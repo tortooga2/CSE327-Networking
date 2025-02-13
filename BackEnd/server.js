@@ -1,5 +1,9 @@
 import express from "express";
 import path from "path";
+
+//Import the router from the module
+import exampleRouter from "./Modules/module.example.js";
+
 //Create an express application
 const app = express();
 const PORT = 3000;
@@ -9,7 +13,12 @@ const __dirname = path.resolve();
 // Add middleware to parse JSON
 app.use(express.json());
 
-// Add Routes for API here:
+//_____________________________________________________________________________________
+// Add Enpoints Here:
+//Example:
+app.use("/example", exampleRouter);
+
+//_____________________________________________________________________________________
 
 //Do not change the following code:
 //Serve static files from the React app. Make sure you build the front end before running the server

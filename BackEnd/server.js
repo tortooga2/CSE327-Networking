@@ -20,9 +20,9 @@ app.use("/example", exampleRouter);
 
 //_____________________________________________________________________________________
 
-//Do not change the following code:
+//Try not to change the following code:
 //Serve static files from the React app. Make sure you build the front end before running the server
-// 'npm run build' in the front end / Networking-Solution directory
+// 'npm run build' in the FrontEnd/Networking-Solution directory
 app.use(
     express.static(path.join(__dirname, "../FrontEnd/Networking-Solution/dist"))
 );

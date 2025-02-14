@@ -5,7 +5,7 @@ import "./App.css";
 
 function App() {
     const [count, setCount] = useState(0);
-    const [data, setData] = useState(null);
+    const [data, setData] = useState(null); //useState, when changed will trigger a re-render. We need this to update our dom with new data
 
     // Fetch example data from the backend
     //useEffect is a hook that runs after the first render of the component
@@ -49,13 +49,14 @@ function App() {
             </p>
             <p>
                 <strong>Example Data:</strong>
-                {data ? (
+                {data ? ( //If data is not null, display the data
                     <p>
                         {data.message}
                         <br />
                         {data.data}
                     </p>
                 ) : (
+                    //If data is null, display loading
                     <p>Loading...</p>
                 )}
             </p>

@@ -1,5 +1,6 @@
 import express from "express";
 import path from "path";
+import cors from "cors";
 
 //Import the router from the module
 import exampleRouter from "./Modules/module.example.js";
@@ -12,6 +13,7 @@ const __dirname = path.resolve();
 
 // Add middleware to parse JSON
 app.use(express.json());
+app.use(cors()); //Will remove once we deploy
 
 //_____________________________________________________________________________________
 // Add Enpoints Here:

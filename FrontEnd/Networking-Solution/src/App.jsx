@@ -47,7 +47,7 @@ function App() {
             <p className="read-the-docs">
                 Click on the Vite and React logos to learn more
             </p>
-            <p>
+            <div>
                 <strong>Example Data:</strong>
                 {data ? ( //If data is not null, display the data
                     <p>
@@ -59,7 +59,7 @@ function App() {
                     //If data is null, display loading
                     <p>Loading...</p>
                 )}
-            </p>
+            </div>
         </>
     );
 }

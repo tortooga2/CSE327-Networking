@@ -13,7 +13,10 @@ const __dirname = path.resolve();
 
 // Add middleware to parse JSON
 app.use(express.json());
-app.use(cors()); //Will remove once we deploy
+if (process.env.NODE_ENV !== "production") {
+    console.log("CORS enabled");
+    app.use(cors()); //Will remove once we deploy
+}
 
 //_____________________________________________________________________________________
 // Add Enpoints Here:

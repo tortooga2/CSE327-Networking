@@ -7,7 +7,7 @@ import exampleRouter from "./Modules/module.example.js";
 
 //Create an express application
 const app = express();
-const PORT = 80;
+const PORT = 3000;
 // Define the directory for the server
 const __dirname = path.resolve();
 

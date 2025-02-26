@@ -13,4 +13,4 @@ npm run prod
 ```
 
 
-What is different about prod and dev (beyond hot reloading)? Well, to put it simply, we have configured our server to 
+

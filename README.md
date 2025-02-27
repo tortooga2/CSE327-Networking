@@ -1,5 +1,13 @@
 # CSE 327 Documentation
 
+## Table of Contents
+
+-   [Setup](#setup)
+-   [Development](#development)
+-   [How to work with git](#how-to-work-with-git)
+
+## Installation
+
 After Cloning the repo:
 
 ```
@@ -19,6 +27,4 @@ Once that is completed validate your setup with:
 ```
 npm run dev
 ```
-
-[This is a link to our main resource doc](https://docs.google.com/document/d/1hG2CDY9-72s14cN8ma7hkM-X22lWiIzedLB3FlKaZRw/edit?usp=sharing)
 

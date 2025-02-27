@@ -3,6 +3,7 @@
     "version": "1.0.0",
     "main": "index.js",
     "scripts": {
+        "setup": "concurrently \"cd FrontEnd/Networking-Solution && npm install\" \"cd BackEnd && npm install\"",
         "dev": "cross-env NODE_ENV=development concurrently \"cd FrontEnd/Networking-Solution && npm run dev\" \"cd BackEnd && npm run dev\"",
         "prod": "cross-env NODE_ENV=production concurrently   \"cd FrontEnd/Networking-Solution && npm run build\" \"cd BackEnd && npm run prod\"",
         "test": "echo \"Error: no test specified\" && exit 1"

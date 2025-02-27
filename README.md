@@ -1,16 +1,21 @@
 # CSE 327 Documentation
 
-after cloning the mono-repo, you can launch both the frontend's dev mode as well as the backends dev mode (hot reloading) with
+After Cloning the repo:
 
 ```
-npm run dev
+cd CSE-327-Repo
 ```
 
-for production, simply run
+Then run:
 
 ```
-npm run prod
+npm install
+
+npm run setup
 ```
 
+Once that is completed validate your setup with:
 
+```npm run dev
 
+```

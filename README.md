@@ -16,6 +16,6 @@ npm run setup
 
 Once that is completed validate your setup with:
 
-```npm run dev
-
+```
+npm run dev
 ```

@@ -19,3 +19,9 @@ Once that is completed validate your setup with:
 ```
 npm run dev
 ```
+
+
+| Task | Deadline | Desc |
+|------|----------|------|
+|Create a table | now | kljdflskjdfjlksdjfl|
+

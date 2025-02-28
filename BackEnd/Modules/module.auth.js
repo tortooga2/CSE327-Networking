@@ -44,6 +44,9 @@ const auth = {
 
     Signup: async (req, res) => {
         const { email, password } = req.body;
+        if (!email || !password)
+            return res.status(400).json({ error: "Missing email or password" });
+
         const userExists = await (async () => {
             try {
                 const query = `SELECT EXISTS(SELECT 1 FROM users WHERE email=$1)`;
@@ -73,6 +76,8 @@ const auth = {
 
     Login: async (req, res) => {
         const { email, password } = req.body;
+        if (!email || !password)
+            return res.status(400).json({ error: "Missing email or password" });
         const query = `SELECT * FROM users WHERE email=$1`;
         const user = await (async () => {
             try {
@@ -108,6 +113,9 @@ const auth = {
 
     Logout: async (req, res) => {
         const token = req.cookies.sessionToken;
+        if (!token) {
+            return res.status(400).json({ error: "Missing session token" });
+        }
         try {
             await auth.sessionDB.del(token);
         } catch (error) {
@@ -119,29 +127,32 @@ const auth = {
 
     TestVerify: async (req, res) => {
         const token = req.cookies.sessionToken;
-        try {
-            auth.Verify(token);
-        } catch (error) {
-            return res.status(401).json({ error: "Invalid session token" });
+        if (!token) {
+            return res.status(400).json({ error: "Missing session token" });
         }
-        return res.status(200).json({ message: "Session token is valid" });
+        auth.Verify(req, res, () => {});
     },
 
-    Verify: async (token) => {
+    //Middle ware to verify session token. Used for all routes other than login and signup.
+    Verify: async (req, res, next) => {
         //get session token from cookie (UUID).
-        const sessionToken = token;
+        const sessionToken = req.cookies.sessionToken;
+        if (!sessionToken) {
+            return res.status(400).json({ error: "No session token" });
+        }
 
         try {
             //Get profile_id from session token (UUID).
             const profile_id = await auth.sessionDB.get(sessionToken);
             if (!profile_id) {
-                throw new Error("Invalid session token");
+                return res.status(401).json({ error: "Invalid session token" });
             }
+            return res.status(200).json({ message: "Session token is valid" });
         } catch (error) {
-            throw new Error(
-                "An error occurred trying to verify the session token. Likely from the redis db, check the redis connection"
-            );
+            return res.status(500).json({ error: "Internal server error" });
         }
+
+        next();
     },
 };
 

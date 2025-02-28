@@ -1,9 +1,12 @@
 import express from "express";
 import path from "path";
 import cors from "cors";
+import cookieParser from "cookie-parser";
+import dotenv from "dotenv";
 
 //Import the router from the module
 import exampleRouter from "./Modules/module.example.js";
+import authRouter from "./Routes/routes.auth.js";
 
 //Create an express application
 const app = express();
@@ -12,7 +15,11 @@ const PORT = 3000;
 const __dirname = path.resolve();
 
 // Add middleware to parse JSON
+app.use(cookieParser());
 app.use(express.json());
+
+dotenv.config();
+
 if (process.env.NODE_ENV !== "production") {
     console.log("CORS enabled");
     app.use(cors()); //Will remove once we deploy
@@ -21,7 +28,7 @@ if (process.env.NODE_ENV !== "production") {
 //_____________________________________________________________________________________
 // Add Enpoints Here:
 //Example:
-app.use("/example", exampleRouter);
+app.use("/api/auth", authRouter);
 
 //_____________________________________________________________________________________
 

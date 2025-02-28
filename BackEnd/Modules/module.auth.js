@@ -17,12 +17,16 @@ const auth = {
     SendToken: async (res, user) => {
         const sessionToken = crypto.randomBytes(32).toString("hex");
 
-        await auth.sessionDB.set(
-            sessionToken,
-            user.profile_id,
-            "EX",
-            Number(process.env.TOKEN_EXP)
-        );
+        try {
+            await auth.sessionDB.set(
+                sessionToken,
+                user.profile_id,
+                "EX",
+                Number(process.env.TOKEN_EXP)
+            );
+        } catch (error) {
+            return res.status(500).json({ error: "Internal server error" });
+        }
         res.cookie("sessionToken", sessionToken, {
             maxAge: Number(process.env.TOKEN_EXP) * 1000,
             httpOnly: true,
@@ -101,6 +105,17 @@ const auth = {
     },
     //Simple Verify function. checks to make sure a session token is valid
     //TODO: refactor to allow padding of session token directly so it can be used in other functions.
+
+    Logout: async (req, res) => {
+        const token = req.cookies.sessionToken;
+        try {
+            await auth.sessionDB.del(token);
+        } catch (error) {
+            return res.status(500).json({ error: "Internal server error" });
+        }
+        res.clearCookie("sessionToken");
+        return res.status(200).json({ message: "Logged out" });
+    },
 
     TestVerify: async (req, res) => {
         const token = req.cookies.sessionToken;

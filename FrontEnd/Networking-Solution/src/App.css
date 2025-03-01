@@ -1,5 +1,5 @@
 @import url("https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap");
-
+@import url("https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400..800;1,400..800&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap");
 #root {
     max-width: 1280px;
     margin: 0 auto;
@@ -17,6 +17,16 @@
     padding-right: 0.5rem;
 }
 
+.miamor {
+    transform: rotate(0deg);
+    transition: transform 0.5s ease-in-out;
+}
+
+.miamor:hover {
+    transform: rotate(180deg);
+    transition: transform 0.5s ease-in-out;
+}
+
 .title {
 }
 
@@ -28,5 +38,6 @@
 
 .miamor {
     font-family: "Playfair Display", serif;
+    font-weight: 400;
     font-style: italic;
 }

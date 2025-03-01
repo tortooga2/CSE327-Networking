@@ -1,7 +1,9 @@
+@import url("https://fonts.cdnfonts.com/css/garamond");
+
 :root {
     --colorMode: "dark";
     --primary-color: #242424;
-    --secondary-color: #f1dac4;
+    --secondary-color: #d9d3ba;
     --special-color: #555555;
 
     font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;

@@ -1,7 +1,7 @@
 :root {
     --colorMode: "dark";
     --primary-color: #242424;
-    --secondary-color: #cccccc;
+    --secondary-color: #f1dac4;
     --special-color: #555555;
 
     font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;

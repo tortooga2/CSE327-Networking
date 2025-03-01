@@ -4,6 +4,7 @@ import viteLogo from "/vite.svg";
 import "./App.css";
 
 import Button from "./Components/Button";
+import FileItem from "./Components/FileItem";
 
 function App() {
   return (
@@ -15,6 +16,16 @@ function App() {
         </h1>
       </div>
       <Button>Click Me</Button>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          width: "80vw",
+        }}
+      >
+        <FileItem />
+      </div>
     </>
   );
 }

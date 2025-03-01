@@ -1,8 +1,7 @@
 CREATE extension IF NOT EXISTS "pgcrypto";
 
 CREATE TABLE users (
-    id SERIAL PRIMARY KEY,
-    user_id UUID DEFAULT gen_random_uuid (),
+    user_id UUID PRIMARY KEY DEFAULT gen_random_uuid (),
     email TEXT NOT NULL,
     hash TEXT NOT NULL,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP

@@ -58,7 +58,28 @@ REDIS_URL = 0.0.0.0:6379
 TOKEN_EXP = 60 ##in seconds
 ```
 
-message me Chase in discord for any help.
+To stop running your docker containers, run:
+
+```
+docker-compose down
+```
+
+Or stop them manually in the docker desktop application.
+
+to restart them if we make changes to the SQL script in init-scripts/, run:
+
+```
+docker-compose down -v
+docker-compose up -d
+```
+I have had an issue where the two folders docker creates data and redis, need to be deleted manually before the new init-tables.sql script is ran.
+you can confirm that this is the bug happening if you see the message
+```
+PostgreSQL Database directory appears to contain a database; Skipping initialization
+```
+if you see this message, rerun docker-compose down -v and delete /data and /redis manually.
+
+message discord if you need any help.
 
 # development
 

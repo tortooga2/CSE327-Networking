@@ -17,16 +17,6 @@
     padding-right: 0.5rem;
 }
 
-.miamor {
-    transform: rotate(0deg);
-    transition: transform 0.5s ease-in-out;
-}
-
-.miamor:hover {
-    transform: rotate(180deg);
-    transition: transform 0.5s ease-in-out;
-}
-
 .title {
 }
 

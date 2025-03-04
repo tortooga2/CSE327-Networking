@@ -19,8 +19,8 @@ CREATE TABLE items (
     description TEXT NOT NULL DEFAULT 'no description',
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     metadata JSONB NOT NULL DEFAULT '{}',
-    parents_refs UUID[],
-    children_refs UUID[],
+    parents_refs JSONB,
+    children_refs JSONB,
 
     FOREIGN KEY (owner_id) REFERENCES users(user_id)
 );

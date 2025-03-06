@@ -14,6 +14,49 @@ const PORT = 3000;
 // Define the directory for the server
 const __dirname = path.resolve();
 
+//Connect to the database with Sequelize ORM
+import { Sequelize, DataTypes } from "sequelize";
+
+const sequelize = new Sequelize('connectwork', 'postgres', '1234', {
+    host: 'localhost',
+    dialect: 'postgres'
+});
+
+//Test connection
+try {
+    await sequelize.authenticate();
+    console.log('Database connection has been established successfully.');
+} catch (error) {
+    console.error('Unable to connect to the database:', error);
+}
+
+//Defining Models for database
+//Table that contains user_id as primary key, email, hash, and timestamp
+const Users = sequelize.define(
+    'Users', {
+        user_id: {
+            type: DataTypes.UUID,
+            allowNull: false,
+            primaryKey: true,
+            unique: true,
+            defaultValue: sequelize.uuidV4,
+        },
+        email: {
+            type: DataTypes.STRING,
+            allowNull: false,
+            unique: true,
+        },
+        hash: {
+            type: DataTypes.STRING,
+            allowNull: false,
+        }, 
+    },
+);
+
+//Model sync IMPORTANT: Sync is only for development, and should not be used in production
+//Incorrect use of Sync can lead to DATA LOSS
+await sequelize.sync({ force: true });
+
 // Add middleware to parse JSON
 app.use(cookieParser());
 app.use(express.json());

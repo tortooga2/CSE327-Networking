@@ -1,14 +1,19 @@
 import dotenv from "dotenv";
-
-import pkg from "pg";
-const { Pool } = pkg;
+import { Sequelize } from "sequelize";
 
 dotenv.config();
 
-export const pool = new Pool({
-  database: process.env.DB_NAME,
-  user: process.env.DB_USR,
-  password: process.env.DB_PASSWORD,
-  host: process.env.DB_HOST,
-  port: process.env.DB_PORT,
-});
+const sequelize = new Sequelize(
+  process.env.DB_NAME,
+  process.env.DB_USER,
+  process.env.DB_PASSWORD,
+  {
+    host: process.env.DB_HOST,
+    dialect: "postgres",
+  },
+);
+
+export { sequelize };
+
+//Defining Models for database
+//Table that contains user_id as primary key, email, hash, and timestamp

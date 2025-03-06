@@ -6,8 +6,8 @@ import dotenv from "dotenv";
 dotenv.config();
 
 import { Redis } from "ioredis";
-
-import { pool } from "./module.db.js";
+import { sequelize } from "./module.db.js";
+import { Users } from "../Model/model.user.js";
 
 // First, check if we have a cookie credential
 
@@ -28,13 +28,13 @@ const auth = {
       return res.status(500).json({ error: "Internal server error" });
     }
     res.cookie("sessionToken", sessionToken, {
-      maxAge: Number(process.env.TOKEN_EXP) * 1000,
+      maxAge: Number(process.env.TOKEN_EXP) * 1000 * 1000,
       httpOnly: true,
     });
 
     return res.status(200).json({
       user: {
-        profile_id: user.profile_id,
+        user_id: user.user_id,
         email: user.email,
         password: user.password,
         session_token: sessionToken,
@@ -49,26 +49,44 @@ const auth = {
 
     const userExists = await (async () => {
       try {
-        const query = `SELECT EXISTS(SELECT 1 FROM users WHERE email=$1)`;
-        const result = await pool.query(query, [email]);
-        return result.rows[0].exists;
+        console.log("BP 1");
+        const user = await Users.findOne({
+          where: { email },
+        });
+        console.log("BP 2");
+        console.log(!user);
+        return user ? true : false;
       } catch (error) {
+        console.log(error);
         res.status(500).json({ error: "Internal server error" });
         return null;
       }
     })();
-
+    console.log("BP 3");
     if (userExists)
       return res.status(409).json({ error: "Email already exists" });
 
     const hash = await bcrypt.hash(password, 10);
-    const profile_id = uuidv4();
-    await pool.query(
-      `INSERT INTO users (email, hash, user_id) VALUES ('${email}', '${hash}', '${profile_id}')`,
-    );
+    const user_id = uuidv4();
+
+    try {
+      const user = await Users.create({
+        email,
+        hash,
+        user_id,
+      });
+    } catch (error) {
+      console.log(error);
+      res.status(500).json({ error: "Internal server error" });
+      return null;
+    }
+
+    // await pool.query(
+    //   `INSERT INTO "Users" (email, hash, user_id) VALUES ('${email}', '${hash}', '${user_id}')`,
+    // );
 
     auth.SendToken(res, {
-      profile_id,
+      user_id,
       email,
       password,
     });
@@ -78,11 +96,15 @@ const auth = {
     const { email, password } = req.body;
     if (!email || !password)
       return res.status(400).json({ error: "Missing email or password" });
-    const query = `SELECT * FROM users WHERE email=$1`;
+
     const user = await (async () => {
       try {
-        const { rows } = await pool.query(query, [email]);
-        return rows[0] ?? null;
+        const user = await Users.findOne({
+          where: { email },
+        });
+        if (!user) return null;
+
+        return user;
       } catch (error) {
         console.error(error);
         res.status(500).json({ error: "Internal server error" });

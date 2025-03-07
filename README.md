@@ -4,11 +4,10 @@
 
 -   [Setup](#setup)
 -   [Development](#development)
--   [How to work with git](#how-to-work-with-git)
--   [Documentation](###Documentation)
+-   [Documentation](#Documentation)
 - 
 
-# setting up node/vite
+# setup
 
 After Cloning the repo:
 
@@ -94,12 +93,12 @@ Workflow: While you may use your own workflow, assuming its compatable with the 
 
 ## Backend
 
-- [Authentication](###Authentication)
+- [Authentication](###Authentication:)
 
 
 ### Authentication:
-- [SignUp](####Signup)
-- [Login](####Login)
+- [SignUp](####Signup:)
+- [Login](####Login:)
 
 #### Signup:
 

@@ -89,16 +89,16 @@ Workflow: While you may use your own workflow, assuming its compatable with the 
 
 # Documentation
 
-- [Backend](##Backend)
+- [Backend](#Backend)
 
 ## Backend
 
-- [Authentication](###Authentication:)
+- [Authentication](#Authentication:)
 
 
 ### Authentication:
-- [SignUp](####Signup)
-- [Login](####Login)
+- [SignUp](#Signup)
+- [Login](#Login)
 
 #### Signup
 

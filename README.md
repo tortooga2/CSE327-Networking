@@ -97,10 +97,10 @@ Workflow: While you may use your own workflow, assuming its compatable with the 
 
 
 ### Authentication:
-- [SignUp](####Signup:)
-- [Login](####Login:)
+- [SignUp](####Signup)
+- [Login](####Login)
 
-#### Signup:
+#### Signup
 
 Endpoint: ``` {baseUrl}/api/auth/signup/ ```
 Method: POST
@@ -163,7 +163,7 @@ await fetch({baseUrl}/api/auth/signup), {
 })
 ```
 
-#### Login:
+#### Login
 
 Endpoint: ``` {baseUrl}/api/auth/login/ ```
 Method: POST

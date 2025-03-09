@@ -1,12 +1,13 @@
-# CSE 327 Documentation
+
 
 ## Table of Contents
 
 -   [Setup](#setup)
 -   [Development](#development)
--   [How to work with git](#how-to-work-with-git)
+-   [Documentation](#Documentation)
+- 
 
-# setting up node/vite
+# setup
 
 After Cloning the repo:
 
@@ -84,3 +85,145 @@ message discord if you need any help.
 # development
 
 Workflow: While you may use your own workflow, assuming its compatable with the team, you will generally start by going to trello. Find an item in the To-Do list that either you are assigned or with noone assigned to. Drag it over to the In-Progress section and assign yourself to it. Then, in github, create a branch. using the naming convension, "feature/{featurename}". Make sure that you are creating this branch from the latest main branch to avoid merge conflicts. Code up the feature all while commiting often. Then, once the feature is done, on github, submit a merge request to the dev branch. When its accepted the branch will be deleted.
+
+
+# Documentation
+
+- [Backend](#Backend)
+
+## Backend
+
+- [Authentication](#Authentication:)
+
+
+### Authentication:
+- [SignUp](#Signup)
+- [Login](#Login)
+
+#### Signup
+
+Endpoint: ``` {baseUrl}/api/auth/signup/ ```
+Method: POST
+Required Fields: Body
+
+This endpoint is pretty self explanatory. It expects a body with elements ```email``` and ```password```.
+
+Request:
+
+```
+//Body
+{
+email: {{email}},
+password: {{password}}
+}
+```
+
+Successful Response: 
+
+Status Code: 200
+
+```
+{
+	message : {"User Account Succefully Created}
+}
+```
+
++ Session token send as a cookie. 
+
+Failed Response: 
+
+Status Code: 500
+```
+{ error: "Internal server error" }
+```
+Status Code: 409
+```
+{ error: "Email already exists" }
+```
+Status Code: 400
+```
+{ error: "Missing email or password" }
+```
+
+
+
+Example Usage:
+
+```
+await fetch({baseUrl}/api/auth/signup), {
+	method: "POST",
+	headers: {
+		"Content-Type": "application/json",
+		"credentials": "same-origin",
+	},
+	body: JSON.stringify({
+		email: {{Some email}},
+		password: {{Some Password}}
+	})
+})
+```
+
+#### Login
+
+Endpoint: ``` {baseUrl}/api/auth/login/ ```
+Method: POST
+Required Fields: Body
+
+This endpoint is pretty self explanatory It expects the body content to be filled with an ```email``` and a ```password```.
+
+Request:
+
+```
+//Body
+{
+email: {{email}},
+password: {{password}}
+}
+```
+
+Successful Response: 
+
+Status Code: 200
+
+```
+{
+	message : {"User Account Succefully Created}
+}
+```
+
++ Session token send as a cookie. 
+
+Failed Response: 
+
+Status Code: 500
+```
+{ error: "Internal server error" }
+```
+Status Code: 401
+```
+{ error: "Invalid credentials" }
+```
+Status Code: 400
+```
+{ error: "Missing email or password" }
+```
+
+
+Example Usage:
+
+```
+await fetch({baseUrl}/api/auth/login), {
+	method: "POST",
+	headers: {
+		"Content-Type": "application/json",
+		"credentials": "same-origin",
+	},
+	body: JSON.stringify({
+		email: {{Some email}},
+		password: {{Some Password}}
+	})
+})
+```
+
+
+#### In Future Request, the Session Token should be included as a cookie using the credential header. 

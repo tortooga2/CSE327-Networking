@@ -20,3 +20,5 @@ export const Users = sequelize.define("Users", {
     allowNull: false,
   },
 });
+
+

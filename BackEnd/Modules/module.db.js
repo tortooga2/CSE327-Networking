@@ -14,6 +14,3 @@ const sequelize = new Sequelize(
 );
 
 export { sequelize };
-
-//Defining Models for database
-//Table that contains user_id as primary key, email, hash, and timestamp

@@ -3,10 +3,8 @@ import path from "path";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import dotenv from "dotenv";
-import { Sequelize, DataTypes } from "sequelize";
 
 //Import the router from the module
-import exampleRouter from "./Modules/module.example.js";
 import authRouter from "./Routes/routes.auth.js";
 import { sequelize } from "./Modules/module.db.js";
 
@@ -31,7 +29,12 @@ try {
 
 //Model sync IMPORTANT: Sync is only for development, and should not be used in production
 //Incorrect use of Sync can lead to DATA LOSS
-await sequelize.sync({ force: false });
+try {
+  await sequelize.sync({ force: false });
+  console.log('Database synchronized');
+} catch (error) {
+  console.error('Error syncing database:', error);
+}
 
 // Add middleware to parse JSON
 app.use(cookieParser());

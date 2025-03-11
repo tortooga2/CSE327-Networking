@@ -6,7 +6,7 @@ import dotenv from "dotenv";
 dotenv.config();
 
 import { Redis } from "ioredis";
-import { Users } from "../Model/model.user.js";
+import { Users } from "./module.db.js";
 
 // TODO: Some things to note about proper session auth. Firstly, We could only let tokens be valid for a max of 4 hours. We should refresh the token every time the user makes a request. 
 // Or in other words, we sign out the user after 4 hours of inactivity
@@ -35,7 +35,7 @@ const auth = {
 
         return res.status(200).json({
             user: {
-                user_id: user.user_id,
+                profile_id: user.profile_id,
                 email: user.email,
                 password: user.password,
                 session_token: sessionToken,
@@ -68,13 +68,13 @@ const auth = {
             return res.status(409).json({ error: "Email already exists" });
 
         const hash = await bcrypt.hash(password, 10);
-        const user_id = uuidv4();
+        const profile_id = uuidv4();
 
         console.log("BP 4");
 
         try {
             const user = await Users.create({
-                user_id,
+                profile_id,
                 email,
                 hash,
             });
@@ -90,7 +90,7 @@ const auth = {
         // );
 
         auth.SendToken(res, {
-            user_id,
+            profile_id,
             email,
             password,
         });
@@ -129,7 +129,7 @@ const auth = {
         }
         //Generate session token
         auth.SendToken(res, {
-            profile_id: user.user_id,
+            profile_id: user.profile_id,
             email,
             password,
         });
@@ -169,8 +169,8 @@ const auth = {
 
         try {
             //Get profile_id from session token (UUID).
-            const user_id = await auth.sessionDB.get(sessionToken);
-            if (!user_id) {
+            const profile_id = await auth.sessionDB.get(sessionToken);
+            if (!profile_id) {
                 return res.status(401).json({ error: "Invalid session token" });
             }
             return res.status(200).json({ message: "Session token is valid" });

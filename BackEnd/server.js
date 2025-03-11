@@ -6,7 +6,8 @@ import dotenv from "dotenv";
 
 //Import the router from the module
 import authRouter from "./Routes/routes.auth.js";
-import { sequelize } from "./Modules/module.db.js";
+import { sequelize, SyncDB } from "./Modules/module.db.js";
+
 
 dotenv.config();
 //Create an express application
@@ -19,22 +20,9 @@ const __dirname = path.resolve();
 
 console.log(process.env.DB_NAME, process.env.DB_USER, process.env.DB_PASSWORD);
 
-//Test connection
-try {
-  await sequelize.authenticate();
-  console.log("Database connection has been established successfully.");
-} catch (error) {
-  console.error("Unable to connect to the database:", error);
-}
 
-//Model sync IMPORTANT: Sync is only for development, and should not be used in production
-//Incorrect use of Sync can lead to DATA LOSS
-try {
-  await sequelize.sync({ force: false });
-  console.log('Database synchronized');
-} catch (error) {
-  console.error('Error syncing database:', error);
-}
+SyncDB();
+
 
 // Add middleware to parse JSON
 app.use(cookieParser());

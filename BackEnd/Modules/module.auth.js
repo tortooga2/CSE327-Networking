@@ -8,7 +8,9 @@ dotenv.config();
 import { Redis } from "ioredis";
 import { Users } from "../Model/model.user.js";
 
-// First, check if we have a cookie credential
+// TODO: Some things to note about proper session auth. Firstly, We could only let tokens be valid for a max of 4 hours. We should refresh the token every time the user makes a request. 
+// Or in other words, we sign out the user after 4 hours of inactivity
+
 
 const auth = {
     sessionDB: new Redis(process.env.REDIS_URL),
@@ -82,7 +84,7 @@ const auth = {
             res.status(500).json({ error: "Internal server error" });
             return null;
         }
-
+        // Code using pg pool rather than sequelize
         // await pool.query(
         //   `INSERT INTO "Users" (email, hash, user_id) VALUES ('${email}', '${hash}', '${user_id}')`,
         // );
@@ -175,6 +177,8 @@ const auth = {
         } catch (error) {
             return res.status(500).json({ error: "Internal server error" });
         }
+
+
 
         next();
     },

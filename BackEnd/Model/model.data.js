@@ -28,11 +28,15 @@ export const Data = sequelize.define("Data", {
     visitors: {
         type: DataTypes.BIGINT,
     },
-    parent: {
-        type: DataTypes.BIGINT,
+    parents: {
+        type: Datatypes.JSONB,
+        allowNull: false,
+        defaultValue: { item_id: [] },
     },
     children: {
         type: DataTypes.JSONB,
+        allowNull: false,
+        defaultValue: { item_id: [] },
     }
 });
 

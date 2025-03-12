@@ -11,7 +11,7 @@ export const createDataTable = (sequelize) => {
             primaryKey: true,
             unique: true,
         },
-        owner: {
+        owner_id: {
             type: DataTypes.UUID,
             allowNull: false,
             references: {

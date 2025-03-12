@@ -11,7 +11,7 @@ export const initAssoc = (tables) => {
     //This section defines a One-to-Many association between Users and Data
     //Makes the owner column in Data a foreign from Users
     tables.Users.hasMany(tables.Data, {
-        foreignKey: 'owner',
+        foreignKey: 'owner_id',
         sourceKey: 'profile_id',
     });
 

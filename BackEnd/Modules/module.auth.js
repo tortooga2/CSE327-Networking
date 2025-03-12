@@ -173,12 +173,12 @@ const auth = {
             if (!profile_id) {
                 return res.status(401).json({ error: "Invalid session token" });
             }
-            return res.status(200).json({ message: "Session token is valid" });
+
         } catch (error) {
             return res.status(500).json({ error: "Internal server error" });
         }
 
-
+        req.profile_id = profile_id;
 
         next();
     },

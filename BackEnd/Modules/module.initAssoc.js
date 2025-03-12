@@ -15,10 +15,7 @@ export const initAssoc = (tables) => {
         sourceKey: 'profile_id',
     });
 
-    tables.Data.belongsTo(tables.Users, {
-        foreignKey: 'owner',
-        targetKey: 'profile_id',
-    });
+
 
     //Creates foreign key "owner_id" from User's "user_id"
     tables.Data.belongsTo(

@@ -5,7 +5,7 @@ import { createDataTable } from "../Models/model.data.js";
 import { initAssoc } from "./module.initAssoc.js";
 dotenv.config();
 
-export const sequelize = new Sequelize(
+const sequelize = new Sequelize(
   process.env.DB_NAME,
   process.env.DB_USER,
   process.env.DB_PASSWORD,
@@ -15,12 +15,12 @@ export const sequelize = new Sequelize(
   },
 );
 
-export const Users = createUsersTable(sequelize);
-export const Data = createDataTable(sequelize);
+const Users = createUsersTable(sequelize);
+const Data = createDataTable(sequelize);
 
 //initAssoc({ Users, Data });
 
-export const SyncDB = async () => {
+const SyncDB = async () => {
 
   //Test connection
   try {
@@ -47,6 +47,6 @@ export const SyncDB = async () => {
 }
 
 
-
+export { Users, Data, sequelize, SyncDB };
 
 

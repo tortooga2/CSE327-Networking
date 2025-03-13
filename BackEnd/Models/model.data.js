@@ -23,7 +23,7 @@ export const createDataTable = (sequelize) => {
             onUpdate: "CASCADE", //Updates rows in table when User row is deleted
         },
         name: {
-            type: DataTypes.BIGINT,
+            type: DataTypes.STRING,
             allowNull: true,
         },
         type: {
@@ -45,7 +45,6 @@ export const createDataTable = (sequelize) => {
             allowNull: false,
             defaultValue: { item_id: [] },
         },
-
         children: {
             type: DataTypes.JSONB,
             allowNull: false,

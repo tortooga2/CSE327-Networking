@@ -1,4 +1,5 @@
 import dotenv from "dotenv";
+import chalk from "chalk";
 import { Sequelize } from "sequelize";
 import { createUsersTable } from "../Models/model.users.js";
 import { createDataTable } from "../Models/model.data.js";
@@ -24,24 +25,28 @@ const SyncDB = async () => {
     //Test connection
     try {
         await sequelize.authenticate();
-        console.log("Database connection has been established successfully.");
+        console.log(
+            chalk.bgGreen(
+                "Database connection has been established successfully."
+            )
+        );
     } catch (error) {
-        console.error("Unable to connect to the database:", error);
+        console.error(chalk.bgRed("Unable to connect to the database:", error));
     }
 
     //Model sync IMPORTANT: Sync is only for development, and should not be used in production
     //Incorrect use of Sync can lead to DATA LOSS
     try {
         await Users.sync({ alter: true });
-        console.log("Database synchronized");
+        console.log(chalk.bgGreen("Database synchronized"));
     } catch (error) {
-        console.error("Error syncing database:", error);
+        console.error(chalk.bgRed("Error syncing database:", error));
     }
     try {
         await Data.sync({ alter: true });
-        console.log("Database synchronized");
+        console.log(chalk.bgGreen("Database synchronized"));
     } catch (error) {
-        console.error("Error syncing database:", error);
+        console.error(chalk.bgRed("Error syncing database:", error));
     }
 };
 

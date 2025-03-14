@@ -7,6 +7,7 @@ dotenv.config();
 
 import { Redis } from "ioredis";
 import { Users } from "./module.db.js";
+import { debugMessage } from "./module.debugHelpers.js";
 
 // TODO: Some things to note about proper session auth. Firstly, We could only let tokens be valid for a max of 4 hours. We should refresh the token every time the user makes a request.
 // Or in other words, we sign out the user after 4 hours of inactivity
@@ -31,15 +32,18 @@ const auth = {
             maxAge: Number(process.env.TOKEN_EXP) * 1000 * 1000,
             httpOnly: true,
         });
-
-        return res.status(200).json({
-            user: {
-                profile_id: user.profile_id,
-                email: user.email,
-                password: user.password,
-                session_token: sessionToken,
-            },
-        });
+        if (process.env.NODE_ENV !== "production") {
+            return res.status(200).json({
+                user: {
+                    profile_id: user.profile_id,
+                    email: user.email,
+                    password: user.password,
+                    session_token: sessionToken,
+                },
+            });
+        } else {
+            return res.status(200);
+        }
     },
 
     Signup: async (req, res) => {
@@ -49,12 +53,12 @@ const auth = {
 
         const userExists = await (async () => {
             try {
-                console.log("BP 1");
+                debugMessage("Auth: BP 1, Line 56");
                 const user = await Users.findOne({
                     where: { email },
                 });
-                console.log("BP 2");
-                console.log(!user);
+                debugMessage("Auth: BP 2, Line 60");
+                debugMessage(`${!user}, Line 61`);
                 return user ? true : false;
             } catch (error) {
                 console.log(error);
@@ -62,7 +66,7 @@ const auth = {
                 return null;
             }
         })();
-        console.log("BP 3");
+
         if (userExists)
             return res.status(409).json({ error: "Email already exists" });
 
@@ -177,6 +181,8 @@ const auth = {
         } catch (error) {
             return res.status(500).json({ error: "Internal server error" });
         }
+
+        auth.sessionDB.expire(sessionToken, Number(process.env.TOKEN_EXP));
 
         req.profile_id = profile_id;
 

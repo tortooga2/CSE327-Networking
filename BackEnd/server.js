@@ -26,7 +26,7 @@ SyncDB();
 app.use(cookieParser());
 app.use(express.json());
 
-if (process.env.NODE_ENV !== "production") {
+if (process.env.DEBUG) {
     console.log("CORS enabled");
     app.use(cors()); //Will remove once we deploy
 }

@@ -8,9 +8,8 @@ dotenv.config();
 import { Redis } from "ioredis";
 import { Users } from "./module.db.js";
 
-// TODO: Some things to note about proper session auth. Firstly, We could only let tokens be valid for a max of 4 hours. We should refresh the token every time the user makes a request. 
+// TODO: Some things to note about proper session auth. Firstly, We could only let tokens be valid for a max of 4 hours. We should refresh the token every time the user makes a request.
 // Or in other words, we sign out the user after 4 hours of inactivity
-
 
 const auth = {
     sessionDB: new Redis(process.env.REDIS_URL),
@@ -81,6 +80,7 @@ const auth = {
             console.log(user);
         } catch (error) {
             console.log("Failed to send to database");
+            console.log(error);
             res.status(500).json({ error: "Internal server error" });
             return null;
         }
@@ -156,7 +156,7 @@ const auth = {
         if (!token) {
             return res.status(400).json({ error: "Missing session token" });
         }
-        auth.Verify(req, res, () => { });
+        auth.Verify(req, res, () => {});
     },
 
     //Middle ware to verify session token. Used for all routes other than login and signup.
@@ -164,16 +164,16 @@ const auth = {
         //get session token from cookie (UUID).
         const sessionToken = req.cookies.sessionToken;
         if (!sessionToken) {
-            return res.status(400).json({ error: "No session token" });
+            return res.redirect("/"); //Redirect to login page
         }
 
         try {
             //Get profile_id from session token (UUID).
-            const profile_id = await auth.sessionDB.get(sessionToken);
+            var profile_id = await auth.sessionDB.get(sessionToken);
             if (!profile_id) {
-                return res.status(401).json({ error: "Invalid session token" });
+                res.redirect("/"); //Redirect to login page
+                return;
             }
-
         } catch (error) {
             return res.status(500).json({ error: "Internal server error" });
         }

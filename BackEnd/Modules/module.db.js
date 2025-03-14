@@ -32,6 +32,7 @@ const SyncDB = async () => {
         );
     } catch (error) {
         console.error(chalk.bgRed("Unable to connect to the database:", error));
+        throw error;
     }
 
     //Model sync IMPORTANT: Sync is only for development, and should not be used in production

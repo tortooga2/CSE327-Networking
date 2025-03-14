@@ -7,18 +7,36 @@ dotenv.config();
 
 import { Redis } from "ioredis";
 import { Users } from "./module.db.js";
-import { debugMessage } from "./module.debugHelpers.js";
+import { debugMessage, debugError } from "./module.debugHelpers.js";
 
 // TODO: Some things to note about proper session auth. Firstly, We could only let tokens be valid for a max of 4 hours. We should refresh the token every time the user makes a request.
 // Or in other words, we sign out the user after 4 hours of inactivity
 
-const auth = {
-    sessionDB: new Redis(process.env.REDIS_URL),
+//Helper function to connect to Redis. Done this way to propeply handle connection errors.
+const connectToRedis = async () => {
+    var redis = new Redis(process.env.REDIS_URL);
+    redis.on("error", (error) => {
+        //when error event is emitted, log the error
+        debugError(error);
+    });
 
+    redis.on("connect", () => {
+        //When connected, log the connection
+        debugMessage("Connected to Redis");
+    });
+    return redis;
+};
+
+const auth = {
+    //Redis Handle. This is used to store session tokens.
+    sessionDB: await connectToRedis(),
+
+    //Function to send a session token to the user.
     SendToken: async (res, user) => {
         const sessionToken = crypto.randomBytes(32).toString("hex");
 
         try {
+            //set [sessionToken] = profile_id, expire in [TOKEN_EXP] seconds
             await auth.sessionDB.set(
                 sessionToken,
                 user.profile_id,
@@ -28,11 +46,13 @@ const auth = {
         } catch (error) {
             return res.status(500).json({ error: "Internal server error" });
         }
+        //Set the session token as a cookie.
         res.cookie("sessionToken", sessionToken, {
             maxAge: Number(process.env.TOKEN_EXP) * 1000 * 1000,
             httpOnly: true,
         });
-        if (process.env.NODE_ENV !== "production") {
+        //If in debug mode, return the user object with the session token so that it can be used for testing.
+        if (process.env.DEBUG) {
             return res.status(200).json({
                 user: {
                     profile_id: user.profile_id,
@@ -42,57 +62,60 @@ const auth = {
                 },
             });
         } else {
+            //If not in debug mode, just return a 200 status code.
             return res.status(200);
         }
     },
 
     Signup: async (req, res) => {
+        //Extract email and password from request body
         const { email, password } = req.body;
+        //Check if email and password are present
         if (!email || !password)
             return res.status(400).json({ error: "Missing email or password" });
-
+        //Try to check if a user exists with the same email
         const userExists = await (async () => {
             try {
-                debugMessage("Auth: BP 1, Line 56");
+                debugMessage("Auth: BP 1, Line 56"); // Debug message used for testing
+
                 const user = await Users.findOne({
                     where: { email },
                 });
+
                 debugMessage("Auth: BP 2, Line 60");
                 debugMessage(`${!user}, Line 61`);
-                return user ? true : false;
+
+                return user ? true : false; //return a boolean value if the user exists
             } catch (error) {
                 console.log(error);
                 res.status(500).json({ error: "Internal server error" });
-                return null;
+                throw error; // throw an error if the user does not exist. Usually we would want to return res, however in this case we want to throw an error.
             }
         })();
 
+        //Check if the user exists
         if (userExists)
             return res.status(409).json({ error: "Email already exists" });
-
+        //Hash the password
         const hash = await bcrypt.hash(password, 10);
+        //Generate a profile_id
         const profile_id = uuidv4();
 
-        console.log("BP 4");
-
+        debugMessage("Auth: BP 4, Line 103");
+        //Try to send the user to the database
         try {
             const user = await Users.create({
                 profile_id,
                 email,
                 hash,
             });
-            console.log(user);
+            debugMessage(user);
         } catch (error) {
-            console.log("Failed to send to database");
-            console.log(error);
             res.status(500).json({ error: "Internal server error" });
-            return null;
+            throw error;
         }
-        // Code using pg pool rather than sequelize
-        // await pool.query(
-        //   `INSERT INTO "Users" (email, hash, user_id) VALUES ('${email}', '${hash}', '${user_id}')`,
-        // );
 
+        //Generate a session token and send to the user
         auth.SendToken(res, {
             profile_id,
             email,
@@ -101,10 +124,14 @@ const auth = {
     },
 
     Login: async (req, res) => {
+        //Extract email and password from request body
         const { email, password } = req.body;
+
+        //Check if email and password are present
         if (!email || !password)
             return res.status(400).json({ error: "Missing email or password" });
 
+        //Try to find a user with the same email
         const user = await (async () => {
             try {
                 const user = await Users.findOne({
@@ -121,16 +148,18 @@ const auth = {
         })();
 
         // Check if db actually returns a response or was found
-        if (!user)
+        if (!user) {
             return res.status(401).json({ error: "Invalid credentials" });
+        }
 
         const hashedPassword = user.hash;
-
         const match = await bcrypt.compare(password, hashedPassword);
 
+        //check if password matches.
         if (!match) {
             return res.status(401).json({ error: "Invalid credentials" });
         }
+
         //Generate session token
         auth.SendToken(res, {
             profile_id: user.profile_id,
@@ -138,23 +167,31 @@ const auth = {
             password,
         });
     },
-    //Simple Verify function. checks to make sure a session token is valid
-    //TODO: refactor to allow padding of session token directly so it can be used in other functions.
 
     Logout: async (req, res) => {
+        //Get session token from cookie
         const token = req.cookies.sessionToken;
+        //Check if token is present
         if (!token) {
             return res.status(400).json({ error: "Missing session token" });
         }
+
+        //Try to delete the session token from the database
         try {
             await auth.sessionDB.del(token);
         } catch (error) {
+            debugError(error);
             return res.status(500).json({ error: "Internal server error" });
         }
-        res.clearCookie("sessionToken");
-        return res.status(200).json({ message: "Logged out" });
+
+        //respond by clearing the cookie and sending a confirmation message
+        return res
+            .status(200)
+            .clearCookie("sessionToken")
+            .json({ message: "Logged out" });
     },
 
+    //Simple function to test if the session token is valid.
     TestVerify: async (req, res) => {
         const token = req.cookies.sessionToken;
         if (!token) {
@@ -179,11 +216,17 @@ const auth = {
                 return;
             }
         } catch (error) {
+            debugError(error);
             return res.status(500).json({ error: "Internal server error" });
         }
 
-        auth.sessionDB.expire(sessionToken, Number(process.env.TOKEN_EXP));
+        //reset the expire time of the session token
+        await auth.sessionDB.expire(
+            sessionToken,
+            Number(process.env.TOKEN_EXP)
+        );
 
+        //Add the profile_id to the request object to be used in the route.
         req.profile_id = profile_id;
 
         next();

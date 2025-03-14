@@ -1,4 +1,5 @@
 import { Data } from "./module.db.js";
+import { debugMessage, debugError } from "./module.debugHelpers.js";
 
 const getAllUserData = async (req, res) => {
     const profile_id = req.profile_id;
@@ -9,10 +10,10 @@ const getAllUserData = async (req, res) => {
             },
         });
 
-        console.log(data);
+        debugMessage(data);
         res.status(200).send({ data: data });
     } catch (err) {
-        console.log(err);
+        debugError(err);
         res.status(500).send("Internal Server Error");
     }
 };
@@ -40,11 +41,10 @@ const testCreateUserData = async (req, res) => {
             ...GenerateData(),
             owner_id: profile_id,
         });
-
-        console.log(newData);
+        debugMessage(newData);
         res.status(200).send({ data: newData });
     } catch (err) {
-        console.log(err);
+        debugError(err);
         res.status(500).send("Internal Server Error");
     }
 };
@@ -59,10 +59,10 @@ const createUserData = async (req, res) => {
             owner_id: profile_id,
         });
 
-        console.log(newData);
+        debugMessage(newData);
         res.status(200).send({ data: newData });
     } catch (err) {
-        console.log(err);
+        debugError(err);
         res.status(500).send("Internal Server Error");
     }
 };

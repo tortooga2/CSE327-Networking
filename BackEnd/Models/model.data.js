@@ -1,15 +1,13 @@
 import { DataTypes } from "sequelize";
 
-
-
 //Creates the Data table in the DB
 export const createDataTable = (sequelize) => {
     return sequelize.define("data", {
         id: {
             type: DataTypes.BIGINT,
             allowNull: false,
+            autoIncrement: true,
             primaryKey: true,
-            unique: true,
         },
         owner_id: {
             type: DataTypes.UUID,
@@ -51,5 +49,4 @@ export const createDataTable = (sequelize) => {
             defaultValue: { item_id: [] },
         },
     });
-}
-
+};

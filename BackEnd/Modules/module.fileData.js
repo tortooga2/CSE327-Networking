@@ -3,12 +3,13 @@ import { debugMessage, debugError } from "./module.debugHelpers.js";
 
 //Delete file by ID
 const deleteFileById = async (req, res) => {
-    const file_id = req.params.fileId; //Gets file Id from the url
+    const { id, owner_id } = req.body;
     try {
         //If deletedFile == 0, no file was deleted
         const deletedFile = await Data.destroy({
             where: {
-                id: file_id,
+                id: id,
+                owner_id: owner_id,
             },
         });
 

@@ -14,15 +14,20 @@ const deleteFileById = async (req, res) => {
 
         //Check if anything was deleted
         if (deletedFile == 0) {
-            res.status(404).send("File Not Found");
+            res.status(404).json({
+                message: "File not found",
+            });
             return; //Chase lemme know if this is bad practice. I put this to stop it from executing more code.
         }
 
-        debugMessage("Deleted File");
-        res.status(204).send();
+        res.status(204).json({
+            message: "File Successfully deleted"
+        });
     } catch (err) {
         debugError(err);
-        res.status(500).send("Internal Server Error: Could Not Delete File")
+        res.status(500).json({
+            message: "Internal server error",
+        });
     }
 };
 

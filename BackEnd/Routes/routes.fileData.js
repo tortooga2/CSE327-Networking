@@ -5,6 +5,6 @@ import { deleteFileById } from "../Modules/module.fileData.js";
 const fileDataRouter = Router();
 
 fileDataRouter.use(auth.Verify);
-fileDataRouter.delete("/delete", deleteFileById);
+fileDataRouter.delete("/delete/:id", deleteFileById);
 
 export default fileDataRouter;

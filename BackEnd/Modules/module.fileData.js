@@ -20,9 +20,7 @@ const deleteFileById = async (req, res) => {
             return; //Chase lemme know if this is bad practice. I put this to stop it from executing more code.
         }
 
-        res.status(204).json({
-            message: "File Successfully deleted"
-        });
+        res.status(204).send();
     } catch (err) {
         debugError(err);
         res.status(500).json({

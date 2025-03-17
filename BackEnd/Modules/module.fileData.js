@@ -1,5 +1,5 @@
-import { Data } from "./module.db";
-import { debugMessage, debugError } from "./module.debugHelpers";
+import { Data } from "./module.db.js";
+import { debugMessage, debugError } from "./module.debugHelpers.js";
 
 //Delete file by ID
 const deleteFileById = async (req, res) => {

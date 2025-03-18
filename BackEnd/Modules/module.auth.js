@@ -7,7 +7,7 @@ dotenv.config();
 
 import { Redis } from "ioredis";
 import { Users } from "./module.db.js";
-import { debugMessage, debugError } from "./module.debugHelpers.js";
+import { debugMessage, debugError, DEBUG } from "./module.debugHelpers.js";
 
 // TODO: Some things to note about proper session auth. Firstly, We could only let tokens be valid for a max of 4 hours. We should refresh the token every time the user makes a request.
 // Or in other words, we sign out the user after 4 hours of inactivity
@@ -52,7 +52,9 @@ const auth = {
             httpOnly: true,
         });
         //If in debug mode, return the user object with the session token so that it can be used for testing.
-        if (process.env.DEBUG) {
+        console.log(process.env.DEBUG);
+        if (DEBUG) {
+
             return res.status(200).json({
                 user: {
                     profile_id: user.profile_id,
@@ -63,7 +65,7 @@ const auth = {
             });
         } else {
             //If not in debug mode, just return a 200 status code.
-            return res.status(200);
+            return res.status(200).send("OK");
         }
     },
 
@@ -197,7 +199,7 @@ const auth = {
         if (!token) {
             return res.status(400).json({ error: "Missing session token" });
         }
-        auth.Verify(req, res, () => {});
+        auth.Verify(req, res, () => { });
     },
 
     //Middle ware to verify session token. Used for all routes other than login and signup.

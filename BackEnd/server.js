@@ -9,6 +9,8 @@ import authRouter from "./Routes/routes.auth.js";
 import fileDataRouter from "./Routes/routes.fileData.js";
 import { sequelize, SyncDB } from "./Modules/module.db.js";
 
+import { DEBUG } from "./Modules/module.debugHelpers.js";
+
 dotenv.config();
 //Create an express application
 const app = express();
@@ -26,7 +28,7 @@ SyncDB();
 app.use(cookieParser());
 app.use(express.json());
 
-if (process.env.DEBUG) {
+if (DEBUG) {
     console.log("CORS enabled");
     app.use(cors()); //Will remove once we deploy
 }

@@ -5,8 +5,8 @@
     "main": "server.js",
     "type": "module",
     "scripts": {
-        "dev": "nodemon server.js",
-        "prod": "node server.js",
+        "dev": "cross-env DEBUG=true nodemon server.js",
+        "prod": "cross-env DEBUG=false node server.js",
         "test": "echo \"Error: no test specified\" && exit 1"
     },
     "author": "",
@@ -16,6 +16,7 @@
         "chalk": "^5.4.1",
         "cookie-parser": "^1.4.7",
         "cors": "^2.8.5",
+        "cross-env": "^7.0.3",
         "dotenv": "^16.4.7",
         "express": "^4.21.2",
         "install": "^0.13.0",

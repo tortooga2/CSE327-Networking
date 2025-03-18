@@ -65,7 +65,7 @@ const auth = {
             });
         } else {
             //If not in debug mode, just return a 200 status code.
-            return res.status(200).send("OK");
+            return res.status(200).redirect("/app");
         }
     },
 

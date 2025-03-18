@@ -1,4 +1,4 @@
-import { Data } from "./module.db.js";
+import { Data, sequelize } from "./module.db.js";
 import { debugMessage, debugError } from "./module.debugHelpers.js";
 
 const getAllUserData = async (req, res) => {
@@ -52,16 +52,22 @@ const testCreateUserData = async (req, res) => {
 const createUserData = async (req, res) => {
     const profile_id = req.profile_id;
     const { data } = req.body;
+    const transaction = await sequelize.transaction(); //Start transaction with database
 
     try {
-        const newData = await Data.create({
-            ...data,
-            owner_id: profile_id,
-        });
+        const newData = await Data.create(
+            {
+                ...data,
+                owner_id: profile_id,
+            },
+            { transaction: transaction }
+        );
 
+        await transaction.commit(); //Commit transaction 
         debugMessage(newData);
         res.status(200).send({ data: newData });
     } catch (err) {
+        await transaction.rollback(); //Rollback the transaction since error was thrown
         debugError(err);
         res.status(500).send("Internal Server Error");
     }
@@ -71,17 +77,20 @@ const createUserData = async (req, res) => {
 const deleteFileById = async (req, res) => {
     const profile_id = req.profile_id;
     const id = req.params.id;
+    const transaction = await sequelize.transaction(); //Start transaction with database
 
     try {
-        //If deletedFile == 0, no file was deleted
-        const deletedFile = await Data.destroy({
-            where: {
-                id: id,
-                owner_id: profile_id,
+        const deletedFile = await Data.destroy(
+            {
+                where: {
+                    id: id,
+                    owner_id: profile_id,
+                },
             },
-        });
+            { transaction: transaction}
+        );
 
-        //Check if anything was deleted
+        //If deletedFile == 0, no file was deleted
         if (deletedFile == 0) {
             res.status(404).json({
                 message: "File not found",
@@ -89,8 +98,10 @@ const deleteFileById = async (req, res) => {
             return; //Chase lemme know if this is bad practice. I put this to stop it from executing more code.
         }
 
+        await transaction.commit(); //Commit transaction 
         res.status(204).send();
     } catch (err) {
+        await transaction.rollback(); //Rollback the transaction since error was thrown
         debugError(err);
         res.status(500).json({
             message: "Internal server error",

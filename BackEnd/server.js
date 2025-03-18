@@ -7,6 +7,7 @@ import dotenv from "dotenv";
 //Import the router from the module
 import authRouter from "./Routes/routes.auth.js";
 import userDataRouter from "./Routes/routes.userData.js";
+import fileDataRouter from "./Routes/routes.fileData.js";
 import { sequelize, SyncDB } from "./Modules/module.db.js";
 
 dotenv.config();
@@ -36,6 +37,7 @@ if (process.env.DEBUG) {
 //Example:
 app.use("/api/auth", authRouter);
 app.use("/api/userData", userDataRouter);
+app.use("/api/file", fileDataRouter);
 
 //_____________________________________________________________________________________
 

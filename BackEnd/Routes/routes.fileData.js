@@ -11,12 +11,6 @@ const fileDataRouter = Router();
 
 fileDataRouter.use(auth.Verify);
 fileDataRouter.delete("/delete/:id", deleteFileById);
-
-
-
-
-
-fileDataRouter.use(auth.Verify);
 fileDataRouter.get("/all", getAllUserData);
 fileDataRouter.post("/create", createUserData);
 

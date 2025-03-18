@@ -67,8 +67,6 @@ const createUserData = async (req, res) => {
     }
 };
 
-export { getAllUserData, createUserData, testCreateUserData };
-
 //Delete file by ID
 const deleteFileById = async (req, res) => {
     const profile_id = req.profile_id;
@@ -100,4 +98,4 @@ const deleteFileById = async (req, res) => {
     }
 };
 
-export { deleteFileById };
+export { getAllUserData, createUserData, testCreateUserData, deleteFileById };

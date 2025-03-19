@@ -11,7 +11,7 @@ const schema = {
             description: "Get the schema of the API",
             header: {
                 "Content-Type": "application/json",
-                credentials: "include",
+                credentials: "same-origin",
             },
         },
     },
@@ -36,6 +36,15 @@ const schema = {
             body: {
                 email: "string",
                 password: "string",
+            },
+        },
+    },
+    "/auth/logout": {
+        POST: {
+            description: "Logout of the API",
+            header: {
+                "Content-Type": "application/json",
+                credientials: "same-origin",
             },
         },
     },

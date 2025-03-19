@@ -118,6 +118,14 @@ const API = {
             const Methods = Object.keys(API.Schema[Endpoint]);
             newRequest.possibleMethods = Methods;
             newRequest.Method = Methods[0];
+            newRequest.Headers = API.Schema[Endpoint][Methods[0]].header;
+            newRequest.hasParameters = API.Schema[Endpoint][Methods[0]]
+                .parameters
+                ? true
+                : false;
+            newRequest.hasBody = API.Schema[Endpoint][Methods[0]].body
+                ? true
+                : false;
             return newRequest;
         },
 
@@ -183,12 +191,40 @@ const API = {
         },
 
         async Send() {
+            if (!this.Endpoint) {
+                throw new Error("Endpoint not set");
+            }
+            if (!this.Method) {
+                throw new Error("Method not set");
+            }
+            if (!this.Headers) {
+                throw new Error("Headers not set");
+            }
+            if (this.hasBody && !this.Body) {
+                throw new Error(
+                    "This request requires a body, however none was set"
+                );
+            }
+            if (this.hasParameters && !this.Parameters) {
+                throw new Error("Parameters not set");
+            }
+
             const response = await (async () => {
+                if (this.hasParameters) {
+                    this.Endpoint = this.Endpoint + "?";
+                    const keys = Object.keys(this.Parameters);
+                    for (let key of keys) {
+                        this.Endpoint =
+                            this.Endpoint + `${key}=${this.Parameters[key]}&`;
+                    }
+                    this.Endpoint = this.Endpoint.slice(0, -1);
+                }
+
                 try {
                     return await fetch(API.baseURL + this.Endpoint, {
                         method: this.Method,
                         headers: this.Headers,
-                        body: JSON.stringify(this.Body),
+                        body: this.hasBody ? JSON.stringify(this.Body) : null,
                     });
                 } catch (error) {
                     throw new Error("Failed to send request", error);
@@ -212,12 +248,12 @@ async function test() {
     console.log(API.Schema);
     console.log(API.EndPoints);
 
-    const staticRequest = API.Request.New("login").SetMethod("POST").SetBody({
+    const newRequest = API.Request.New("login").SetBody({
         email: "Aniya9@yahoo.com",
         password: "TSUPNGMglBGCTld",
     });
-    staticRequest.Print();
-    const data = await staticRequest.Send();
+    newRequest.Print();
+    const data = await newRequest.Send();
     console.log(data);
 }
 

@@ -36,7 +36,13 @@ const API = {
         }
 
         try {
-            API.Schema = await response.json();
+            const data = await response.json();
+
+            if (data.error) {
+                throw new Error(data.error);
+            }
+
+            API.Schema = data;
         } catch (error) {
             throw new Error("Failed to parse the schema", error);
         }

@@ -5,9 +5,10 @@ import cookieParser from "cookie-parser";
 import dotenv from "dotenv";
 
 //Import the router from the module
+import { sequelize, SyncDB } from "./Modules/Database/module.db.js";
 import authRouter from "./Routes/routes.auth.js";
 import fileDataRouter from "./Routes/routes.fileData.js";
-import { sequelize, SyncDB } from "./Modules/module.db.js";
+import schemaRouter from "./Routes/routes.schema.js";
 
 import { DEBUG } from "./Modules/module.debugHelpers.js";
 
@@ -38,6 +39,7 @@ if (DEBUG) {
 //Example:
 app.use("/api/auth", authRouter);
 app.use("/api/file", fileDataRouter);
+app.use("/api", schemaRouter);
 
 //_____________________________________________________________________________________
 

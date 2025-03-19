@@ -1,8 +1,8 @@
 import dotenv from "dotenv";
 import chalk from "chalk";
 import { Sequelize } from "sequelize";
-import { createUsersTable } from "../Models/model.users.js";
-import { createDataTable } from "../Models/model.data.js";
+import { createUsersTable } from "../../Models/model.users.js";
+import { createDataTable } from "../../Models/model.data.js";
 import { initAssoc } from "./module.initAssoc.js";
 dotenv.config();
 

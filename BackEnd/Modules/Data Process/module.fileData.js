@@ -1,5 +1,5 @@
-import { Data, sequelize } from "./module.db.js";
-import { debugMessage, debugError } from "./module.debugHelpers.js";
+import { Data, sequelize } from "../Database/module.db.js";
+import { debugMessage, debugError } from "../module.debugHelpers.js";
 
 const getAllUserData = async (req, res) => {
     const profile_id = req.profile_id;
@@ -63,7 +63,7 @@ const createUserData = async (req, res) => {
             { transaction: transaction }
         );
 
-        await transaction.commit(); //Commit transaction 
+        await transaction.commit(); //Commit transaction
         debugMessage(newData);
         res.status(200).send({ data: newData });
     } catch (err) {
@@ -87,7 +87,7 @@ const deleteFileById = async (req, res) => {
                     owner_id: profile_id,
                 },
             },
-            { transaction: transaction}
+            { transaction: transaction }
         );
 
         //If deletedFile == 0, no file was deleted
@@ -98,7 +98,7 @@ const deleteFileById = async (req, res) => {
             return; //Chase lemme know if this is bad practice. I put this to stop it from executing more code.
         }
 
-        await transaction.commit(); //Commit transaction 
+        await transaction.commit(); //Commit transaction
         res.status(204).send();
     } catch (err) {
         await transaction.rollback(); //Rollback the transaction since error was thrown

@@ -19,8 +19,6 @@ const sequelize = new Sequelize(
 const Users = createUsersTable(sequelize);
 const Data = createDataTable(sequelize);
 
-//initAssoc({ Users, Data });
-
 const SyncDB = async () => {
     //Test connection
     try {

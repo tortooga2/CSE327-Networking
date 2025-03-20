@@ -2,7 +2,7 @@ import { DataTypes } from "sequelize";
 
 //Creates the Data table in the DB
 export const createDataTable = (sequelize) => {
-    return sequelize.define("data", {
+    return sequelize.define("file_ledger", {
         id: {
             type: DataTypes.BIGINT,
             allowNull: false,

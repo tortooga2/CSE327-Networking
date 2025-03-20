@@ -1,0 +1,32 @@
+#file-menu {
+    position: fixed;
+    top: 9px;
+    right: 9px;
+    cursor: pointer;
+}
+
+#file-upload-container {
+    display: none;
+    position: fixed;
+    top: 50px;
+    right: 9px;
+    background-color: #f0f0f0;
+    padding: 9px;
+    border: 1px solid #ccc;
+}
+
+#notes-container {
+    margin: 20px;
+}
+
+.note {
+    border: 1px solid #ddd;
+    padding: 9px;
+    margin-bottom: 9px;
+}
+
+.file-item {
+    border: 1px solid #ddd;
+    padding: 9px;
+    margin-bottom: 9px;
+}

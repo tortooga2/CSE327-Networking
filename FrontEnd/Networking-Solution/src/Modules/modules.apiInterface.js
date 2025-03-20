@@ -9,21 +9,25 @@ const API = {
 
     EndpointEnum: null,
 
-    Connect: async (baseURL, email, password) => {
+    Connect: async (baseURL, email, password, loginCallBack) => {
         UserStateManager.clearUser();
         const data = await UserStateManager.Login(baseURL, email, password);
+        if (loginCallBack)
+            loginCallBack({ ok: data.error ? false : true, error: data.error });
         UserStateManager.setUser("Logged in");
 
         const response = await (async () => {
             //DEBUGGING ONLY
-            let header = {
+
+            console.log("Session Token: ", data.user.session_token);
+            const header = {
                 "Content-Type": "application/json",
-                Cookie: `sessionToken=${data.user.session_token}`,
             };
 
             try {
-                return await fetch(baseURL + "/schema/", {
+                return await fetch(baseURL + "/schema", {
                     method: "GET",
+                    credentials: "include",
                     headers: header,
                 });
             } catch (error) {
@@ -37,6 +41,7 @@ const API = {
 
         try {
             const data = await response.json();
+            console.log(data);
 
             if (data.error) {
                 throw new Error(data.error);
@@ -44,6 +49,7 @@ const API = {
 
             API.Schema = data;
         } catch (error) {
+            console.log(error);
             throw new Error("Failed to parse the schema", error);
         }
 
@@ -59,11 +65,15 @@ const API = {
         API.UserManager.Login(email, password);
     },
 
-    Signup: async (email, password) => {
+    Signup: async (baseURL, email, password, callback) => {
         if (!API.UserManager) {
             throw new Error("UserManager not set");
         }
-        API.UserManager.Signup(email, password);
+        const data = await API.UserManager.Signup(baseURL, email, password);
+        if (!data.error) {
+            API.UserManager.setUser("Logged in");
+        }
+        callback({ ok: data.error ? false : true, error: data.error });
     },
 
     SetUserManager: (UserManager) => {

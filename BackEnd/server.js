@@ -31,7 +31,12 @@ app.use(express.json());
 
 if (DEBUG) {
     console.log("CORS enabled");
-    app.use(cors()); //Will remove once we deploy
+    app.use(
+        cors({
+            origin: "http://localhost:5173",
+            credentials: true,
+        })
+    ); //Will remove once we deploy
 }
 
 //_____________________________________________________________________________________

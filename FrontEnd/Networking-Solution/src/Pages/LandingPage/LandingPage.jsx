@@ -1,8 +1,16 @@
 import "./LandingPage.css";
 
+import { useState } from "react";
+
 import Button from "../../Components/Button";
 
+import LoginWindow from "../../Components/LoginDialog/LoginWindow";
+import SignupWindow from "../../Components/SingupDialog/SignupDialog";
+
 function LandingPage() {
+    const [showLogin, setShowLogin] = useState(false);
+    const [showSignUp, setShowSignUp] = useState(false);
+
     console.log("Landing Page");
     return (
         <>
@@ -26,9 +34,39 @@ function LandingPage() {
                     gap: "1rem",
                 }}
             >
-                <Button>Login</Button>
-                <Button>Sign Up</Button>
+                <Button
+                    onClick={() => {
+                        setShowLogin(!showLogin);
+                        setShowSignUp(false);
+                    }}
+                >
+                    Login
+                </Button>
+                <Button
+                    onClick={() => {
+                        setShowSignUp(!showSignUp);
+                        setShowLogin(false);
+                    }}
+                >
+                    Sign Up
+                </Button>
             </div>
+
+            {showLogin && (
+                <LoginWindow
+                    setState={(state) => {
+                        setShowLogin(state);
+                    }}
+                />
+            )}
+
+            {showSignUp && (
+                <SignupWindow
+                    setState={(state) => {
+                        setShowSignUp(state);
+                    }}
+                />
+            )}
 
             <div
                 style={{

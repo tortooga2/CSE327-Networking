@@ -52,7 +52,7 @@ const auth = {
             httpOnly: true,
         });
         //If in debug mode, return the user object with the session token so that it can be used for testing.
-        console.log(process.env.DEBUG);
+
         if (DEBUG) {
             return res.status(200).json({
                 user: {
@@ -64,7 +64,9 @@ const auth = {
             });
         } else {
             //If not in debug mode, just return a 200 status code.
-            return res.status(200).redirect("/app");
+            return res
+                .status(200)
+                .json({ message: "Logged in", redirect: "/app" });
         }
     },
 
@@ -112,8 +114,13 @@ const auth = {
             });
             debugMessage(user);
         } catch (error) {
+            if (error.errors[0].message === "email must be unique") {
+                res.status(409).json({ error: "Email already exists" });
+                return;
+            }
             res.status(500).json({ error: "Internal server error" });
-            throw error;
+            console.log(error);
+            return;
         }
 
         //Generate a session token and send to the user
@@ -205,15 +212,18 @@ const auth = {
     Verify: async (req, res, next) => {
         //get session token from cookie (UUID).
         const sessionToken = req.cookies.sessionToken;
+
         if (!sessionToken) {
-            return res.redirect("/"); //Redirect to login page
+            return res
+                .status(200)
+                .json({ error: "Could not find sessionToken" }); //Redirect to login page
         }
 
         try {
             //Get profile_id from session token (UUID).
             var profile_id = await auth.sessionDB.get(sessionToken);
             if (!profile_id) {
-                res.redirect("/"); //Redirect to login page
+                res.status(200).json({ error: "could not find profile id" }); //Redirect to login page
                 return;
             }
         } catch (error) {

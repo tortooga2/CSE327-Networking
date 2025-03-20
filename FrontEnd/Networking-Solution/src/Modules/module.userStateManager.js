@@ -36,7 +36,7 @@ const UserStateManager = {
         }
         const data = await response.json();
         UserStateManager.setUser("Logged in");
-        console.log("User Logged in a returned: ", data);
+        console.log("User Logged in and returned: ", data);
         return data;
     },
     Signup: async (baseURL, email, password) => {

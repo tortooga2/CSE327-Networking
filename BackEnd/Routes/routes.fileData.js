@@ -12,7 +12,7 @@ const fileDataRouter = Router();
 
 fileDataRouter.use(auth.Verify);
 fileDataRouter.delete("/delete/:id", deleteFileById);
-fileDataRouter.get("/recieve/:profile_id/:id", sendFileById);
+fileDataRouter.get("/recieve/:id", sendFileById);
 fileDataRouter.get("/all", getAllUserData);
 fileDataRouter.post("/create", createUserData);
 

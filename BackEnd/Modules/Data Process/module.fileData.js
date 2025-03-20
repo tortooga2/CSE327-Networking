@@ -109,7 +109,7 @@ const deleteFileById = async (req, res) => {
     }
 };
 
-//Should send the file back to the client when provided the ID
+//Should send the file back to the client when given proper file ID
 const sendFileById = async (req, res) => {
     try {
         const file = await Data.findAll(
@@ -118,10 +118,15 @@ const sendFileById = async (req, res) => {
             },
         );
 
+        if (file[0] == null) {
+            res.status(404).send("File not found");
+            return;
+        };
+
         if (file[0].owner_id != req.profile_id) {
             res.status(403).send("The client does not have access rights to the content");
             return;
-        }
+        };
         
         res.status(200).send({ file: file});
 

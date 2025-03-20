@@ -110,7 +110,7 @@ const deleteFileById = async (req, res) => {
 };
 
 //Should send the file back to the client when given proper file ID
-const sendFileById = async (req, res) => {
+const getFileById = async (req, res) => {
     try {
         const file = await Data.findAll(
             {
@@ -136,4 +136,4 @@ const sendFileById = async (req, res) => {
     }
 };
 
-export { getAllUserData, createUserData, testCreateUserData, deleteFileById, sendFileById };
+export { getAllUserData, createUserData, testCreateUserData, deleteFileById, getFileById };

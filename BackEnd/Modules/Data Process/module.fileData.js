@@ -75,37 +75,29 @@ const createUserData = async (req, res) => {
 
 //Delete file by ID
 const deleteFileById = async (req, res) => {
-    const profile_id = req.profile_id;
-    const id = req.params.id;
     const transaction = await sequelize.transaction(); //Start transaction with database
 
     try {
-        const deletedFile = await Data.destroy(
-            {
-                where: {
-                    id: id,
-                    owner_id: profile_id,
-                },
-            },
-            { transaction: transaction }
-        );
+        const file = await Data.findByPk(req.params.id);
 
-        //If deletedFile == 0, no file was deleted
-        if (deletedFile == 0) {
-            res.status(404).json({
-                message: "File not found",
-            });
-            return; //Chase lemme know if this is bad practice. I put this to stop it from executing more code.
+        if (file === null) {
+            res.status(404).send("File not found");
+            return;
         }
+
+        if (file.owner_id != req.profile_id) {
+            res.status(403).send("The client does not have access rights to the content");
+            return;
+        }
+
+        await file.destroy({ transaction: transaction });
 
         await transaction.commit(); //Commit transaction
         res.status(204).send();
     } catch (err) {
         await transaction.rollback(); //Rollback the transaction since error was thrown
         debugError(err);
-        res.status(500).json({
-            message: "Internal server error",
-        });
+        res.status(500).send("Internal server error");
     }
 };
 

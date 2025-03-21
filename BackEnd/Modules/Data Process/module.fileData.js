@@ -118,6 +118,20 @@ const updateFileLedger = async (req, res) => {
             return;
         }
 
+        //Check the columns. We don't want to change ID, Owner_id, dateCreated, createdAt, updatedAt
+        const invalidColumn = ["id", "profile_id", "createdAt", "dateCreated"];
+        for (const key in changes) {
+            for (let i = 0; i < 2; i++) {
+                if (key === invalidColumn[i]) {
+                    res.status(400).json({
+                        "error": "Bad Request",
+                        "message": "Not allowed to change one of the columns"
+                    });
+                    return;
+                }
+            }
+        }
+
         await file.update(changes, {transaction: transaction});
 
         await transaction.commit(); //Commit transaction

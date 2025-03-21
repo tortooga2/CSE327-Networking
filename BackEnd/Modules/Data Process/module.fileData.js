@@ -109,12 +109,18 @@ const updateFileLedger = async (req, res) => {
         const file = await Data.findByPk(req.params.id);
         
         if (file === null) {
-            res.status(404).send("File not found");
+            res.status(404).json({
+                "error": "File not found",
+                "message": "File does not exist within the database"
+            });
             return;
         }
 
         if (file.owner_id != req.profile_id) {
-            res.status(403).send("The client does not have access rights to the content");
+            res.status(403).json({
+                "error": "Forbidden",
+                "message": "The client does not have access rights to the content"
+            });
             return;
         }
 
@@ -139,7 +145,10 @@ const updateFileLedger = async (req, res) => {
     } catch (err) {
         await transaction.rollback(); //Rollback the transaction since error was thrown
         debugError(err);
-        res.status(500).send("Internal server error");
+        res.status(500).json({
+            "error": "Internal server error",
+            "message": "Congratulations, you broke the code somehow :("
+        });
     }
 };
 

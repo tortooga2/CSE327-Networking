@@ -123,10 +123,10 @@ const updateFileLedger = async (req, res) => {
             return;
         }
 
-        //Check the columns. We don't want to change ID, Owner_id, dateCreated, createdAt, updatedAt
+        //Check the columns. We don't want to change ID, Owner_id, dateCreated, createdAt
         const invalidColumn = ["id", "profile_id", "createdAt", "dateCreated"];
         for (const key in req.body) {
-            for (let i = 0; i < 2; i++) {
+            for (let i = 0; i < 4; i++) {
                 if (key === invalidColumn[i]) {
                     res.status(400).json({
                         "error": "Bad Request",

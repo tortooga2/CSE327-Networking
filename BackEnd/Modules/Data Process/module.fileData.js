@@ -101,4 +101,32 @@ const deleteFileById = async (req, res) => {
     }
 };
 
-export { getAllUserData, createUserData, testCreateUserData, deleteFileById };
+const updateFileLedger = async (req, res) => {
+    const transaction = await sequelize.transaction();
+    const changes = req.body;
+
+    try {
+        const file = await Data.findByPk(req.params.id);
+        
+        if (file === null) {
+            res.status(404).send("File not found");
+            return;
+        }
+
+        if (file.owner_id != req.profile_id) {
+            res.status(403).send("The client does not have access rights to the content");
+            return;
+        }
+
+        await file.update(changes, {transaction: transaction});
+
+        await transaction.commit(); //Commit transaction
+        res.status(200).send({ file: file});
+    } catch (err) {
+        await transaction.rollback(); //Rollback the transaction since error was thrown
+        debugError(err);
+        res.status(500).send("Internal server error");
+    }
+};
+
+export { getAllUserData, createUserData, testCreateUserData, deleteFileById, updateFileLedger };

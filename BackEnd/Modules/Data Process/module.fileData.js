@@ -103,7 +103,6 @@ const deleteFileById = async (req, res) => {
 
 const updateFileLedger = async (req, res) => {
     const transaction = await sequelize.transaction();
-    const changes = req.body;
 
     try {
         const file = await Data.findByPk(req.params.id);
@@ -126,7 +125,7 @@ const updateFileLedger = async (req, res) => {
 
         //Check the columns. We don't want to change ID, Owner_id, dateCreated, createdAt, updatedAt
         const invalidColumn = ["id", "profile_id", "createdAt", "dateCreated"];
-        for (const key in changes) {
+        for (const key in req.body) {
             for (let i = 0; i < 2; i++) {
                 if (key === invalidColumn[i]) {
                     res.status(400).json({
@@ -138,7 +137,7 @@ const updateFileLedger = async (req, res) => {
             }
         }
 
-        await file.update(changes, {transaction: transaction});
+        await file.update(req.body, {transaction: transaction});
 
         await transaction.commit(); //Commit transaction
         res.status(200).send({ file: file});

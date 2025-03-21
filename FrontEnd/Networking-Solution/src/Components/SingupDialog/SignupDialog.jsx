@@ -1,10 +1,11 @@
 import { useState, useEffect, useRef } from "react";
-import API from "../../Modules/modules.apiInterface.js";
+import { useNavigate } from "react-router-dom";
 
 import Button from "../Button";
 
 const SignupWindow = ({ setState }) => {
     const formRef = useRef(null);
+    const navigate = useNavigate();
 
     const [style, setStyle] = useState({
         position: "absolute",
@@ -53,18 +54,35 @@ const SignupWindow = ({ setState }) => {
             const email = e.target[0].value;
             const password = e.target[1].value;
 
-            await API.Signup(
-                "http://localhost:3000/api",
-                email,
-                password,
-                (res) => {
-                    if (res.ok) {
-                        window.open("/app", "_self");
-                    }
+            const response = await fetch(
+                "http://localhost:3000/api/auth/signup",
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({ email, password }),
+                    credentials: "include",
                 }
             );
+
+            const data = (async () => {
+                try {
+                    const data = await response.json();
+                    return data;
+                } catch (error) {
+                    console.error("Error signing up:", error);
+                }
+            })();
+
+            if (data.error) {
+                console.error(data.error);
+                return;
+            }
+            console.log(data);
+            navigate("/app");
         });
-    }, []);
+    }, [navigate]);
 
     return (
         <div style={style}>

@@ -1,12 +1,14 @@
 import { useState, useEffect, useRef } from "react";
-import API from "../../Modules/modules.apiInterface.js";
+import { useNavigate } from "react-router-dom";
 
 import Button from "../Button";
 
 const LoginWindow = ({ setState }) => {
     const formRef = useRef(null);
 
-    const [style, setStyle] = useState({
+    const navigate = useNavigate();
+
+    const [style] = useState({
         position: "absolute",
         top: "50%",
         left: "50%",
@@ -21,20 +23,20 @@ const LoginWindow = ({ setState }) => {
         justifyContent: "left",
     });
 
-    const [formStyle, setFormStyle] = useState({
+    const [formStyle] = useState({
         display: "flex",
         flexDirection: "column",
         gap: "1rem",
     });
 
-    const [inputStyle, setInputStyle] = useState({
+    const [inputStyle] = useState({
         padding: "0.5rem",
         borderRadius: "5px",
         border: "1px solid var(--secondary-color)",
         minWidth: "300px",
     });
 
-    const [closeStyle, setCloseStyle] = useState({
+    const [closeStyle] = useState({
         position: "absolute",
         top: "0",
         right: "0",
@@ -53,18 +55,33 @@ const LoginWindow = ({ setState }) => {
             const email = e.target[0].value;
             const password = e.target[1].value;
 
-            await API.Connect(
-                "http://localhost:3000/api",
-                email,
-                password,
-                (res) => {
-                    if (res.ok) {
-                        window.open("/app", "_self");
+            // In LoginWindow.jsx
+            try {
+                const response = await fetch(
+                    "http://localhost:3000/api/auth/login",
+                    {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify({
+                            email,
+                            password,
+                        }),
                     }
+                );
+                const data = await response.json();
+                if (data.error) {
+                    console.error(data.error);
+                    return;
                 }
-            );
+                console.log(data);
+                navigate("/app");
+            } catch (err) {
+                console.error(err);
+            }
         });
-    }, []);
+    }, [formRef, navigate]);
 
     return (
         <div style={style}>

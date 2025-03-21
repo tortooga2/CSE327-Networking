@@ -5,6 +5,6 @@ const authRouter = Router();
 authRouter.post("/signup", api.Signup);
 authRouter.post("/login", api.Login);
 authRouter.post("/logout", api.Logout);
-authRouter.post("/testverify", api.TestVerify);
+authRouter.get("/verify", api.TestVerify);
 
 export default authRouter;

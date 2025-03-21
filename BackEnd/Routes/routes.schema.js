@@ -42,9 +42,29 @@ const schema = {
     "/auth/logout": {
         POST: {
             description: "Logout of the API",
+            credientials: "include",
             header: {
                 "Content-Type": "application/json",
-                credientials: "same-origin",
+            },
+        },
+    },
+
+    "/auth/verify": {
+        GET: {
+            description: "Verify the user",
+            credientials: "include",
+            header: {
+                "Content-Type": "application/json",
+            },
+        },
+    },
+
+    "/file/all": {
+        GET: {
+            description: "Get all the files",
+            credientials: "include",
+            header: {
+                "Content-Type": "application/json",
             },
         },
     },

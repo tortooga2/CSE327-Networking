@@ -30,13 +30,16 @@ app.use(cookieParser());
 app.use(express.json());
 
 if (DEBUG) {
-    console.log("CORS enabled");
     app.use(
         cors({
-            origin: "http://localhost:5173",
+            origin: "http://localhost:5173", // Replace with your frontend URL
             credentials: true,
+            methods: ["GET", "POST", "PUT", "DELETE"],
+            allowedHeaders: ["Content-Type", "Authorization", "Cookie"],
         })
     ); //Will remove once we deploy
+    console.log("CORS enabled");
+    app.options("*", cors());
 }
 
 //_____________________________________________________________________________________

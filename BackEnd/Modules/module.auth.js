@@ -47,14 +47,24 @@ const auth = {
             return res.status(500).json({ error: "Internal server error" });
         }
         //Set the session token as a cookie.
+
         res.cookie("sessionToken", sessionToken, {
-            maxAge: Number(process.env.TOKEN_EXP) * 1000 * 1000,
+            maxAge: Number(process.env.TOKEN_EXP) * 1000,
             httpOnly: true,
+            sameSite: "none", // Must be "none" for cross-origin
+            secure: true, // Must be true when sameSite is "none"
+            path: "/", // Apply to all paths
         });
+
+        // Add debug logging
+        console.log(
+            "Set-Cookie header after setting:",
+            res.getHeader("Set-Cookie")
+        );
         //If in debug mode, return the user object with the session token so that it can be used for testing.
 
         if (DEBUG) {
-            return res.status(200).json({
+            res.status(200).json({
                 user: {
                     profile_id: user.profile_id,
                     email: user.email,
@@ -64,9 +74,7 @@ const auth = {
             });
         } else {
             //If not in debug mode, just return a 200 status code.
-            return res
-                .status(200)
-                .json({ message: "Logged in", redirect: "/app" });
+            res.status(200).json({ message: "Logged in", redirect: "/app" });
         }
     },
 
@@ -203,16 +211,19 @@ const auth = {
     TestVerify: async (req, res) => {
         const token = req.cookies.sessionToken;
         if (!token) {
-            return res.status(400).json({ error: "Missing session token" });
+            return res.status(200).json({ error: "Missing session token" });
         }
-        auth.Verify(req, res, () => {});
+        return auth.Verify(req, res, () => {
+            return res.status(200).json({ message: "Session token is valid" });
+        });
     },
 
     //Middle ware to verify session token. Used for all routes other than login and signup.
     Verify: async (req, res, next) => {
         //get session token from cookie (UUID).
+        console.log(req.cookies);
         const sessionToken = req.cookies.sessionToken;
-
+        console.log("Received session token: ", sessionToken);
         if (!sessionToken) {
             return res
                 .status(200)
@@ -226,6 +237,7 @@ const auth = {
                 res.status(200).json({ error: "could not find profile id" }); //Redirect to login page
                 return;
             }
+            console.log("Profile ID: ", profile_id);
         } catch (error) {
             debugError(error);
             return res.status(500).json({ error: "Internal server error" });

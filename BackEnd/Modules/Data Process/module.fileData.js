@@ -2,6 +2,7 @@ import { Data, sequelize } from "../Database/module.db.js";
 import { debugMessage, debugError } from "../module.debugHelpers.js";
 
 const getAllUserData = async (req, res) => {
+    console.log("Get all user data");
     const profile_id = req.profile_id;
     try {
         const data = await Data.findAll({

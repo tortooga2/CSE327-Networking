@@ -6,7 +6,7 @@
     "type": "module",
     "scripts": {
         "dev": "cross-env DEBUG=true nodemon server.js",
-        "prod": "cross-env DEBUG=false node server.js",
+        "prod": "cross-env DEBUG=true node server.js",
         "test": "echo \"Error: no test specified\" && exit 1"
     },
     "author": "",

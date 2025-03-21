@@ -5,7 +5,7 @@
     "scripts": {
         "setup": "concurrently \"cd FrontEnd/Networking-Solution && npm install\" \"cd BackEnd && npm install\"",
         "dev": "cross-env DEBUG=true concurrently \"cd FrontEnd/Networking-Solution && npm run dev\" \"cd BackEnd && npm run dev\"",
-        "prod": "cross-env DEBUG=false concurrently   \"cd FrontEnd/Networking-Solution && npm run build\" \"cd BackEnd && npm run prod\"",
+        "prod": "cross-env DEBUG=true concurrently   \"cd FrontEnd/Networking-Solution && npm run build\" \"cd BackEnd && npm run prod\"",
         "test": "echo \"Error: no test specified\" && exit 1"
     },
     "keywords": [],

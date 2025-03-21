@@ -1,6 +1,7 @@
 import "./LandingPage.css";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 import Button from "../../Components/Button";
 
@@ -10,6 +11,30 @@ import SignupWindow from "../../Components/SingupDialog/SignupDialog";
 function LandingPage() {
     const [showLogin, setShowLogin] = useState(false);
     const [showSignUp, setShowSignUp] = useState(false);
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        fetch("http://localhost:3000/api/auth/verify", {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            credentials: "include",
+        })
+            .then((response) => {
+                response.json().then((data) => {
+                    if (data.error) {
+                        console.error(data.error);
+                        return;
+                    } else {
+                        navigate("/app");
+                    }
+                });
+            })
+            .catch((error) => {
+                console.error("Error verifying user:", error);
+            });
+    }, [navigate]);
 
     console.log("Landing Page");
     return (

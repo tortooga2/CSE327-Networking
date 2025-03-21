@@ -1,5 +1,11 @@
-import react, { useState, useRef } from "react";
+import { useState, useRef, useEffect, use } from "react";
+
 import "./MainApp.css";
+
+import FileViewer from "../../Components/Fileviewer/Fileviewer.jsx";
+
+import Dashboard from "../../Components/Dashboard.jsx";
+import Sidebar from "../../Components/Sidebar.jsx";
 
 const MainApp = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -8,6 +14,15 @@ const MainApp = () => {
     const [newNote, setNewNote] = useState("");
 
     const fileInputRef = useRef(null);
+
+    useEffect(() => {
+        console.log("MainApp mounted");
+
+        return () => {
+            console.log("MainApp unmounted");
+        };
+    }, []);
+
     const openDialog = () => {
         if (fileInputRef.current) {
             fileInputRef.current.click();
@@ -26,7 +41,7 @@ const MainApp = () => {
             console.log("Click here to upload file:", file);
         }
     };
-    
+
     const handleNoteChange = (event) => {
         setNewNote(event.target.value);
     };
@@ -40,58 +55,65 @@ const MainApp = () => {
 
     return (
         <>
-        <header>
-            <h1>MainApp</h1>
-            <p>This is where our main app will go!</p>
-        </header>
-            <h2> Here is the place to upload your files!</h2>
+            {/* <h2> Here is the place to upload your files!</h2>
             <input
-            ref = {fileInputRef}
-            id="fileid"
-            type="file"
-            hidden
-            onChange={handleFileChange}
+                ref={fileInputRef}
+                id="fileid"
+                type="file"
+                hidden
+                onChange={handleFileChange}
             />
 
-            <input id = "buttonid" type="button" value="Upload MB" onClick = {openDialog} />
+            <input
+                id="buttonid"
+                type="button"
+                value="Upload MB"
+                onClick={openDialog}
+            />
 
             <div id="file-menu" onClick={handleMenuClick}>
                 ☰
             </div>
 
-            <div 
-            id = "file-upload-container"
-            style = {{ display: isMenuOpen ? "block" : "none" }}
+            <div
+                id="file-upload-container"
+                style={{ display: isMenuOpen ? "block" : "none" }}
             >
-                <input type = "file" id = "file-upload" onChange = {handleFileChange} />
+                <input
+                    type="file"
+                    id="file-upload"
+                    onChange={handleFileChange}
+                />
             </div>
 
-            <div id = "notes-container">
+            <div id="notes-container">
                 <h2> Here are the Notes and Files</h2>
                 <textarea
-                    id = "new-note"
-                    placeholder = "Enter your note here"
-                    value = {newNote}
-                    onChange = {handleNoteChange}
+                    id="new-note"
+                    placeholder="Enter your note here"
+                    value={newNote}
+                    onChange={handleNoteChange}
                 />
-                <button onClick = {handleAddNote}>Add Note</button>
-
+                <button onClick={handleAddNote}>Add Note</button> */}
+            <Dashboard />
+            <div
+                style={{
+                    display: "flex",
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                    position: "relative",
+                    height: "calc(100vh - 3rem)",
+                    width: "100%",
+                }}
+            >
                 <div>
-                    {files.map((file, index) => (
-                        <div key={index} className="file-item">
-                            {`File: ${file.name}, Type: ${file.type}, Size: ${file.size} bytes`}
-                            </div>
-                    ))}
+                    <Sidebar />
                 </div>
-
-                <div>
-                    {notes.map((note, index) => (
-                        <div key ={index} className = "note">
-                            {note}
-                        </div>
-                    ))}
+                <div style={{ flex: 1, overflowY: "auto", height: "100%" }}>
+                    <FileViewer />
                 </div>
             </div>
+            {/* </div> */}
         </>
     );
 };

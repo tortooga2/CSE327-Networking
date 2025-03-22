@@ -103,24 +103,30 @@ const deleteFileById = async (req, res) => {
 
 //Sends a file to another user by simply cloning the row
 const sendFileToOther = async (req, res) => {
-    try {
-        const otherUser = await Users.findByPk(req.params.other_id)
-        const originalFile = await Data.findByPk(req.params.file_id);
+    const transaction = await sequelize.transaction(); //Start transaction with database
 
-        if (!originalFile) {
+    try {
+        const otherUser = await Users.findByPk(req.params.other_id);
+        if (otherUser === null) {
+            return res.status(404).send("User not found");
+        }
+
+        const originalFile = await Data.findByPk(req.params.file_id);
+        if (originalFile === null) {
             return res.status(404).send("File not found");
         }
     
+        const { id, createdAt, updatedAt, ...fileData } = originalFile.toJSON(); //Destructure original file
         const sentFile = await Data.create({
-            ...originalFile.toJSON(),
-            id: undefined,
+            ...fileData,
             owner_id: otherUser.profile_id,
-            createdAt: undefined,
-            updatedAt: undefined
-        });
+        }, { transaction: transaction });
 
+        await transaction.commit(); //Commit transaction
         res.status(200).send({ sent: sentFile });
     } catch (err) {
+        await transaction.rollback(); //Rollback the transaction since error was thrown
+        debugError(err);
         res.status(500).send("Internal server error");
     }
 };

@@ -102,18 +102,36 @@ const deleteFileById = async (req, res) => {
 };
 
 //Sends a file to another user by simply cloning the row
-const sendFileToOther = async (req, res) => {
+const sendFileToUser = async (req, res) => {
     const transaction = await sequelize.transaction(); //Start transaction with database
 
     try {
         const otherUser = await Users.findByPk(req.params.other_id);
-        if (otherUser === null) {
-            return res.status(404).send("User not found");
+        if (otherUser === null) { //Check if the other user exists
+            return res.status(404).json({
+                error: "User not found",
+                message: "The user you're looking for may not exist"
+            }); 
+        }
+        if (otherUser.profile_id === req.profile_id) {
+            return res.status(400).json({
+                error: "Incorrect User id",
+                message: "You tried to send yourself a file"
+            });
         }
 
         const originalFile = await Data.findByPk(req.params.file_id);
-        if (originalFile === null) {
-            return res.status(404).send("File not found");
+        if (originalFile === null) { //Check if the file exists
+            return res.status(404).json({
+                error: "File not found",
+                message: "The file you want to send may not exist"
+            }); 
+        }
+        if (originalFile.owner_id != req.profile_id) { //Check to see if the owner of the file is the client
+            return res.status(403).json({
+                error: "Insufficient Permissions",
+                message: "You must be the owner of the file to send it",
+            });
         }
     
         const { id, createdAt, updatedAt, ...fileData } = originalFile.toJSON(); //Destructure original file
@@ -123,7 +141,7 @@ const sendFileToOther = async (req, res) => {
         }, { transaction: transaction });
 
         await transaction.commit(); //Commit transaction
-        res.status(200).send({ sent: sentFile });
+        res.status(201).send({ sent: sentFile });
     } catch (err) {
         await transaction.rollback(); //Rollback the transaction since error was thrown
         debugError(err);
@@ -131,4 +149,4 @@ const sendFileToOther = async (req, res) => {
     }
 };
 
-export { getAllUserData, createUserData, testCreateUserData, deleteFileById, sendFileToOther };
+export { getAllUserData, createUserData, testCreateUserData, deleteFileById, sendFileToUser };

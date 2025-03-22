@@ -5,7 +5,7 @@ import {
     createUserData,
     testCreateUserData,
     deleteFileById,
-    sendFileToOther,
+    sendFileToUser,
 } from "../Modules/Data Process/module.fileData.js";
 
 const fileDataRouter = Router();
@@ -14,7 +14,7 @@ fileDataRouter.use(auth.Verify);
 fileDataRouter.delete("/delete/:id", deleteFileById);
 fileDataRouter.get("/all", getAllUserData);
 fileDataRouter.post("/create", createUserData);
-fileDataRouter.post("/send/:other_id/:file_id", sendFileToOther);
+fileDataRouter.post("/send/:other_id/:file_id", sendFileToUser);
 
 // Test the creation of a user data
 fileDataRouter.post("/createtest", testCreateUserData);

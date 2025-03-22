@@ -29,11 +29,6 @@ export const createDataTable = (sequelize) => {
             values: ["jpg", "png", "pdf"], //Placeholder values
             allowNull: false,
         },
-        dateCreated: {
-            type: DataTypes.DATE,
-            allowNull: false,
-            defaultValue: DataTypes.NOW,
-        },
         metadata: {
             type: DataTypes.JSONB,
             allowNull: false,

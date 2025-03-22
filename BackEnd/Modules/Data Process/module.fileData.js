@@ -1,4 +1,4 @@
-import { Data, sequelize } from "../Database/module.db.js";
+import { Data, Users, sequelize } from "../Database/module.db.js";
 import { debugMessage, debugError } from "../module.debugHelpers.js";
 
 const getAllUserData = async (req, res) => {
@@ -101,4 +101,28 @@ const deleteFileById = async (req, res) => {
     }
 };
 
-export { getAllUserData, createUserData, testCreateUserData, deleteFileById };
+//Sends a file to another user by simply cloning the row
+const sendFileToOther = async (req, res) => {
+    try {
+        const otherUser = await Users.findByPk(req.params.other_id)
+        const originalFile = await Data.findByPk(req.params.file_id);
+
+        if (!originalFile) {
+            return res.status(404).send("File not found");
+        }
+    
+        const sentFile = await Data.create({
+            ...originalFile.toJSON(),
+            id: undefined,
+            owner_id: otherUser.profile_id,
+            createdAt: undefined,
+            updatedAt: undefined
+        });
+
+        res.status(200).send({ sent: sentFile });
+    } catch (err) {
+        res.status(500).send("Internal server error");
+    }
+};
+
+export { getAllUserData, createUserData, testCreateUserData, deleteFileById, sendFileToOther };

@@ -7,6 +7,7 @@ import {
     deleteFileById,
     updateFileLedger,
     getFileById,
+    sendFileToUser,
 } from "../Modules/Data Process/module.fileData.js";
 
 const fileDataRouter = Router();
@@ -16,6 +17,7 @@ fileDataRouter.delete("/delete/:id", deleteFileById);
 fileDataRouter.get("/recieve/:id", getFileById);
 fileDataRouter.get("/all", getAllUserData);
 fileDataRouter.post("/create", createUserData);
+fileDataRouter.post("/send/:other_id/:file_id", sendFileToUser);
 fileDataRouter.patch("/update/:id", updateFileLedger);
 
 // Test the creation of a user data

@@ -40,6 +40,7 @@ const testCreateUserData = async (req, res) => {
         const newData = await Data.create({
             ...GenerateData(),
             owner_id: profile_id,
+            creator_id: profile_id,
         });
         debugMessage(newData);
         res.status(200).send({ data: newData });
@@ -59,6 +60,7 @@ const createUserData = async (req, res) => {
             {
                 ...data,
                 owner_id: profile_id,
+                creator_id: profile_id
             },
             { transaction: transaction }
         );

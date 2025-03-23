@@ -101,4 +101,27 @@ const deleteFileById = async (req, res) => {
     }
 };
 
-export { getAllUserData, createUserData, testCreateUserData, deleteFileById };
+//Should send the file back to the client when given proper file ID
+const getFileById = async (req, res) => {
+    try {
+        const file = await Data.findByPk(req.params.id);
+
+        if (file === null) {
+            res.status(404).send("File not found");
+            return;
+        };
+
+        if (file.owner_id != req.profile_id) {
+            res.status(403).send("The client does not have access rights to the content");
+            return;
+        };
+        
+        res.status(200).send({ file: file});
+
+    } catch (err) {
+        debugError(err);
+        res.status(500).send("Internal Server Error");
+    }
+};
+
+export { getAllUserData, createUserData, testCreateUserData, deleteFileById, getFileById };

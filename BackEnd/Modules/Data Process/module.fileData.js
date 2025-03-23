@@ -101,6 +101,56 @@ const deleteFileById = async (req, res) => {
     }
 };
 
+const updateFileLedger = async (req, res) => {
+    const transaction = await sequelize.transaction();
+
+    try {
+        const file = await Data.findByPk(req.params.id);
+        
+        if (file === null) {
+            res.status(404).json({
+                "error": "File not found",
+                "message": "File does not exist within the database"
+            });
+            return;
+        }
+
+        if (file.owner_id != req.profile_id) {
+            res.status(403).json({
+                "error": "Forbidden",
+                "message": "The client does not have access rights to the content"
+            });
+            return;
+        }
+
+        //Check the columns. We don't want to change ID, Owner_id, dateCreated, createdAt
+        const invalidColumn = ["id", "profile_id", "createdAt", "dateCreated"];
+        for (const key in req.body) {
+            for (let i = 0; i < 4; i++) {
+                if (key === invalidColumn[i]) {
+                    res.status(400).json({
+                        "error": "Bad Request",
+                        "message": "Not allowed to change one of the columns"
+                    });
+                    return;
+                }
+            }
+        }
+
+        await file.update(req.body, {transaction: transaction});
+
+        await transaction.commit(); //Commit transaction
+        res.status(200).send({ file: file});
+    } catch (err) {
+        await transaction.rollback(); //Rollback the transaction since error was thrown
+        debugError(err);
+        res.status(500).json({
+            "error": "Internal server error",
+            "message": "Congratulations, you broke the code somehow :("
+        });
+    }
+};
+
 //Should send the file back to the client when given proper file ID
 const getFileById = async (req, res) => {
     try {
@@ -124,4 +174,4 @@ const getFileById = async (req, res) => {
     }
 };
 
-export { getAllUserData, createUserData, testCreateUserData, deleteFileById, getFileById };
+export { getAllUserData, createUserData, testCreateUserData, deleteFileById, updateFileLedger, getFileById };

@@ -1,7 +1,48 @@
+# Dependency directories
+node_modules/
+jspm_packages/
 
+# Build output
+Frontend/dist
+dist/
+build/
+out/
 
-node_modules
-
-# Logs
+# Environment variables
 .env
 .env.*
+!.env.example
+
+# Data directories
+data/
+redis/
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+
+# Cache directories
+.npm
+.eslintcache
+.stylelintcache
+.rpt2_cache/
+.rts2_cache_cjs/
+.rts2_cache_es/
+.rts2_cache_umd/
+
+# Editor directories and files
+.idea/
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+.DS_Store
+
+# Operating System Files
+Thumbs.db

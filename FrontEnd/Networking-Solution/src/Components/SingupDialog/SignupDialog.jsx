@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 
-import Button from "../Button";
+import Button from "../Button/Button";
 
 const SignupWindow = ({ setState }) => {
     const formRef = useRef(null);
@@ -54,33 +54,7 @@ const SignupWindow = ({ setState }) => {
             const email = e.target[0].value;
             const password = e.target[1].value;
 
-            const response = await fetch(
-                "http://localhost:3000/api/auth/signup",
-                {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({ email, password }),
-                    credentials: "include",
-                }
-            );
-
-            const data = (async () => {
-                try {
-                    const data = await response.json();
-                    return data;
-                } catch (error) {
-                    console.error("Error signing up:", error);
-                }
-            })();
-
-            if (data.error) {
-                console.error(data.error);
-                return;
-            }
-            console.log(data);
-            navigate("/app");
+            console.log("Signup with email:", email, "and password", password);
         });
     }, [navigate]);
 
@@ -94,9 +68,18 @@ const SignupWindow = ({ setState }) => {
                     type="password"
                     placeholder="Password"
                 />
-                <button style={{ maxWidth: "100px" }} type="submit">
-                    Login
-                </button>
+                <Button
+                    style={{
+                        maxWidth: "100px",
+                        paddingLeft: "0.5rem",
+                        paddingRight: "0.5rem",
+                    }}
+                    onClick={() => {
+                        formRef.current.dispatchEvent(new Event("submit"));
+                    }}
+                >
+                    Sign up
+                </Button>
             </form>
             <Button
                 style={closeStyle}

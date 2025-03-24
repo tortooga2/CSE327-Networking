@@ -1,12 +1,9 @@
 import { useState, useEffect, useRef } from "react";
-import { useNavigate } from "react-router-dom";
 
-import Button from "../Button";
+import Button from "../Button/Button";
 
 const LoginWindow = ({ setState }) => {
     const formRef = useRef(null);
-
-    const navigate = useNavigate();
 
     const [style] = useState({
         position: "absolute",
@@ -55,33 +52,9 @@ const LoginWindow = ({ setState }) => {
             const email = e.target[0].value;
             const password = e.target[1].value;
 
-            // In LoginWindow.jsx
-            try {
-                const response = await fetch(
-                    "http://localhost:3000/api/auth/login",
-                    {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json",
-                        },
-                        body: JSON.stringify({
-                            email,
-                            password,
-                        }),
-                    }
-                );
-                const data = await response.json();
-                if (data.error) {
-                    console.error(data.error);
-                    return;
-                }
-                console.log(data);
-                navigate("/app");
-            } catch (err) {
-                console.error(err);
-            }
+            console.log("Login with email:", email, "and password", password);
         });
-    }, [formRef, navigate]);
+    }, []);
 
     return (
         <div style={style}>
@@ -93,9 +66,14 @@ const LoginWindow = ({ setState }) => {
                     type="password"
                     placeholder="Password"
                 />
-                <button style={{ maxWidth: "100px" }} type="submit">
+                <Button
+                    style={{ maxWidth: "100px" }}
+                    onClick={() => {
+                        formRef.current.dispatchEvent(new Event("submit"));
+                    }}
+                >
                     Login
-                </button>
+                </Button>
             </form>
             <Button
                 style={closeStyle}

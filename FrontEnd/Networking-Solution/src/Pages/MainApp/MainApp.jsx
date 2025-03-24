@@ -15,14 +15,6 @@ const MainApp = () => {
 
     const fileInputRef = useRef(null);
 
-    useEffect(() => {
-        console.log("MainApp mounted");
-
-        return () => {
-            console.log("MainApp unmounted");
-        };
-    }, []);
-
     const openDialog = () => {
         if (fileInputRef.current) {
             fileInputRef.current.click();

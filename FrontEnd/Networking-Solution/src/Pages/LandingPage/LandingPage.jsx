@@ -1,9 +1,8 @@
 import "./LandingPage.css";
 
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 
-import Button from "../../Components/Button";
+import Button from "../../Components/Button/Button";
 
 import LoginWindow from "../../Components/LoginDialog/LoginWindow";
 import SignupWindow from "../../Components/SingupDialog/SignupDialog";
@@ -11,34 +10,20 @@ import SignupWindow from "../../Components/SingupDialog/SignupDialog";
 function LandingPage() {
     const [showLogin, setShowLogin] = useState(false);
     const [showSignUp, setShowSignUp] = useState(false);
-    const navigate = useNavigate();
 
-    useEffect(() => {
-        fetch("http://localhost:3000/api/auth/verify", {
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            credentials: "include",
-        })
-            .then((response) => {
-                response.json().then((data) => {
-                    if (data.error) {
-                        console.error(data.error);
-                        return;
-                    } else {
-                        navigate("/app");
-                    }
-                });
-            })
-            .catch((error) => {
-                console.error("Error verifying user:", error);
-            });
-    }, [navigate]);
-
-    console.log("Landing Page");
     return (
-        <>
+        <div
+            className={"landing-page"}
+            style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                flexDirection: "column",
+                height: "100vh",
+                width: "100vw",
+                margin: "auto",
+            }}
+        >
             <div className={"title"}>
                 <p className={"special"}> Welcome to </p>
                 <h1>
@@ -60,14 +45,25 @@ function LandingPage() {
                 }}
             >
                 <Button
+                    style={{
+                        color: "var(--primary-color)",
+                        paddingLeft: "0.5rem",
+                        paddingRight: "0.5rem",
+                    }}
                     onClick={() => {
                         setShowLogin(!showLogin);
                         setShowSignUp(false);
                     }}
                 >
+                    {" "}
                     Login
                 </Button>
                 <Button
+                    style={{
+                        color: "var(--primary-color)",
+                        paddingLeft: "0.5rem",
+                        paddingRight: "0.5rem",
+                    }}
                     onClick={() => {
                         setShowSignUp(!showSignUp);
                         setShowLogin(false);
@@ -108,7 +104,7 @@ function LandingPage() {
                 <span style={{ fontStyle: "italic" }}> mi amore </span>. All
                 rights reserved.
             </div>
-        </>
+        </div>
     );
 }
 

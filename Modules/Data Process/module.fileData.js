@@ -84,13 +84,17 @@ const deleteFileById = async (req, res) => {
         const file = await Data.findByPk(req.params.id);
 
         if (file === null) {
-            res.status(404).send("File not found");
-            return;
+            return res.status(404).json({
+                error: "File not found",
+                message: "File you tried to delete may not exist"
+            });
         }
 
         if (file.owner_id != req.profile_id) {
-            res.status(403).send("The client does not have access rights to the content");
-            return;
+            return res.status(403).json({
+                error: "Insufficient credentials",
+                message: "This file does not belong to you"
+            });
         }
 
         await file.destroy({ transaction: transaction });
@@ -100,7 +104,10 @@ const deleteFileById = async (req, res) => {
     } catch (err) {
         await transaction.rollback(); //Rollback the transaction since error was thrown
         debugError(err);
-        res.status(500).send("Internal server error");
+        res.status(500).json({
+            error: "Unhandled exception",
+            message: "The server encountered an unexpected condition"
+        });
     }
 };
 
@@ -111,31 +118,28 @@ const updateFileLedger = async (req, res) => {
         const file = await Data.findByPk(req.params.id);
         
         if (file === null) {
-            res.status(404).json({
-                "error": "File not found",
-                "message": "File does not exist within the database"
+            return res.status(404).json({
+                error: "File not found",
+                message: "The file you tried to update may not exist"
             });
-            return;
         }
 
         if (file.owner_id != req.profile_id) {
-            res.status(403).json({
-                "error": "Forbidden",
-                "message": "The client does not have access rights to the content"
+            return res.status(403).json({
+                error: "Insufficient credentials",
+                message: "This file does not belong to you"
             });
-            return;
         }
 
-        //Check the columns. We don't want to change ID, Owner_id, dateCreated, createdAt
-        const invalidColumn = ["id", "profile_id", "createdAt", "dateCreated"];
+        //Check the columns. We don't want to change id, owner_id, updatedAt, createdAt, or creator_id
+        const invalidColumn = ["id", "owner_id", "createdAt", "updatedAt", "creator_id"];
         for (const key in req.body) {
-            for (let i = 0; i < 4; i++) {
+            for (let i = 0; i < 5; i++) {
                 if (key === invalidColumn[i]) {
-                    res.status(400).json({
+                    return res.status(400).json({
                         "error": "Bad Request",
                         "message": "Not allowed to change one of the columns"
                     });
-                    return;
                 }
             }
         }
@@ -148,8 +152,8 @@ const updateFileLedger = async (req, res) => {
         await transaction.rollback(); //Rollback the transaction since error was thrown
         debugError(err);
         res.status(500).json({
-            "error": "Internal server error",
-            "message": "Congratulations, you broke the code somehow :("
+            error: "Unhandled exception",
+            message: "The server encountered an unexpected condition"
         });
     }
 };
@@ -160,20 +164,27 @@ const getFileById = async (req, res) => {
         const file = await Data.findByPk(req.params.id);
 
         if (file === null) {
-            res.status(404).send("File not found");
-            return;
+            return res.status(404).json({
+                error: "File not found",
+                message: "The file you are trying to find may not exist"
+            });
         };
 
         if (file.owner_id != req.profile_id) {
-            res.status(403).send("The client does not have access rights to the content");
-            return;
+            return res.status(403).json({
+                error: "Insufficient credentials",
+                message: "This file does not belong to you"
+            });
         };
         
         res.status(200).send({ file: file});
 
     } catch (err) {
         debugError(err);
-        res.status(500).send("Internal Server Error");
+        res.status(500).json({
+            error: "Unhandled exception",
+            message: "The server encountered an unexpected condition"
+        });
     }
 };
 

@@ -1,4 +1,4 @@
-const resMessage = (resCode, isOkay, error, message, data) => {
+const resMessage = (res, resCode, isOkay, error, message, data) => {
     const content = {};
     
     content.okay = isOkay;
@@ -10,7 +10,7 @@ const resMessage = (resCode, isOkay, error, message, data) => {
         content.data = data
     }
 
-    return resCode.status(resCode).json({ ...content });
+    return res.status(resCode).json({ ...content });
 };
 
-export { resMessage as default };
+export { resMessage }

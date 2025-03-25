@@ -1,9 +1,11 @@
 import { useState, useEffect, useRef } from "react";
 
 import Button from "../Button/Button";
+import { useUser } from "../Contexts/ctx.user";
 
 const LoginWindow = ({ setState }) => {
     const formRef = useRef(null);
+    const { user } = useUser();
 
     const [style] = useState({
         position: "absolute",
@@ -53,8 +55,10 @@ const LoginWindow = ({ setState }) => {
             const password = e.target[1].value;
 
             console.log("Login with email:", email, "and password", password);
+
+            await user.SignIn(email, password);
         });
-    }, []);
+    }, [user]);
 
     return (
         <div style={style}>

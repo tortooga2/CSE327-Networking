@@ -211,7 +211,7 @@ const auth = {
     TestVerify: async (req, res) => {
         const token = req.cookies.sessionToken;
         if (!token) {
-            return res.status(200).json({ error: "Missing session token" });
+            return res.status(401).json({ error: "Missing session token" });
         }
         return auth.Verify(req, res, () => {
             return res.status(200).json({ message: "Session token is valid" });
@@ -225,8 +225,9 @@ const auth = {
         const sessionToken = req.cookies.sessionToken;
         console.log("Received session token: ", sessionToken);
         if (!sessionToken) {
+            console.log("Session token not found");
             return res
-                .status(200)
+                .status(404)
                 .json({ error: "Could not find sessionToken" }); //Redirect to login page
         }
 
@@ -234,7 +235,8 @@ const auth = {
             //Get profile_id from session token (UUID).
             var profile_id = await auth.sessionDB.get(sessionToken);
             if (!profile_id) {
-                res.status(200).json({ error: "could not find profile id" }); //Redirect to login page
+                console.log("Profile ID not found");
+                res.status(404).json({ error: "could not find profile id" }); //Redirect to login page
                 return;
             }
             console.log("Profile ID: ", profile_id);

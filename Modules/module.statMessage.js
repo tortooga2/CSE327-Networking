@@ -1,13 +1,14 @@
-const resMessage = (res, resCode, isOkay, error, message, data) => {
-    const content = {};
-    
-    content.okay = isOkay;
-    if (error != null) {
-        content.error = error,
-        content.message = message
+const resMessage = (res, resCode, isOkay, { error = null, message = null, data = null }) => {
+    const content = { okay: isOkay };
+
+    if (error) {
+        content.error = error;
     }
-    if (data != null) {
-        content.data = data
+    if (message) {
+        content.message = message;
+    }
+    if (data) {
+        content.data = data;
     }
 
     return res.status(resCode).json({ ...content });

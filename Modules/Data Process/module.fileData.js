@@ -12,10 +12,17 @@ const getAllUserData = async (req, res) => {
         });
 
         debugMessage(data);
-        res.status(200).send({ data: data });
+        res.status(200).json({
+            okay: true,
+            data: data
+        });
     } catch (err) {
         debugError(err);
-        res.status(500).send("Internal Server Error");
+        res.status(500).json({
+            okay: false,
+            error: "Unhandled exception",
+            message: "The server encountered an unexpected condition"
+        });
     }
 };
 
@@ -44,10 +51,17 @@ const testCreateUserData = async (req, res) => {
             creator_id: profile_id,
         });
         debugMessage(newData);
-        res.status(200).send({ data: newData });
+        res.status(200).json({
+            okay: true,
+            data: newData
+        });
     } catch (err) {
         debugError(err);
-        res.status(500).send("Internal Server Error");
+        res.status(500).json({
+            okay: false,
+            error: "Unhandled exception",
+            message: "The server encountered an unexpected condition"
+        });
     }
 };
 
@@ -68,11 +82,18 @@ const createUserData = async (req, res) => {
 
         await transaction.commit(); //Commit transaction
         debugMessage(newData);
-        res.status(200).send({ data: newData });
+        res.status(200).json({
+            okay: true,
+            data: newData
+        });
     } catch (err) {
         await transaction.rollback(); //Rollback the transaction since error was thrown
         debugError(err);
-        res.status(500).send("Internal Server Error");
+        res.status(500).json({
+            okay: false,
+            error: "Unhandled exception",
+            message: "The server encountered an unexpected condition"
+        });
     }
 };
 
@@ -85,6 +106,7 @@ const deleteFileById = async (req, res) => {
 
         if (file === null) {
             return res.status(404).json({
+                okay: false,
                 error: "File not found",
                 message: "File you tried to delete may not exist"
             });
@@ -92,6 +114,7 @@ const deleteFileById = async (req, res) => {
 
         if (file.owner_id != req.profile_id) {
             return res.status(403).json({
+                okay: false,
                 error: "Insufficient credentials",
                 message: "This file does not belong to you"
             });
@@ -100,11 +123,14 @@ const deleteFileById = async (req, res) => {
         await file.destroy({ transaction: transaction });
 
         await transaction.commit(); //Commit transaction
-        res.status(204).send();
+        res.status(200).json({
+            okay: true
+        });
     } catch (err) {
         await transaction.rollback(); //Rollback the transaction since error was thrown
         debugError(err);
         res.status(500).json({
+            okay: false,
             error: "Unhandled exception",
             message: "The server encountered an unexpected condition"
         });
@@ -119,6 +145,7 @@ const updateFileLedger = async (req, res) => {
         
         if (file === null) {
             return res.status(404).json({
+                okay: false,
                 error: "File not found",
                 message: "The file you tried to update may not exist"
             });
@@ -126,6 +153,7 @@ const updateFileLedger = async (req, res) => {
 
         if (file.owner_id != req.profile_id) {
             return res.status(403).json({
+                okay: false,
                 error: "Insufficient credentials",
                 message: "This file does not belong to you"
             });
@@ -137,6 +165,7 @@ const updateFileLedger = async (req, res) => {
             for (let i = 0; i < 5; i++) {
                 if (key === invalidColumn[i]) {
                     return res.status(400).json({
+                        okay: false,
                         "error": "Bad Request",
                         "message": "Not allowed to change one of the columns"
                     });
@@ -147,11 +176,15 @@ const updateFileLedger = async (req, res) => {
         await file.update(req.body, {transaction: transaction});
 
         await transaction.commit(); //Commit transaction
-        res.status(200).send({ file: file});
+        res.status(200).json({
+            okay: true,
+            file: file
+        });
     } catch (err) {
         await transaction.rollback(); //Rollback the transaction since error was thrown
         debugError(err);
         res.status(500).json({
+            okay: false,
             error: "Unhandled exception",
             message: "The server encountered an unexpected condition"
         });
@@ -165,6 +198,7 @@ const getFileById = async (req, res) => {
 
         if (file === null) {
             return res.status(404).json({
+                okay: false,
                 error: "File not found",
                 message: "The file you are trying to find may not exist"
             });
@@ -172,16 +206,21 @@ const getFileById = async (req, res) => {
 
         if (file.owner_id != req.profile_id) {
             return res.status(403).json({
+                okay: false,
                 error: "Insufficient credentials",
                 message: "This file does not belong to you"
             });
         };
         
-        res.status(200).send({ file: file});
+        res.status(200).send({ 
+            okay: true,
+            file: file
+        });
 
     } catch (err) {
         debugError(err);
         res.status(500).json({
+            okay: false,
             error: "Unhandled exception",
             message: "The server encountered an unexpected condition"
         });
@@ -196,12 +235,14 @@ const sendFileToUser = async (req, res) => {
         const otherUser = await Users.findByPk(req.params.other_id);
         if (otherUser === null) { //Check if the other user exists
             return res.status(404).json({
+                okay: false,
                 error: "User not found",
                 message: "The user you're looking for may not exist"
             }); 
         }
         if (otherUser.profile_id === req.profile_id) {
             return res.status(400).json({
+                okay: false,
                 error: "Incorrect User id",
                 message: "You tried to send yourself a file"
             });
@@ -210,12 +251,14 @@ const sendFileToUser = async (req, res) => {
         const originalFile = await Data.findByPk(req.params.file_id);
         if (originalFile === null) { //Check if the file exists
             return res.status(404).json({
+                okay: false,
                 error: "File not found",
                 message: "The file you want to send may not exist"
             }); 
         }
         if (originalFile.owner_id != req.profile_id) { //Check to see if the owner of the file is the client
             return res.status(403).json({
+                okay: false,
                 error: "Insufficient Permissions",
                 message: "You must be the owner of the file to send it",
             });
@@ -228,11 +271,18 @@ const sendFileToUser = async (req, res) => {
         }, { transaction: transaction });
 
         await transaction.commit(); //Commit transaction
-        res.status(201).send({ sent: sentFile });
+        res.status(201).send({ 
+            okay: true,
+            sent: sentFile
+        });
     } catch (err) {
         await transaction.rollback(); //Rollback the transaction since error was thrown
         debugError(err);
-        res.status(500).send("Internal server error");
+        res.status(500).json({
+            okay: false,
+            error: "Unhandled exception",
+            message: "The server encountered an unexpected condition"
+        });
     }
 };
 

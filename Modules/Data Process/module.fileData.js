@@ -264,7 +264,7 @@ const sendFileToUser = async (req, res) => {
             });
         }
     
-        const { id, createdAt, updatedAt, ...fileData } = originalFile.toJSON(); //Destructure original file
+        const { id, updatedAt, ...fileData } = originalFile.toJSON(); //Destructure original file
         const sentFile = await Data.create({
             ...fileData,
             owner_id: otherUser.profile_id,

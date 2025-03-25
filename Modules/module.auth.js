@@ -44,7 +44,11 @@ const auth = {
                 Number(process.env.TOKEN_EXP)
             );
         } catch (error) {
-            return res.status(500).json({ error: "Internal server error" });
+            return res.status(500).json({
+                okay: false,
+                error: "Unhandled exception",
+                message: "The server encountered an unexpected condition"
+            });
         }
         //Set the session token as a cookie.
 
@@ -66,6 +70,7 @@ const auth = {
         if (DEBUG) {
             res.status(200).json({
                 user: {
+                    okay: true,
                     profile_id: user.profile_id,
                     email: user.email,
                     password: user.password,
@@ -74,7 +79,7 @@ const auth = {
             });
         } else {
             //If not in debug mode, just return a 200 status code.
-            res.status(200).json({ message: "Logged in", redirect: "/app" });
+            res.status(200).json({ okay: true, message: "Logged in", redirect: "/app" });
         }
     },
 
@@ -83,7 +88,11 @@ const auth = {
         const { email, password } = req.body;
         //Check if email and password are present
         if (!email || !password)
-            return res.status(400).json({ error: "Missing email or password" });
+            return res.status(400).json({
+                okay: false,
+                error: "Bad request",
+                message: "Missing email or password"
+            });
         //Try to check if a user exists with the same email
         const userExists = await (async () => {
             try {
@@ -99,14 +108,22 @@ const auth = {
                 return user ? true : false; //return a boolean value if the user exists
             } catch (error) {
                 console.log(error);
-                res.status(500).json({ error: "Internal server error" });
+                return res.status(500).json({
+                    okay: false,
+                    error: "Unhandled exception",
+                    message: "The server encountered an unexpected condition"
+                });
                 throw error; // throw an error if the user does not exist. Usually we would want to return res, however in this case we want to throw an error.
             }
         })();
 
         //Check if the user exists
         if (userExists)
-            return res.status(409).json({ error: "Email already exists" });
+            return res.status(409).json({
+                okay: false,
+                error: "Request conflict",
+                message: "Account with email already exists"
+            });
         //Hash the password
         const hash = await bcrypt.hash(password, 10);
         //Generate a profile_id
@@ -123,10 +140,17 @@ const auth = {
             debugMessage(user);
         } catch (error) {
             if (error.errors[0].message === "email must be unique") {
-                res.status(409).json({ error: "Email already exists" });
-                return;
+                return res.status(409).json({
+                    okay: false,
+                    error: "Request conflict",
+                    message: "Account with email already exists"
+                });
             }
-            res.status(500).json({ error: "Internal server error" });
+            res.status(500).json({
+                okay: false,
+                error: "Unhandled exception",
+                message: "The server encountered an unexpected condition"
+            });
             console.log(error);
             return;
         }
@@ -145,7 +169,11 @@ const auth = {
 
         //Check if email and password are present
         if (!email || !password)
-            return res.status(400).json({ error: "Missing email or password" });
+            return res.status(400).json({
+                okay: false,
+                error: "Bad request",
+                message: "Missing email or password"
+            });
 
         //Try to find a user with the same email
         const user = await (async () => {
@@ -158,14 +186,22 @@ const auth = {
                 return user;
             } catch (error) {
                 console.error(error);
-                res.status(500).json({ error: "Internal server error" });
+                res.status(500).json({
+                    okay: false,
+                    error: "Unhandled exception",
+                    message: "The server encountered an unexpected condition"
+                });
                 return null;
             }
         })();
 
         // Check if db actually returns a response or was found
         if (!user) {
-            return res.status(401).json({ error: "Invalid credentials" });
+            return res.status(401).json({
+                okay: false,
+                error: "Invalid credentials",
+                message: "Password or email is incorrect"
+            });
         }
 
         const hashedPassword = user.hash;
@@ -173,7 +209,11 @@ const auth = {
 
         //check if password matches.
         if (!match) {
-            return res.status(401).json({ error: "Invalid credentials" });
+            return res.status(401).json({
+                okay: false,
+                error: "Invalid credentials",
+                message: "Password or email is incorrect"
+            });
         }
 
         //Generate session token
@@ -189,7 +229,11 @@ const auth = {
         const token = req.cookies.sessionToken;
         //Check if token is present
         if (!token) {
-            return res.status(400).json({ error: "Missing session token" });
+            return res.status(400).json({
+                okay: false,
+                error: "Bad request",
+                message: "Missing session token"
+            });
         }
 
         //Try to delete the session token from the database
@@ -197,7 +241,11 @@ const auth = {
             await auth.sessionDB.del(token);
         } catch (error) {
             debugError(error);
-            return res.status(500).json({ error: "Internal server error" });
+            res.status(500).json({
+                okay: false,
+                error: "Unhandled exception",
+                message: "The server encountered an unexpected condition"
+            });
         }
 
         //respond by clearing the cookie and sending a confirmation message
@@ -211,10 +259,14 @@ const auth = {
     TestVerify: async (req, res) => {
         const token = req.cookies.sessionToken;
         if (!token) {
-            return res.status(200).json({ error: "Missing session token" });
+            return res.status(400).json({
+                okay: false,
+                error: "Bad request",
+                message: "Missing session token"
+            });
         }
         return auth.Verify(req, res, () => {
-            return res.status(200).json({ message: "Session token is valid" });
+            return res.status(200).json({ okay: true, message: "Session token is valid" });
         });
     },
 
@@ -234,13 +286,20 @@ const auth = {
             //Get profile_id from session token (UUID).
             var profile_id = await auth.sessionDB.get(sessionToken);
             if (!profile_id) {
-                res.status(200).json({ error: "could not find profile id" }); //Redirect to login page
-                return;
+                return res.status(404).json({ //Redirect to login page
+                    okay: false,
+                    error: "Profile_id not found",
+                    message: "The server could not find profile id"
+                });
             }
             console.log("Profile ID: ", profile_id);
         } catch (error) {
             debugError(error);
-            return res.status(500).json({ error: "Internal server error" });
+            res.status(500).json({
+                okay: false,
+                error: "Unhandled exception",
+                message: "The server encountered an unexpected condition"
+            });
         }
 
         //reset the expire time of the session token

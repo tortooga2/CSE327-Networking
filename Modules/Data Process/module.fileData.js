@@ -100,6 +100,16 @@ const createUserData = async (req, res) => {
     } catch (err) {
         await transaction.rollback(); //Rollback the transaction since error was thrown
         debugError(err);
+        
+        if (err instanceof Sequelize.ValidationError) {
+            console.log(err.message);
+            return res.status(400).json({
+                okay: false,
+                error: "Invalid input",
+                message: err.message    
+            });
+        }  
+        
         res.status(500).json({
             okay: false,
             error: "Unhandled exception",
@@ -194,6 +204,16 @@ const updateFileLedger = async (req, res) => {
     } catch (err) {
         await transaction.rollback(); //Rollback the transaction since error was thrown
         debugError(err);
+
+        if (err instanceof Sequelize.ValidationError) {
+            console.log(err.message);
+            return res.status(400).json({
+                okay: false,
+                error: "Invalid input",
+                message: err.message    
+            });
+        }  
+    
         res.status(500).json({
             okay: false,
             error: "Unhandled exception",

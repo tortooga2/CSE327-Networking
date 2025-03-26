@@ -69,7 +69,7 @@ const auth = {
         //If in debug mode, return the user object with the session token so that it can be used for testing.
 
         if (DEBUG) {
-            res.status(201).json({
+            res.status(200).json({
                 user: {
                     okay: true,
                     profile_id: user.profile_id,

@@ -48,13 +48,15 @@ export const createDataTable = (sequelize) => {
             allowNull: true,
         },
         type: {
-            type: DataTypes.ENUM,
-            values: ["jpg", "png", "pdf"], //Placeholder values
+            type: DataTypes.STRING,
             allowNull: false,
+            validate: {
+                isAlpha: { msg: "File type is not supported or is invalid" }
+            }
         },
         metadata: {
             type: DataTypes.JSONB,
-            allowNull: false,
+            allowNull: false
         },
         parents: {
             type: DataTypes.JSONB,

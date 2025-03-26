@@ -15,6 +15,22 @@ export const FileManagerProvider = ({ children }) => {
     const [files, setFiles] = useState([]);
     const [subscribers, setSubscribers] = useState([]);
 
+    const [selectedFiles, setSelectedFiles] = useState([]);
+
+    const addFile = (file) => {
+        const filesArray = selectedFiles;
+        if (filesArray.includes(file)) {
+            filesArray.splice(filesArray.indexOf(file), 1);
+        } else {
+            filesArray.push(file);
+        }
+        setSelectedFiles([...filesArray]);
+    };
+
+    useEffect(() => {
+        console.log("Selected files", selectedFiles);
+    }, [selectedFiles]);
+
     const getUsersFiles = async () => {
         try {
             const response = await fetch("/api/file/all", {
@@ -59,6 +75,18 @@ export const FileManagerProvider = ({ children }) => {
         });
     }, []); // No dependencies needed
 
+    const updateFiles = (data) => {
+        const filesMap = new Map();
+        files.forEach((file) => filesMap.set(file.id, file));
+        data.forEach((file) => filesMap.set(file.id, file));
+        const filesArray = Array.from(filesMap.values());
+        filesArray.sort(
+            (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+        );
+        setFiles(filesArray);
+        notifySubscribers(filesArray);
+    };
+
     const TestFunction = async () => {
         try {
             const response = await fetch("/api/file/createtest", {
@@ -72,12 +100,29 @@ export const FileManagerProvider = ({ children }) => {
             if (response.ok) {
                 const data = (await response.json()).data;
                 console.log(data);
-                const filesArray = [...files, data];
-                filesArray.sort(
-                    (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
-                );
-                setFiles(filesArray);
-                notifySubscribers(filesArray);
+                updateFiles([data]);
+            }
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+    const ConnectFiles = async () => {
+        try {
+            const response = await fetch("/api/file/connect", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                credentials: "include",
+                body: JSON.stringify({ file_ids: selectedFiles }),
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                console.log(data);
+                updateFiles(data.data);
+                setSelectedFiles([]);
             }
         } catch (error) {
             console.error(error);
@@ -92,6 +137,9 @@ export const FileManagerProvider = ({ children }) => {
             subscribe,
             notifySubscribers,
             TestFunction,
+            addFile,
+            selectedFiles,
+            ConnectFiles,
         }),
         [files, subscribe, notifySubscribers]
     );

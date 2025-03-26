@@ -2,13 +2,20 @@ import { useState } from "react";
 import propTypes from "prop-types";
 import "./File.css";
 
-const File = ({ fileData }) => {
+const File = ({ fileData, onSelect }) => {
     const fileContent = useState(fileData);
 
     return (
         <div>
             <div className="file-item">
                 <p>id: {fileContent[0].id}</p>
+                <input
+                    type="checkbox"
+                    onClick={() => {
+                        console.log("File clicked", fileContent[0].id);
+                        onSelect(fileContent[0].id);
+                    }}
+                />
                 <p>
                     Date:{" "}
                     {(() => {

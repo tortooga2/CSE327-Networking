@@ -8,6 +8,7 @@ import {
     updateFileLedger,
     getFileById,
     sendFileToUser,
+    ConnectFiles,
 } from "../Modules/Data Process/module.fileData.js";
 
 const fileDataRouter = Router();
@@ -19,6 +20,7 @@ fileDataRouter.get("/all", getAllUserData);
 fileDataRouter.post("/create", createUserData);
 fileDataRouter.post("/send/:other_id/:file_id", sendFileToUser);
 fileDataRouter.patch("/update/:id", updateFileLedger);
+fileDataRouter.post("/connect", ConnectFiles);
 
 // Test the creation of a user data
 fileDataRouter.post("/createtest", testCreateUserData);

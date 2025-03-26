@@ -63,6 +63,7 @@ const FileViewer = () => {
                             `${file.name}-${Date.parse(file.createdAt)}`
                         }
                         fileData={file}
+                        onSelect={fileManager.addFile}
                     />
                 ))
             ) : (

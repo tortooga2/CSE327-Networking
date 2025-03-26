@@ -5,18 +5,16 @@ import "./File.css";
 const File = ({ fileData }) => {
     const fileContent = useState(fileData);
 
-    console.log(fileContent);
-
     return (
         <div>
             <div className="file-item">
+                <p>id: {fileContent[0].id}</p>
                 <p>
                     Date:{" "}
                     {(() => {
-                        const date = new Date(fileContent[0].dateCreated);
+                        const date = fileContent[0].createdAt;
 
-                        date.toLocaleTimeString();
-                        return date.toLocaleDateString();
+                        return date;
                     })()}
                 </p>
 

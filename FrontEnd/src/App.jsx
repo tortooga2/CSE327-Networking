@@ -2,7 +2,6 @@ import { Route, Routes } from "react-router-dom";
 import LandingPage from "./Pages/LandingPage/LandingPage";
 import MainApp from "./Pages/MainApp/MainApp";
 
-
 import { UserProvider } from "./Components/Contexts/ctx.user.jsx";
 
 const App = () => {

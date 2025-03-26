@@ -61,7 +61,7 @@ const createUserData = async (req, res) => {
             {
                 ...data,
                 owner_id: profile_id,
-                creator_id: profile_id
+                creator_id: profile_id,
             },
             { transaction: transaction }
         );
@@ -89,7 +89,9 @@ const deleteFileById = async (req, res) => {
         }
 
         if (file.owner_id != req.profile_id) {
-            res.status(403).send("The client does not have access rights to the content");
+            res.status(403).send(
+                "The client does not have access rights to the content"
+            );
             return;
         }
 
@@ -109,19 +111,20 @@ const updateFileLedger = async (req, res) => {
 
     try {
         const file = await Data.findByPk(req.params.id);
-        
+
         if (file === null) {
             res.status(404).json({
-                "error": "File not found",
-                "message": "File does not exist within the database"
+                error: "File not found",
+                message: "File does not exist within the database",
             });
             return;
         }
 
         if (file.owner_id != req.profile_id) {
             res.status(403).json({
-                "error": "Forbidden",
-                "message": "The client does not have access rights to the content"
+                error: "Forbidden",
+                message:
+                    "The client does not have access rights to the content",
             });
             return;
         }
@@ -132,24 +135,24 @@ const updateFileLedger = async (req, res) => {
             for (let i = 0; i < 4; i++) {
                 if (key === invalidColumn[i]) {
                     res.status(400).json({
-                        "error": "Bad Request",
-                        "message": "Not allowed to change one of the columns"
+                        error: "Bad Request",
+                        message: "Not allowed to change one of the columns",
                     });
                     return;
                 }
             }
         }
 
-        await file.update(req.body, {transaction: transaction});
+        await file.update(req.body, { transaction: transaction });
 
         await transaction.commit(); //Commit transaction
-        res.status(200).send({ file: file});
+        res.status(200).send({ file: file });
     } catch (err) {
         await transaction.rollback(); //Rollback the transaction since error was thrown
         debugError(err);
         res.status(500).json({
-            "error": "Internal server error",
-            "message": "Congratulations, you broke the code somehow :("
+            error: "Internal server error",
+            message: "Congratulations, you broke the code somehow :(",
         });
     }
 };
@@ -162,15 +165,16 @@ const getFileById = async (req, res) => {
         if (file === null) {
             res.status(404).send("File not found");
             return;
-        };
+        }
 
         if (file.owner_id != req.profile_id) {
-            res.status(403).send("The client does not have access rights to the content");
+            res.status(403).send(
+                "The client does not have access rights to the content"
+            );
             return;
-        };
-        
-        res.status(200).send({ file: file});
+        }
 
+        res.status(200).send({ file: file });
     } catch (err) {
         debugError(err);
         res.status(500).send("Internal Server Error");
@@ -183,38 +187,44 @@ const sendFileToUser = async (req, res) => {
 
     try {
         const otherUser = await Users.findByPk(req.params.other_id);
-        if (otherUser === null) { //Check if the other user exists
+        if (otherUser === null) {
+            //Check if the other user exists
             return res.status(404).json({
                 error: "User not found",
-                message: "The user you're looking for may not exist"
-            }); 
+                message: "The user you're looking for may not exist",
+            });
         }
         if (otherUser.profile_id === req.profile_id) {
             return res.status(400).json({
                 error: "Incorrect User id",
-                message: "You tried to send yourself a file"
+                message: "You tried to send yourself a file",
             });
         }
 
         const originalFile = await Data.findByPk(req.params.file_id);
-        if (originalFile === null) { //Check if the file exists
+        if (originalFile === null) {
+            //Check if the file exists
             return res.status(404).json({
                 error: "File not found",
-                message: "The file you want to send may not exist"
-            }); 
+                message: "The file you want to send may not exist",
+            });
         }
-        if (originalFile.owner_id != req.profile_id) { //Check to see if the owner of the file is the client
+        if (originalFile.owner_id != req.profile_id) {
+            //Check to see if the owner of the file is the client
             return res.status(403).json({
                 error: "Insufficient Permissions",
                 message: "You must be the owner of the file to send it",
             });
         }
-    
+
         const { id, createdAt, updatedAt, ...fileData } = originalFile.toJSON(); //Destructure original file
-        const sentFile = await Data.create({
-            ...fileData,
-            owner_id: otherUser.profile_id,
-        }, { transaction: transaction });
+        const sentFile = await Data.create(
+            {
+                ...fileData,
+                owner_id: otherUser.profile_id,
+            },
+            { transaction: transaction }
+        );
 
         await transaction.commit(); //Commit transaction
         res.status(201).send({ sent: sentFile });
@@ -225,4 +235,12 @@ const sendFileToUser = async (req, res) => {
     }
 };
 
-export { getAllUserData, createUserData, testCreateUserData, deleteFileById, updateFileLedger, getFileById, sendFileToUser };
+export {
+    getAllUserData,
+    createUserData,
+    testCreateUserData,
+    deleteFileById,
+    updateFileLedger,
+    getFileById,
+    sendFileToUser,
+};

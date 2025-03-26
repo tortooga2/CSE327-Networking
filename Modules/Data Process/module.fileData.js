@@ -51,6 +51,7 @@ const testCreateUserData = async (req, res) => {
 };
 
 const createUserData = async (req, res) => {
+    console.log("Create user data");
     const profile_id = req.profile_id;
     const { data } = req.body;
     const transaction = await sequelize.transaction(); //Start transaction with database

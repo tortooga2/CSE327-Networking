@@ -1,9 +1,14 @@
 import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
+import { useUser } from "../Contexts/ctx.user";
 
 import Button from "../Button/Button";
 
+
 const SignupWindow = ({ setState }) => {
+    const { user } = useUser();
+
+
     const formRef = useRef(null);
     const navigate = useNavigate();
 
@@ -55,6 +60,9 @@ const SignupWindow = ({ setState }) => {
             const password = e.target[1].value;
 
             console.log("Signup with email:", email, "and password", password);
+
+
+            await user.SignUp(email, password);
         });
     }, [navigate]);
 

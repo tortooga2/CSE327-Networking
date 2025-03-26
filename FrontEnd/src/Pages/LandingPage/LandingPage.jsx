@@ -34,7 +34,7 @@ function LandingPage() {
                     >
                         Bundle
                     </span>
-                    ,<span className="miamor"> mi amore</span>
+                    ,<span className="miamor"> mio amore</span>
                 </h1>
             </div>
             <div
@@ -101,7 +101,7 @@ function LandingPage() {
                 }}
             >
                 @2025 Bundle,{" "}
-                <span style={{ fontStyle: "italic" }}> mi amore </span>. All
+                <span style={{ fontStyle: "italic" }}> mio amore </span>. All
                 rights reserved.
             </div>
         </div>

@@ -2,21 +2,26 @@ import { useState } from "react";
 import propTypes from "prop-types";
 import "./File.css";
 
-const File = ({ fileData }) => {
+const File = ({ fileData, onSelect }) => {
     const fileContent = useState(fileData);
-
-    console.log(fileContent);
 
     return (
         <div>
             <div className="file-item">
+                <p>id: {fileContent[0].id}</p>
+                <input
+                    type="checkbox"
+                    onClick={() => {
+                        console.log("File clicked", fileContent[0].id);
+                        onSelect(fileContent[0].id);
+                    }}
+                />
                 <p>
                     Date:{" "}
                     {(() => {
-                        const date = new Date(fileContent[0].dateCreated);
+                        const date = fileContent[0].createdAt;
 
-                        date.toLocaleTimeString();
-                        return date.toLocaleDateString();
+                        return date;
                     })()}
                 </p>
 

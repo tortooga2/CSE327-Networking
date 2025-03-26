@@ -2,12 +2,16 @@
 
 import { useState, useRef, useEffect } from "react";
 import { Search, User, LogOut, Settings, ChevronDown } from "lucide-react";
+import { useUser } from "./Contexts/ctx.user";
 
 const Dashboard = () => {
+    const { user } = useUser();
+
     const [isSearchExpanded, setIsSearchExpanded] = useState(false);
     const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
     const searchInputRef = useRef(null);
     const profileDropdownRef = useRef(null);
+
 
     // Handle click outside to close dropdown
     useEffect(() => {
@@ -37,9 +41,8 @@ const Dashboard = () => {
         <nav className="w-100% h-25 bg-purple-100  px-4 py-3 flex items-center justify-between">
             {/* Left: Search Bar */}
             <div
-                className={`relative transition-all duration-300 ease-in-out ${
-                    isSearchExpanded ? "w-64" : "w-10"
-                }`}
+                className={`relative transition-all duration-300 ease-in-out ${isSearchExpanded ? "w-64" : "w-10"
+                    }`}
             >
                 <div className="relative flex items-center">
                     <button
@@ -90,9 +93,8 @@ const Dashboard = () => {
                             Ary
                         </span>
                         <ChevronDown
-                            className={`w-4 h-4 transition-transform ${
-                                isProfileDropdownOpen ? "rotate-180" : ""
-                            }`}
+                            className={`w-4 h-4 transition-transform ${isProfileDropdownOpen ? "rotate-180" : ""
+                                }`}
                         />
                     </button>
 
@@ -117,6 +119,9 @@ const Dashboard = () => {
                                 <a
                                     href="#"
                                     className="block px-4 py-2 text-gray-700 hover:bg-pink-200 flex items-center"
+                                    onClick={async () => {
+                                        user.SignOut();
+                                    }}
                                 >
                                     <LogOut className="w-4 h-4 mr-2" />
                                     <span>Sign Out</span>

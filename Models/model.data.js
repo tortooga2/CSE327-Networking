@@ -17,6 +17,12 @@ export const createDataTable = (sequelize) => {
                 model: "users",
                 key: "profile_id",
             },
+            validate: {
+                isUUID: {
+                    args: 4,
+                    msg: "owner_id must be a valid UUID"
+                }
+            },
             onDelete: "CASCADE", //Deletes rows in table when User row is deleted
             onUpdate: "CASCADE", //Updates rows in table when User row is deleted
         },
@@ -27,6 +33,12 @@ export const createDataTable = (sequelize) => {
                 //Makes this a foreign key to the Users table
                 model: "users",
                 key: "profile_id",
+            },
+            validate: {
+                isUUID: {
+                    args: 4,
+                    msg: "creator_id must be a valid UUID"
+                }
             },
             onDelete: "CASCADE", //Deletes rows in table when User row is deleted
             onUpdate: "CASCADE", //Updates rows in table when User row is deleted

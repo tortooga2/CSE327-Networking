@@ -25,4 +25,15 @@ export const initAssoc = (tables) => {
         }
     );
 
-}
+    tables.Data.belongsTo(
+        tables.Users,
+        {
+            foreignKey: "creator_username",
+            targetKey: "username_base",
+            allowNull: false,
+        },
+        {
+            timestamps: false,
+        }
+    );
+};

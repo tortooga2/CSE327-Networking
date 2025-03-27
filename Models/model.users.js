@@ -25,9 +25,41 @@ export const createUsersTable = (sequelize) => {
                 type: DataTypes.STRING,
                 allowNull: false,
             },
+            username_base: {
+                type: DataTypes.STRING,
+                allowNull: false,
+            },
+            username_suffix: {
+                type: DataTypes.STRING,
+                allowNull: false,
+            },
+            full_username: {
+                type: DataTypes.VIRTUAL,
+                get() {
+                    const base = this.getDataValue("username_base");
+                    const suffix = this.getDataValue("username_suffix");
+                    return `${base}${suffix ? suffix : ""}`;
+                },
+            },
         },
         {
             timestamps: false,
+        },
+        {
+            indexes: [
+                {
+                    unique: true,
+                    fields: ["email"],
+                },
+                {
+                    unique: true,
+                    fields: ["profile_id"],
+                },
+                {
+                    unique: true,
+                    fields: ["username_base", "username_suffix"],
+                },
+            ],
         }
     );
 };

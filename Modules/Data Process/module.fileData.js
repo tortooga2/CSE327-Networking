@@ -3,9 +3,20 @@ import { debugMessage, debugError } from "../module.debugHelpers.js";
 
 const getAllUserData = async (req, res) => {
     console.log("Get all user data");
-    const profile_id = req.profile_id;
+    const { profile_id } = req.user;
     try {
         const data = await Data.findAll({
+            attributes: [
+                "id",
+                "creator_username",
+                "name",
+                "type",
+                "metadata",
+                "parents",
+                "children",
+                "createdAt",
+                "updatedAt",
+            ],
             where: {
                 owner_id: profile_id,
             },
@@ -43,12 +54,13 @@ const GenerateData = () => {
 };
 
 const testCreateUserData = async (req, res) => {
-    const profile_id = req.profile_id;
+    const { profile_id, username_base } = req.user;
     try {
         const newData = await Data.create({
             ...GenerateData(),
             owner_id: profile_id,
             creator_id: profile_id,
+            creator_username: req.user.username_base,
         });
         debugMessage(newData);
         res.status(200).json({
@@ -67,7 +79,7 @@ const testCreateUserData = async (req, res) => {
 
 const createUserData = async (req, res) => {
     console.log("Create user data");
-    const profile_id = req.profile_id;
+    const { profile_id, username_base } = req.user;
     const { data } = req.body;
     const transaction = await sequelize.transaction(); //Start transaction with database
 
@@ -77,6 +89,7 @@ const createUserData = async (req, res) => {
                 ...data,
                 owner_id: profile_id,
                 creator_id: profile_id,
+                creator_username: req.user.username_base,
             },
             { transaction: transaction }
         );

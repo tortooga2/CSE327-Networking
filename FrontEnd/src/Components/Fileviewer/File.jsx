@@ -54,7 +54,7 @@ const File = ({ fileData }) => {
                     {fileContent[0].type}
                 </div>
             </td>
-            <td className="owner-column">{fileContent[0].owner_id}</td>
+            <td className="owner-column">{fileContent[0].creator_username}</td>
             <td>{fileContent[0].name}</td>
             <td className="checkbox-column">
                 <input

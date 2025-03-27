@@ -67,7 +67,12 @@ export const createDataTable = (sequelize) => {
             indexes: [
                 {
                     unique: true,
-                    fields: ["owner_id", "creator_id", "name"],
+                    fields: [
+                        "owner_id",
+                        "creator_id",
+                        "creator_username",
+                        "name",
+                    ],
                 },
             ],
         }

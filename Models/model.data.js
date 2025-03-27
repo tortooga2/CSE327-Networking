@@ -19,6 +19,12 @@ export const createDataTable = (sequelize) => {
                     model: "users",
                     key: "profile_id",
                 },
+                validate: {
+                    isUUID: {
+                        args: 4,
+                        msg: "owner_id must be a valid UUID",
+                    },
+                },
                 onDelete: "CASCADE", //Deletes rows in table when User row is deleted
                 onUpdate: "CASCADE", //Updates rows in table when User row is deleted
             },
@@ -30,22 +36,27 @@ export const createDataTable = (sequelize) => {
                     model: "users",
                     key: "profile_id",
                 },
+                validate: {
+                    isUUID: {
+                        args: 4,
+                        msg: "creator_id must be a valid UUID",
+                    },
+                },
                 onDelete: "CASCADE", //Deletes rows in table when User row is deleted
                 onUpdate: "CASCADE", //Updates rows in table when User row is deleted
-            },
-            creator_username: {
-                type: DataTypes.STRING,
-                allowNull: false,
-                defaultValue: "Anonymous",
             },
             name: {
                 type: DataTypes.STRING,
                 allowNull: true,
             },
             type: {
-                type: DataTypes.ENUM,
-                values: ["jpg", "png", "pdf"], //Placeholder values
+                type: DataTypes.STRING,
                 allowNull: false,
+                validate: {
+                    isAlpha: {
+                        msg: "File type is not supported or is invalid",
+                    },
+                },
             },
             metadata: {
                 type: DataTypes.JSONB,
@@ -62,19 +73,6 @@ export const createDataTable = (sequelize) => {
                 defaultValue: { item_id: [] },
             },
         },
-        { tableName: "file_ledger" },
-        {
-            indexes: [
-                {
-                    unique: true,
-                    fields: [
-                        "owner_id",
-                        "creator_id",
-                        "creator_username",
-                        "name",
-                    ],
-                },
-            ],
-        }
+        { tableName: "file_ledger" }
     );
 };

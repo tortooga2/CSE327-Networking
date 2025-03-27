@@ -8,7 +8,11 @@ dotenv.config();
 import { Redis } from "ioredis";
 import { Users } from "./Database/module.db.js";
 import { debugMessage, debugError, DEBUG } from "./module.debugHelpers.js";
+<<<<<<< HEAD
+import { Sequelize } from "sequelize";
+=======
 import { generateUsername } from "./module.usernameGenerator.js";
+>>>>>>> apiRework
 
 // TODO: Some things to note about proper session auth. Firstly, We could only let tokens be valid for a max of 4 hours. We should refresh the token every time the user makes a request.
 // Or in other words, we sign out the user after 4 hours of inactivity
@@ -164,6 +168,16 @@ const auth = {
                     message: "Account with email already exists",
                 });
             }
+            
+            if (error instanceof Sequelize.ValidationError) {
+                console.log(error.message);
+                return res.status(400).json({
+                    okay: false,
+                    error: "Invalid input",
+                    message: error.message    
+                });
+            }
+
             res.status(500).json({
                 okay: false,
                 error: "Unhandled exception",

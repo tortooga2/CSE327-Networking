@@ -39,6 +39,11 @@ h1 {
     margin: 0;
 }
 
+h2 {
+    font-size: 1.8em;
+    margin: 0;
+}
+
 button {
     border: 1px solid #eaeaea;
     width: fit-content;

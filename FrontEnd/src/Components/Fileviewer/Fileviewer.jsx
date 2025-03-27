@@ -1,74 +1,44 @@
 import { useState, useEffect, useRef } from "react";
 
+import "./FileViewer.css";
+
 import File from "./File";
-import { useFileManager } from "../Contexts/ctx.file_manager";
+import { useStore } from "../Contexts/zus.fileManager";
 
 const FileViewer = () => {
-    const { fileManager } = useFileManager();
-
-    const [files, setFiles] = useState([]);
-
-    const subscribedRef = useRef(false);
-
-    const handleFileUpdate = async (newFiles) => {
-        console.log("File update", newFiles);
-        setFiles(newFiles);
-    };
+    const files = useStore.getState().getFiles();
 
     useEffect(() => {
-        if (fileManager.subscribe && !subscribedRef.current) {
-            subscribedRef.current = true;
-            console.log("Setting up subscription");
-            const unsub = fileManager.subscribe(handleFileUpdate);
-
-            // Initial load if needed
-            if (fileManager.files && fileManager.files.length > 0) {
-                handleFileUpdate(fileManager.files);
-            }
-
-            return () => {
-                console.log("Cleaning up subscription");
-                subscribedRef.current = false;
-                unsub();
-            };
-        }
-    }, []); // Empty dependency array
-
-    useEffect(() => {
-        if (
-            fileManager.files &&
-            fileManager.files.length > 0 &&
-            files.length === 0
-        ) {
-            console.log("Files available but local state empty - updating");
-            handleFileUpdate(fileManager.files);
-        }
-    }, [fileManager.files]);
+        useStore.getState().loadFiles();
+    }, []);
 
     return (
         <div
-            style={{
-                position: "relative",
-                display: "flex",
-                flexDirection: "column",
-                width: "100%",
-            }}
+            style={{ display: "flex", flexDirection: "column", width: "100%" }}
         >
-            {files.length > 0 ? (
-                files.map((file) => (
-                    <File
-                        key={
-                            file._id ||
-                            file.id ||
-                            `${file.name}-${Date.parse(file.createdAt)}`
-                        }
-                        fileData={file}
-                        onSelect={fileManager.addFile}
-                    />
-                ))
-            ) : (
-                <div>No files found</div>
-            )}
+            <h1>File Viewer</h1>
+            <table className="file-viewer">
+                <thead>
+                    <tr>
+                        <th className="id-column">ID</th>
+                        <th className="date-column">Date</th>
+
+                        <th className="type-column">Type</th>
+                        <th className="owner-column">Owner</th>
+                        <th>Name</th>
+                        <th className="checkbox-column">Select</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {(() => {
+                        let array = Array.from(files);
+                        console.log("Files in viewer", array);
+                        return array.map((file) => {
+                            return <File fileData={file} key={file.id} />;
+                        });
+                    })()}
+                </tbody>
+            </table>
         </div>
     );
 };

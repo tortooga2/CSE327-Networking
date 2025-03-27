@@ -45,6 +45,11 @@ export const createDataTable = (sequelize) => {
                 onDelete: "CASCADE", //Deletes rows in table when User row is deleted
                 onUpdate: "CASCADE", //Updates rows in table when User row is deleted
             },
+            creator_username: {
+                type: DataTypes.STRING,
+                allowNull: false,
+                defaultValue: "admin",
+            },
             name: {
                 type: DataTypes.STRING,
                 allowNull: true,
@@ -73,6 +78,18 @@ export const createDataTable = (sequelize) => {
                 defaultValue: { item_id: [] },
             },
         },
-        { tableName: "file_ledger" }
+        { tableName: "file_ledger" },
+        {
+            indexes: [
+                {
+                    unique: false,
+                    fields: ["owner_id"],
+                },
+                {
+                    unique: false,
+                    fields: ["creator_id"],
+                },
+            ],
+        }
     );
 };

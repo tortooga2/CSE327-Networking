@@ -76,9 +76,9 @@ const testCreateUserData = async (req, res) => {
             return res.status(400).json({
                 okay: false,
                 error: "Invalid input",
-                message: err.message    
+                message: err.message,
             });
-        }        
+        }
 
         res.status(500).json({
             okay: false,
@@ -114,16 +114,16 @@ const createUserData = async (req, res) => {
     } catch (err) {
         await transaction.rollback(); //Rollback the transaction since error was thrown
         debugError(err);
-        
+
         if (err instanceof Sequelize.ValidationError) {
             console.log(err.message);
             return res.status(400).json({
                 okay: false,
                 error: "Invalid input",
-                message: err.message    
+                message: err.message,
             });
-        }  
-        
+        }
+
         res.status(500).json({
             okay: false,
             error: "Unhandled exception",
@@ -230,10 +230,10 @@ const updateFileLedger = async (req, res) => {
             return res.status(400).json({
                 okay: false,
                 error: "Invalid input",
-                message: err.message    
+                message: err.message,
             });
-        }  
-    
+        }
+
         res.status(500).json({
             okay: false,
             error: "Unhandled exception",
@@ -349,6 +349,14 @@ const ConnectFiles = async (req, res) => {
     //3. Add the bundle to the files parents
     const { profile_id, username_base } = req.user;
     const { file_ids } = req.body;
+
+    if (!Array.isArray(file_ids)) {
+        return res.status(400).json({
+            okay: false,
+            error: "Invalid input",
+            message: "file_ids must be an array of file IDs",
+        });
+    }
 
     const transaction = await sequelize.transaction(); //Start transaction with database
     try {

@@ -55,6 +55,36 @@ const useStore = create((set) => ({
             console.error(error);
         }
     },
+    updateFiles: (data) => {
+        set((state) => {
+            const filesMap = new Map(state.files);
+            data.forEach((file) => filesMap.set(file.id, file));
+            return { files: filesMap };
+        });
+    },
+    connectFiles: async () => {
+        try {
+            const response = await fetch("/api/file/connect", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                credentials: "include",
+                body: JSON.stringify({
+                    file_ids: Array.from(useStore.getState().selectedFiles),
+                }),
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                console.log("Data from RTCPeerConnection", data);
+                useStore.getState().updateFiles(data.data);
+                useStore.getState().unSelectAll();
+            }
+        } catch (error) {
+            console.error(error);
+        }
+    },
 }));
 
 export { useStore };

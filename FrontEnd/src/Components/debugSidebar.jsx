@@ -7,6 +7,8 @@ const DebugSidebar = () => {
     const selectedFiles = useStore((state) => state.selectedFiles);
     const UnSelectAll = useStore((state) => state.unSelectAll);
 
+    const connectFiles = useStore((state) => state.connectFiles);
+
     return (
         <div className="debug-sidebar">
             <h2>Debug Sidebar</h2>
@@ -29,6 +31,7 @@ const DebugSidebar = () => {
                 <button onClick={UnSelectAll}>
                     Unselect All ({selectedFiles.size})
                 </button>
+                <button onClick={connectFiles}>Connect Files</button>
             </div>
         </div>
     );

@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, use } from "react";
+import { useState, useRef, useEffect } from "react";
 
 import "./MainApp.css";
 
@@ -13,6 +13,8 @@ import Dashboard from "../../Components/Dashboard.jsx";
 import Sidebar from "../../Components/Sidebar.jsx";
 
 import DebugSidebar from "../../Components/debugSidebar.jsx";
+
+import { useStore } from "../../Components/Contexts/zus.fileManager";
 
 const MainApp = () => {
     return (

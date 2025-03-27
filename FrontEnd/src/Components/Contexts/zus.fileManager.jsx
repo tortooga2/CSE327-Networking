@@ -3,6 +3,7 @@ import { create } from "zustand";
 const useStore = create((set) => ({
     files: new Map(),
     selectedFiles: new Set(),
+    loading: false,
     getFiles: (paramaters) => {
         return Array.from(useStore.getState().files.values()).sort((a, b) => {
             return new Date(b.createdAt) - new Date(a.createdAt);
@@ -27,6 +28,7 @@ const useStore = create((set) => ({
         });
     },
     loadFiles: async () => {
+        set({ loading: true });
         try {
             const response = await fetch("/api/file/all", {
                 method: "GET",
@@ -47,6 +49,7 @@ const useStore = create((set) => ({
                     }
                     return { files: newFiles };
                 });
+                set({ loading: false });
             }
         } catch (error) {
             console.error(error);

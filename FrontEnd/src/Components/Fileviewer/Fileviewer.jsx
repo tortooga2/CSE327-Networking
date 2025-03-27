@@ -6,10 +6,17 @@ import File from "./File";
 import { useStore } from "../Contexts/zus.fileManager";
 
 const FileViewer = () => {
-    const files = useStore.getState().getFiles();
+    const files = useStore((state) => {
+        return state.files;
+    });
+
+    // const loading = useStore((state) => state.loading);
 
     useEffect(() => {
-        useStore.getState().loadFiles();
+        const loadFiles = async () => {
+            await useStore.getState().loadFiles();
+        };
+        loadFiles();
     }, []);
 
     return (
@@ -31,7 +38,7 @@ const FileViewer = () => {
                 </thead>
                 <tbody>
                     {(() => {
-                        let array = Array.from(files);
+                        let array = useStore.getState().getFiles();
                         console.log("Files in viewer", array);
                         return array.map((file) => {
                             return <File fileData={file} key={file.id} />;

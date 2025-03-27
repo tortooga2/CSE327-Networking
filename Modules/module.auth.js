@@ -8,7 +8,11 @@ dotenv.config();
 import { Redis } from "ioredis";
 import { Users } from "./Database/module.db.js";
 import { debugMessage, debugError, DEBUG } from "./module.debugHelpers.js";
+<<<<<<< HEAD
 import { Sequelize } from "sequelize";
+=======
+import { generateUsername } from "./module.usernameGenerator.js";
+>>>>>>> apiRework
 
 // TODO: Some things to note about proper session auth. Firstly, We could only let tokens be valid for a max of 4 hours. We should refresh the token every time the user makes a request.
 // Or in other words, we sign out the user after 4 hours of inactivity
@@ -40,7 +44,7 @@ const auth = {
             //set [sessionToken] = profile_id, expire in [TOKEN_EXP] seconds
             await auth.sessionDB.set(
                 sessionToken,
-                user.profile_id,
+                JSON.stringify(user),
                 "EX",
                 Number(process.env.TOKEN_EXP)
             );
@@ -48,7 +52,7 @@ const auth = {
             return res.status(500).json({
                 okay: false,
                 error: "Unhandled exception",
-                message: "The server encountered an unexpected condition"
+                message: "The server encountered an unexpected condition",
             });
         }
         //Set the session token as a cookie.
@@ -76,23 +80,29 @@ const auth = {
                     email: user.email,
                     password: user.password,
                     session_token: sessionToken,
+                    username_base: user.username_base,
+                    username_suffix: user.username_suffix,
                 },
             });
         } else {
             //If not in debug mode, just return a 200 status code.
-            res.status(200).json({ okay: true, message: "Logged in", redirect: "/app" });
+            res.status(200).json({
+                okay: true,
+                message: "Logged in",
+                redirect: "/app",
+            });
         }
     },
 
     Signup: async (req, res) => {
         //Extract email and password from request body
-        const { email, password } = req.body;
+        const { email, password, username } = req.body;
         //Check if email and password are present
-        if (!email || !password)
+        if (!email || !password || !username)
             return res.status(400).json({
                 okay: false,
                 error: "Bad request",
-                message: "Missing email or password"
+                message: "Missing email or password or username",
             });
         //Try to check if a user exists with the same email
         const userExists = await (async () => {
@@ -112,7 +122,7 @@ const auth = {
                 return res.status(500).json({
                     okay: false,
                     error: "Unhandled exception",
-                    message: "The server encountered an unexpected condition"
+                    message: "The server encountered an unexpected condition",
                 });
                 throw error; // throw an error if the user does not exist. Usually we would want to return res, however in this case we want to throw an error.
             }
@@ -123,7 +133,7 @@ const auth = {
             return res.status(409).json({
                 okay: false,
                 error: "Request conflict",
-                message: "Account with email already exists"
+                message: "Account with email already exists",
             });
         //Hash the password
         const hash = await bcrypt.hash(password, 10);
@@ -131,12 +141,23 @@ const auth = {
         const profile_id = uuidv4();
 
         debugMessage("Auth: BP 4, Line 103");
+        //Generate a username
+        const usernameObj = await generateUsername(Users, username);
+        if (!usernameObj) {
+            return res.status(500).json({
+                okay: false,
+                error: "Unhandled exception",
+                message: "Could not generate username",
+            });
+        }
         //Try to send the user to the database
         try {
             const user = await Users.create({
                 profile_id,
                 email,
                 hash,
+                username_base: usernameObj.username_base,
+                username_suffix: usernameObj.username_suffix,
             });
             debugMessage(user);
         } catch (error) {
@@ -144,7 +165,7 @@ const auth = {
                 return res.status(409).json({
                     okay: false,
                     error: "Request conflict",
-                    message: "Account with email already exists"
+                    message: "Account with email already exists",
                 });
             }
             
@@ -160,7 +181,7 @@ const auth = {
             res.status(500).json({
                 okay: false,
                 error: "Unhandled exception",
-                message: "The server encountered an unexpected condition"
+                message: "The server encountered an unexpected condition",
             });
             console.log(error);
             return;
@@ -171,6 +192,8 @@ const auth = {
             profile_id,
             email,
             password,
+            username_base: usernameObj.username_base,
+            username_suffix: usernameObj.username_suffix,
         });
     },
 
@@ -183,7 +206,7 @@ const auth = {
             return res.status(400).json({
                 okay: false,
                 error: "Bad request",
-                message: "Missing email or password"
+                message: "Missing email or password",
             });
 
         //Try to find a user with the same email
@@ -200,7 +223,7 @@ const auth = {
                 res.status(500).json({
                     okay: false,
                     error: "Unhandled exception",
-                    message: "The server encountered an unexpected condition"
+                    message: "The server encountered an unexpected condition",
                 });
                 return null;
             }
@@ -211,7 +234,7 @@ const auth = {
             return res.status(401).json({
                 okay: false,
                 error: "Invalid credentials",
-                message: "Password or email is incorrect"
+                message: "Password or email is incorrect",
             });
         }
 
@@ -223,7 +246,7 @@ const auth = {
             return res.status(401).json({
                 okay: false,
                 error: "Invalid credentials",
-                message: "Password or email is incorrect"
+                message: "Password or email is incorrect",
             });
         }
 
@@ -232,6 +255,8 @@ const auth = {
             profile_id: user.profile_id,
             email,
             password,
+            username_base: user.username_base,
+            username_suffix: user.username_suffix,
         });
     },
 
@@ -243,7 +268,7 @@ const auth = {
             return res.status(400).json({
                 okay: false,
                 error: "Bad request",
-                message: "Missing session token"
+                message: "Missing session token",
             });
         }
 
@@ -255,7 +280,7 @@ const auth = {
             res.status(500).json({
                 okay: false,
                 error: "Unhandled exception",
-                message: "The server encountered an unexpected condition"
+                message: "The server encountered an unexpected condition",
             });
         }
 
@@ -273,11 +298,13 @@ const auth = {
             return res.status(401).json({
                 okay: false,
                 error: "Bad request",
-                message: "Missing session token"
+                message: "Missing session token",
             });
         }
         return auth.Verify(req, res, () => {
-            return res.status(200).json({ okay: true, message: "Session token is valid" });
+            return res
+                .status(200)
+                .json({ okay: true, message: "Session token is valid" });
         });
     },
 
@@ -294,26 +321,32 @@ const auth = {
                 .json({ error: "Could not find sessionToken" }); //Redirect to login page
         }
 
+        var user = null;
         try {
             //Get profile_id from session token (UUID).
-            var profile_id = await auth.sessionDB.get(sessionToken);
-            if (!profile_id) {
+            const userString = await auth.sessionDB.get(sessionToken);
+            if (!userString) {
                 console.log("Profile ID not found");
-                return res.status(404).json({ //Redirect to login page
+                return res.status(404).json({
+                    //Redirect to login page
                     okay: false,
                     error: "Profile_id not found",
-                    message: "The server could not find profile id"
+                    message: "The server could not find profile id",
                 });
             }
-            console.log("Profile ID: ", profile_id);
+            console.log("user: ", userString);
+            const userJSON = JSON.parse(userString);
+            user = userJSON;
         } catch (error) {
             debugError(error);
             res.status(500).json({
                 okay: false,
                 error: "Unhandled exception",
-                message: "The server encountered an unexpected condition"
+                message: "The server encountered an unexpected condition",
             });
         }
+
+        console.log(user);
 
         //reset the expire time of the session token
         await auth.sessionDB.expire(
@@ -322,7 +355,8 @@ const auth = {
         );
 
         //Add the profile_id to the request object to be used in the route.
-        req.profile_id = profile_id;
+        console.log(user);
+        req.user = user;
 
         next();
     },

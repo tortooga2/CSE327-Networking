@@ -39,7 +39,7 @@ const SyncDB = async () => {
         await Users.sync({ alter: true });
         console.log(chalk.bgGreen("Database synchronized"));
     } catch (error) {
-        console.error(chalk.bgRed("Error syncing database:", error));
+        console.error(("Error syncing database:", error));
     }
     try {
         await Data.sync({ alter: true });

@@ -70,8 +70,7 @@ async function startServer() {
     // Add Endpoints Here:
     app.use("/api/auth", authRouter);
     app.use("/api/file", fileDataRouter);
-    app.use("/api", schemaRouter);
-
+    app.use("/api/schema", schemaRouter);
     //_____________________________________________________________________________________
 
     if (DEBUG) {

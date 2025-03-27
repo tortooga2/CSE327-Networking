@@ -1,9 +1,42 @@
 .file-item {
-    border: 1px solid #ddd;
-    padding: 10px;
-    display: flex;
-    justify-content: space-between;
-    min-width: 10rem;
+    align-items: center;
+    z-index: 0;
+    border-radius: 0px;
+    outline: 2px solid transparent;
+    transition: outline 0.5s ease-in-out, background-color 0.1s ease-in-out,
+        border-radius 0.1s ease-in-out;
+}
+
+.file-item:hover {
+    background-color: #f0f0f0;
+    transition: all 0.1s ease-in-out;
+}
+
+.file-item.selected {
+    background-color: #f0f0f0;
+
+    outline: 2px solid #646cff;
+    z-index: 1;
+    transition: outline 0.5s ease-in-out, background-color 0.1s ease-in-out,
+        border-radius 0.1s ease-in-out;
+}
+
+.type-column > div {
+    text-align: center;
+    width: 5rem;
     padding-left: 1rem;
     padding-right: 1rem;
+    border-radius: 3px;
+    margin: 0.5rem;
+    background-color: red;
+}
+
+.type-column > .bundle {
+    background-color: #f39aff;
+    color: #4f0458;
+}
+
+.type-column > .jpg {
+    background-color: #95b6f1;
+    color: #00315c;
 }

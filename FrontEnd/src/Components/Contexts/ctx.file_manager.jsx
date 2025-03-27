@@ -144,10 +144,6 @@ export const FileManagerProvider = ({ children }) => {
         [files, subscribe, notifySubscribers]
     );
 
-    useEffect(() => {
-        getUsersFiles();
-    }, []);
-
     return (
         <FileManagerContext.Provider value={{ fileManager }}>
             {children}

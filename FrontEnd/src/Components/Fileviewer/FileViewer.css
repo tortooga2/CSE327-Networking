@@ -1,0 +1,29 @@
+.file-viewer {
+    text-align: left;
+    border-spacing: 0 10px;
+    border-collapse: separate;
+}
+
+.file-viewer > thead > tr > th {
+    padding: 0.5rem;
+    border-bottom: 3px solid #000000;
+}
+
+.id-column {
+    width: 3rem;
+}
+
+.date-column {
+    width: 10rem;
+}
+
+.type-column {
+    width: 10rem;
+    text-align: left;
+    margin-left: 1rem;
+    margin-right: 1rem;
+}
+
+.owner-column {
+    width: 20rem;
+}

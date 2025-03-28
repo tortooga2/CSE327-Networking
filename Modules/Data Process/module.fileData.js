@@ -266,7 +266,7 @@ const getFileById = async (req, res) => {
         //         message: "This file does not belong to you",
         //     });
         // }
-        console.log(file);
+
         res.status(200).send({
             okay: true,
             file: file,

@@ -12,7 +12,7 @@ const FilePage = () => {
 
         console.log("Fetching file data @", `api/file/user/${fileId}`);
 
-        const response = (async () => {
+        const getFileData = async () => {
             try {
                 const response = await fetch(`/api/file/user/${fileId}`, {
                     method: "GET",
@@ -36,10 +36,9 @@ const FilePage = () => {
                     error: error,
                 });
             }
-        })();
-        response.then((data) => {
-            console.log(data);
-        });
+        };
+
+        getFileData();
     }, [fileId, ownerId]);
 
     return (

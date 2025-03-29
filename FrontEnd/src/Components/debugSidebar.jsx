@@ -34,7 +34,6 @@ const DebugSidebar = () => {
 
                 <form action="/api/s3/upload" method="POST" encType="multipart/form-data">
                     <input type="file" name="file" accept="file/*"/>
-                    <input type="text" name="caption" placeholder="Upload Your File"/>
                     <button type="submit">Submit</button>
                 </form>
             </div>

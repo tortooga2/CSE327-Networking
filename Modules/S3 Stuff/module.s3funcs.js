@@ -1,5 +1,3 @@
-import { fileURLToPath } from "node:url";
-import { readdirSync, readFileSync, writeFileSync } from "node:fs";
 import {
     PutObjectCommand,
     ListObjectsCommand,
@@ -8,24 +6,21 @@ import {
     DeleteObjectsCommand,
     DeleteBucketCommand,
 } from "@aws-sdk/client-s3";
-import { s3Client, bucketName } from "../S3 Stuff/module.s3client.js"
+import { s3Client, bucketName } from "../S3 Stuff/module.s3client.js";
+import crypto from "crypto";
+
+//Generates a random name for files. In S3, if a file is uploaded to a bucket and it shares a name with some other file in the bucket, it overrides the old one
+const randomImageName = (bytes = 32) => crypto.randomBytes(bytes).toString('hex');
 
 const fileupload = async (req, res) => {
     console.log("req.body", req.body);
     console.log("req.file", req.file);
 
-    req.file.buffer
-
-    // const params = {
-    //     Bucket: bucketName,
-    //     Key: req.file.originalname,
-    //     Body: req.file.buffer,
-    //     ContentType: req.file.mimetype,
-    // };
+    req.file.buffer;
 
     const command = new PutObjectCommand({
         Bucket: bucketName,
-        Key: req.file.originalname,
+        Key: randomImageName(),
         Body: req.file.buffer,
         ContentType: req.file.mimetype,
     });

@@ -11,6 +11,6 @@ const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
 s3Router.use(auth.Verify);
-s3Router.post("/upload", upload.single('image'), fileupload);
+s3Router.post("/upload", upload.single('file'), fileupload);
 
 export default s3Router;

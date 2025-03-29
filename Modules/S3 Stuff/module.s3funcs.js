@@ -1,10 +1,7 @@
 import {
     PutObjectCommand,
-    ListObjectsCommand,
-    CopyObjectCommand,
     GetObjectCommand,
-    DeleteObjectsCommand,
-    DeleteBucketCommand,
+    DeleteObjectCommand,
 } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { s3Client, bucketName } from "../S3 Stuff/module.s3client.js";
@@ -56,4 +53,23 @@ const fileDownload = async (req, res) => {
     res.status(200).send(url);
 };
 
-export { fileUpload, fileDownload };
+const deleteFile = async (req, res) => {
+    //Obtain the file's key from the database
+    const file = await Data.findByPk(req.params.id);
+
+    //Delete from S3
+    const command = new DeleteObjectCommand({
+        Bucket: bucketName,
+        Key: file.metadata.key,
+    });
+    await s3Client.send(command);
+
+    //Delete from Postgres
+    await file.destroy();
+
+    res.status(200).json({
+        okay: true,
+    });
+};
+
+export { fileUpload, fileDownload, deleteFile };

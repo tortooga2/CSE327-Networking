@@ -24,7 +24,7 @@ const FilePage = () => {
                 if (response.ok) {
                     const data = await response.json();
                     console.log(data);
-                    setFileData(data.file);
+                    setFileData(data.files);
                 } else {
                     setFileData({
                         error: response.statusText,

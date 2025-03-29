@@ -242,6 +242,57 @@ const updateFileLedger = async (req, res) => {
     }
 };
 
+
+const unpackBundle = async (file) => {
+    console.log("Started unpacking!")
+    const files = { mainfile: file, children: [], extra: [] };
+    // Unpack a bundle
+    // 1. Find all children of the bundle
+    // 2. Add the bundle to the children's parents
+    // 3. Remove the bundle from the children's parents
+    // 4. Remove the bundle from the children's children
+    // 5. Remove the bundle from the database
+    const children = file.children.item_id;
+
+
+    try {
+        const childrenData = await Data.findAll({
+            where: {
+                id: children,
+            },
+        });
+
+        //in case we get any bundles, we only want to worry about showing the files data one level deep! if they want to see those files, then they would open that bundle individually, like they have done with this current bundle we are unpacking. JUST ONE LEVEL DEEP!
+        const extras = new Map();
+
+        for (let i of childrenData) {
+            if (i.type === "bundle") {
+                const iChildren = i.children.item_id;
+                const iChildrenData = await Data.findAll({
+                    where: {
+                        id: iChildren,
+
+                    },
+                })
+                for (let l of iChildrenData) {
+                    extras.set(l.id, l);
+                }
+            }
+        }
+
+        files.children = [...childrenData];
+        files.extra = [...extras.values()];
+        console.log(files.extra);
+
+        return files;
+
+    } catch (err) {
+        console.error("Error", err);
+        return null;
+    }
+}
+
+
 //Should send the file back to the client when given proper file ID
 const getFileById = async (req, res) => {
     try {
@@ -266,10 +317,19 @@ const getFileById = async (req, res) => {
         //         message: "This file does not belong to you",
         //     });
         // }
+        //
+        let bundleFiles;
+        if (file.type === "bundle") {
+            bundleFiles = await unpackBundle(file);
+
+        } else {
+            bundleFiles = file;
+        }
+
 
         res.status(200).send({
             okay: true,
-            file: file,
+            files: bundleFiles,
         });
     } catch (err) {
         debugError(err);

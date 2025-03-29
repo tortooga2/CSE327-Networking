@@ -9,7 +9,7 @@ import { Sequelize } from "sequelize";
 const fileUpload = async (req, res) => {
     const { profile_id, username_base } = req.user;
 
-    if (!file) {
+    if (!req.file) {
         return res.status(400).json({
             okay: false,
             error: "Bad request",
@@ -32,16 +32,19 @@ const fileUpload = async (req, res) => {
         await s3Client.send(command); //Sends command to S3 Bucket
         
         const sentFile = await Data.create({ //Create a new object within our database
-            owner_id: profile_id,
-            creator_id: profile_id,
-            creator_username: username_base,
-            name: req.file.originalname,
-            type: req.file.mimetype.split("/")[1],
-            metadata: {
-                key: fileKey,
+                owner_id: profile_id,
+                creator_id: profile_id,
+                creator_username: username_base,
+                name: req.file.originalname,
+                type: req.file.mimetype.split("/")[1],
+                metadata: {
+                    key: fileKey,
+                },
             },
-        }, { transaction: transaction });
+            { transaction: transaction },
+        );
 
+        await transaction.commit();
         res.status(201).json({
             okay: true,
             data: sentFile,
@@ -98,6 +101,7 @@ const fileDownload = async (req, res) => {
             okay: true,
             url: url,
         });
+        await transaction.commit();
     } catch (err) {
         console.log(err);
         res.status(500).json({
@@ -141,6 +145,7 @@ const deleteFile = async (req, res) => {
         await file.destroy({transaction: transaction}); 
         
         res.status(200).json({ okay: true });
+        await transaction.commit();
     } catch (err) {
         await transaction.rollback();
         debugError(err);

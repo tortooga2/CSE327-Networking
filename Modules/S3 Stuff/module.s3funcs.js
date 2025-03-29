@@ -49,7 +49,6 @@ const fileUpload = async (req, res) => {
             okay: true,
             data: sentFile,
         });
-
     } catch (err) {
         await transaction.rollback(); //Rollback the transaction since error was thrown
         console.log(err);
@@ -93,7 +92,7 @@ const fileDownload = async (req, res) => {
 
         const command = new GetObjectCommand({
             Bucket: bucketName,
-            Key: metadata.key,
+            Key: file.metadata.key,
         });
 
         const url = await getSignedUrl(s3Client, command, { expiresIn: 60 }); //Url is currently set to expire in 60 seconds
@@ -101,7 +100,6 @@ const fileDownload = async (req, res) => {
             okay: true,
             url: url,
         });
-        await transaction.commit();
     } catch (err) {
         console.log(err);
         res.status(500).json({
@@ -144,8 +142,8 @@ const deleteFile = async (req, res) => {
         const transaction = await sequelize.transaction(); //Start transaction with database
         await file.destroy({transaction: transaction}); 
         
-        res.status(200).json({ okay: true });
         await transaction.commit();
+        res.status(200).json({ okay: true });
     } catch (err) {
         await transaction.rollback();
         debugError(err);

@@ -6,7 +6,6 @@ import { useStore } from "./Contexts/zus.fileManager";
 const DebugSidebar = () => {
     const selectedFiles = useStore((state) => state.selectedFiles);
     const UnSelectAll = useStore((state) => state.unSelectAll);
-
     const connectFiles = useStore((state) => state.connectFiles);
 
     return (
@@ -32,6 +31,12 @@ const DebugSidebar = () => {
                     Unselect All ({selectedFiles.size})
                 </button>
                 <button onClick={connectFiles}>Connect Files</button>
+
+                <form action="/api/s3/upload" method="POST" encType="multipart/form-data">
+                    <input type="file" name="image" accept="image/*"/>
+                    <input type="text" name="caption" placeholder="Upload Your File"/>
+                    <button type="submit">Submit</button>
+                </form>
             </div>
         </div>
     );

@@ -11,6 +11,7 @@ import { sequelize, SyncDB } from "./Modules/Database/module.db.js";
 import authRouter from "./Routes/routes.auth.js";
 import fileDataRouter from "./Routes/routes.fileData.js";
 import schemaRouter from "./Routes/routes.schema.js";
+import s3Router from "./Routes/routes.s3.js";
 
 import { DEBUG } from "./Modules/module.debugHelpers.js";
 import { fileURLToPath } from "url";
@@ -71,6 +72,7 @@ async function startServer() {
     app.use("/api/auth", authRouter);
     app.use("/api/file", fileDataRouter);
     app.use("/api/schema", schemaRouter);
+    app.use("/api/s3", s3Router);
     //_____________________________________________________________________________________
 
     if (DEBUG) {

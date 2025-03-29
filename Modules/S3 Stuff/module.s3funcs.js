@@ -82,6 +82,7 @@ const fileDownload = async (req, res) => {
                 message: "The file you are looking for may not exist",
             });
         }
+
         if (file.owner_id != profile_id) {
             return res.status(403).json({
                 okay: false,
@@ -123,6 +124,7 @@ const deleteFile = async (req, res) => {
                 message: "The file you are looking for may not exist",
             });
         }
+        
         if (file.owner_id != profile_id) {
             return res.status(403).json({
                 okay: false,

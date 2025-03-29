@@ -20,11 +20,11 @@ const fileUpload = async (req, res) => {
     try {
         const transaction = await sequelize.transaction(); //Start a transaction to our database
 
-        const fileKey = crypto.randomBytes(32).toString('hex'); //Generates a random key for files. In S3, if a file is uploaded to a bucket and it shares a name with some other file in the bucket, it overrides the old one
+        const fileKey = crypto.randomBytes(16).toString('hex'); //Generates a random key for files. In S3, if a file is uploaded to a bucket and it shares a name with some other file in the bucket, it overrides the old one
 
         const command = new PutObjectCommand({
             Bucket: bucketName,
-            Key: fileKey,
+            Key: `${profile_id}/${fileKey}`,
             Body: req.file.buffer,
             ContentType: req.file.mimetype,
         });
@@ -38,7 +38,7 @@ const fileUpload = async (req, res) => {
                 name: req.file.originalname,
                 type: req.file.mimetype.split("/")[1],
                 metadata: {
-                    key: fileKey,
+                    key: `${profile_id}/${fileKey}`,
                 },
             },
             { transaction: transaction },

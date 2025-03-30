@@ -1,9 +1,10 @@
 import { Data, Users, sequelize } from "../Database/module.db.js";
 import { debugMessage, debugError } from "../module.debugHelpers.js";
 import { Sequelize } from "sequelize";
+import crypto from "crypto";
 
 //S3 stuff
-import { GetObjectCommand } from "@aws-sdk/client-s3";
+import { GetObjectCommand, PutObjectCommand, DeleteObjectCommand } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { s3Client, bucketName } from "../S3 Stuff/module.s3client.js";
 
@@ -478,6 +479,21 @@ const ConnectFiles = async (req, res) => {
     }
 };
 
+const generateUploadUrl = async (req, res) => {
+    const fileKey = crypto.randomBytes(16).toString('hex');
+
+    const command = new PutObjectCommand({
+        Bucket: bucketName,
+        Key: fileKey,
+    });
+
+    const response = await s3Client.send(command);
+
+    const url = await getSignedUrl(s3Client, command, { expiresIn: 360});
+
+    res.status(200).send(url);
+};
+
 export {
     getAllUserData,
     createUserData,
@@ -487,4 +503,5 @@ export {
     getFileById,
     sendFileToUser,
     ConnectFiles,
+    generateUploadUrl
 };

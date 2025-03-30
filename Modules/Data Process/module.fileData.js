@@ -28,10 +28,25 @@ const getAllUserData = async (req, res) => {
             },
         });
 
+        //Getting the IDs of all items grabbed
+        const keys = data.map(item => item.metadata.key);
+        
+        const fileUrls = await Promise.all(
+            keys.map(async (key) => {
+                const command = new GetObjectCommand({
+                    Bucket: bucketName,
+                    Key: key,
+                });
+
+                return (getSignedUrl(s3Client, command, { expiresIn: 10 }));
+            }),
+        );
+
         debugMessage(data);
         res.status(200).json({
             okay: true,
             data: data,
+            urls: fileUrls,
         });
     } catch (err) {
         debugError(err);

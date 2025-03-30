@@ -246,12 +246,7 @@ const updateFileLedger = async (req, res) => {
 const unpackBundle = async (file) => {
     console.log("Started unpacking!")
     const files = { mainfile: file, children: [], extra: [] };
-    // Unpack a bundle
-    // 1. Find all children of the bundle
-    // 2. Add the bundle to the children's parents
-    // 3. Remove the bundle from the children's parents
-    // 4. Remove the bundle from the children's children
-    // 5. Remove the bundle from the database
+
     const children = file.children.item_id;
 
 
@@ -318,6 +313,7 @@ const getFileById = async (req, res) => {
         //     });
         // }
         //
+
         let bundleFiles;
         if (file.type === "bundle") {
             bundleFiles = await unpackBundle(file);

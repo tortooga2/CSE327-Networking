@@ -12,7 +12,6 @@ const s3Client = new S3Client({
         secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
     },
     region: bucketRegion,
-    logger: console,
 });
 
 export { s3Client, bucketName, bucketRegion };

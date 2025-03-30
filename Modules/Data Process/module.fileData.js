@@ -481,15 +481,14 @@ const ConnectFiles = async (req, res) => {
 
 const generateUploadUrl = async (req, res) => {
     const fileKey = crypto.randomBytes(16).toString('hex');
+    const { profile_id } = req.user;
 
     const command = new PutObjectCommand({
         Bucket: bucketName,
-        Key: fileKey,
+        Key: `${profile_id}/${fileKey}`,
     });
 
-    const response = await s3Client.send(command);
-
-    const url = await getSignedUrl(s3Client, command, { expiresIn: 360});
+    const url = await getSignedUrl(s3Client, command, { expiresIn: 60 });
 
     res.status(200).send(url);
 };

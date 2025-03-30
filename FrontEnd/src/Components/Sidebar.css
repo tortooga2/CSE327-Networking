@@ -1,0 +1,51 @@
+.sidebar {
+    display: flex;
+    flex-direction: column;
+    width: 300px;
+    height: 100vh;
+    background-color: white;
+    padding: 1rem;
+    box-sizing: border-box;
+}
+
+.title {
+    text-align: left;
+    margin-bottom: 2rem;
+}
+
+.special {
+    font-size: 1rem;
+    color: #333;
+}
+
+h1 {
+    font-size: 2rem;
+    font-weight: bold;
+}
+
+.miamor {
+    font-style: italic;
+}
+
+.sidebar-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.sidebar-button {
+    background-color: #f0f0f0;
+    border: none;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    color: var(--primary-color);
+}
+
+.sidebar-footer {
+    position: absolute;
+    bottom: 0;
+    left: 1rem;
+    color: #cc674b;
+    font-size: 0.8rem;
+    font-family: "Playfair Display", serif;
+}

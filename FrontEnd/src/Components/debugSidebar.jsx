@@ -6,8 +6,8 @@ import { useStore } from "./Contexts/zus.fileManager";
 const DebugSidebar = () => {
     const selectedFiles = useStore((state) => state.selectedFiles);
     const UnSelectAll = useStore((state) => state.unSelectAll);
-
     const connectFiles = useStore((state) => state.connectFiles);
+    const uploadFile = useStore((state) => state.uploadFiles);
 
     return (
         <div className="debug-sidebar">
@@ -32,6 +32,11 @@ const DebugSidebar = () => {
                     Unselect All ({selectedFiles.size})
                 </button>
                 <button onClick={connectFiles}>Connect Files</button>
+
+                <form id="fileForm">
+                    <input id="fileInput" type="file" accepts="file/*"/>
+                    <button type="submit" onClick={uploadFile}>Upload</button>
+                </form>
             </div>
         </div>
     );

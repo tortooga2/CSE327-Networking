@@ -58,7 +58,7 @@ export const createDataTable = (sequelize) => {
                 type: DataTypes.STRING,
                 allowNull: false,
                 validate: {
-                    isAlpha: {
+                    isAlphanumeric: {
                         msg: "File type is not supported or is invalid",
                     },
                 },

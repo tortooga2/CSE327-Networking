@@ -92,6 +92,42 @@ const useStore = create((set) => ({
             console.error(error);
         }
     },
+    uploadFiles: async (e) => {
+        const fileForm = document.querySelector("#fileForm");
+        const fileInput = document.querySelector("#fileInput");
+
+        try {
+            fileForm.addEventListener("submit", async (e) => {
+                e.preventDefault();
+                const file = fileInput.files[0];
+                console.log("FILE NAME: ", file.name);
+                
+                const { url, key } = await fetch("/api/file/s3url", { method: "GET" }).then(res => res.json());
+
+                await fetch(url, {
+                    method: "PUT",
+                    headers: {
+                        ContentType: file.type,
+                    },
+                    body: file,
+                });
+
+                await fetch("/api/file/upload", { 
+                    method: "PUT",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        fileName: file.name,
+                        fileType: file.type,
+                        key: key,
+                    }),
+                });
+             });
+        } catch (err) {
+            console.log(err);
+        }
+    },
 }));
 
 export { useStore };

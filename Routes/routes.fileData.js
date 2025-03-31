@@ -1,16 +1,15 @@
 import { Router } from "express";
 import auth from "../Modules/module.auth.js";
 import {
-    getAllUserData,
+    ConnectFiles,
     createUserData,
-    testCreateUserData,
     deleteFileById,
-    updateFileLedger,
+    getAllUserData,
     getFileById,
     sendFileToUser,
-    ConnectFiles,
-    generateUploadUrl
-} from "../Modules/Data Process/module.fileData.js";
+    updateFileLedger,
+    testCreateUserData,
+} from "../Modules/Data Process/import.dataProcess.js";
 
 const fileDataRouter = Router();
 
@@ -22,7 +21,6 @@ fileDataRouter.post("/create", createUserData);
 fileDataRouter.post("/send/:other_id/:file_id", sendFileToUser);
 fileDataRouter.patch("/update/:id", updateFileLedger);
 fileDataRouter.post("/connect", ConnectFiles);
-fileDataRouter.post("/s3url", generateUploadUrl);
 
 // Test the creation of a user data
 fileDataRouter.post("/createtest", testCreateUserData);

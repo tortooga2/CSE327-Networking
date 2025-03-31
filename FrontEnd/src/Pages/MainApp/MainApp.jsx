@@ -12,11 +12,19 @@ import FileViewer from "../../Components/Fileviewer/Fileviewer.jsx";
 import Dashboard from "../../Components/Dashboard.jsx";
 import Sidebar from "../../Components/Sidebar.jsx";
 
+import { useUser } from "../../Components/Contexts/ctx.user.jsx";
+
 import DebugSidebar from "../../Components/debugSidebar.jsx";
 
 import { useStore } from "../../Components/Contexts/zus.fileManager";
 
 const MainApp = () => {
+    const { user } = useUser();
+
+    useEffect(() => {
+        user.ValidateSession();
+    }, [user]);
+
     return (
         <FileManagerProvider>
             <div style={{ display: "flex" }}>

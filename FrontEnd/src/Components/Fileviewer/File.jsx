@@ -4,9 +4,15 @@ import "./File.css";
 
 import { useStore } from "../Contexts/zus.fileManager";
 
+import FileButtonLess from "./File.buttonless";
+
 const File = ({ fileData }) => {
     const fileContent = useState(fileData);
+    const buttonSection = useRef(null);
     const checkboxRef = useRef(null);
+    const dropDownRef = useRef(null);
+    const [isExpanded, setIsExpanded] = useState(false);
+    const dropDownClassName = "drop-down";
     const isSelected = useStore((state) =>
         state.selectedFiles.has(fileContent[0].id)
     );
@@ -17,53 +23,102 @@ const File = ({ fileData }) => {
     }, [isSelected]);
 
     const handleChange = (e) => {
-        setIsSelected(fileContent[0].id, e.target.checked);
+        console.log("Checkbox changed:", e.target.checked);
+        setIsSelected(fileContent[0].id, !isSelected);
     };
 
     const className = isSelected ? "file-item selected" : "file-item";
-
+    const dropDownClass = isExpanded
+        ? dropDownClassName + " open"
+        : dropDownClassName;
     return (
-        <tr
-            className={className}
-            onClick={() => {
-                checkboxRef.current.checked = !checkboxRef.current.checked;
-                handleChange({
-                    target: { checked: checkboxRef.current.checked },
-                });
+        <div
+            style={{
+                display: "flex",
+                flexDirection: "column",
+                position: "relative",
             }}
         >
-            <td className="id-column">{fileContent[0].id}</td>
-            <td>
-                {" "}
-                {(() => {
-                    const date = fileContent[0].createdAt;
-
-                    const dateObj = new Date(date);
-                    const month = dateObj.getMonth() + 1;
-                    const day = dateObj.getDate();
-                    const year = dateObj.getFullYear();
-                    const hour = dateObj.getHours();
-                    const minute = dateObj.getMinutes();
-
-                    return `${month}-${day}-${year} ${hour}:${minute}`;
-                })()}
-            </td>
-
-            <td className="type-column">
-                <div className={`${fileContent[0].type}`}>
-                    {fileContent[0].type}
+            <div
+                className={className}
+                onClick={() => checkboxRef.current.click()}
+            >
+                <div className={"id-column"}>{fileContent[0].id}</div>
+                <div className={"date-column"}>
+                    {(() => {
+                        const date = new Date(fileContent[0].createdAt);
+                        const options = {
+                            year: "numeric",
+                            month: "2-digit",
+                            day: "2-digit",
+                        };
+                        const formattedDate = date.toLocaleDateString(
+                            "en-US",
+                            options
+                        );
+                        const formattedTime = date.toLocaleTimeString("en-US", {
+                            hour: "2-digit",
+                            minute: "2-digit",
+                        });
+                        return `${formattedDate} ${formattedTime}`;
+                    })()}
                 </div>
-            </td>
-            <td className="owner-column">{fileContent[0].creator_username}</td>
-            <td>{fileContent[0].name}</td>
-            <td className="checkbox-column">
-                <input
-                    type="checkbox"
-                    ref={checkboxRef}
-                    onChange={handleChange}
-                />
-            </td>
-        </tr>
+                <div className={"type-column"}>{fileContent[0].type}</div>
+                <div className={"owner-column"}>
+                    {fileContent[0].creator_username}
+                </div>
+                <div className={"name-column"}>{fileContent[0].name}</div>
+                <div className={"button-column"} ref={buttonSection}>
+                    <input
+                        type="checkbox"
+                        ref={checkboxRef}
+                        onChange={handleChange}
+                    />
+                    {(() => {
+                        if (fileContent[0].type === "bundle") {
+                            return (
+                                <button
+                                    className={"file-button"}
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        // Handle bundle view
+                                        setIsExpanded(!isExpanded);
+                                    }}
+                                >
+                                    <span className={"file-button-text"}>
+                                        View
+                                    </span>
+                                </button>
+                            );
+                        }
+                        return <div className={"file-button"}></div>;
+                    })()}
+                </div>
+            </div>
+            <div
+                className="dropDown-container"
+                style={{ display: "flex", flexDirection: "row" }}
+            >
+                <div style={{ width: "100px" }}></div>
+                {fileContent[0].type === "bundle" ? (
+                    <div className={dropDownClass} ref={dropDownRef}>
+                        {fileContent[0].children.item_id.map((child) => {
+                            const childFile = useStore
+                                .getState()
+                                .getFileById(child);
+                            if (!childFile) return null; // Skip if file not found
+                            return (
+                                <FileButtonLess
+                                    key={child}
+                                    fileData={childFile}
+                                />
+                            );
+                        })}
+                        {console.log(fileContent[0].children)}
+                    </div>
+                ) : null}
+            </div>
+        </div>
     );
 };
 

@@ -24,28 +24,24 @@ const FileViewer = () => {
             style={{ display: "flex", flexDirection: "column", width: "100%" }}
         >
             <h1>File Viewer</h1>
-            <table className="file-viewer">
-                <thead>
-                    <tr>
-                        <th className="id-column">ID</th>
-                        <th className="date-column">Date</th>
-
-                        <th className="type-column">Type</th>
-                        <th className="owner-column">Owner</th>
-                        <th>Name</th>
-                        <th className="checkbox-column">Select</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {(() => {
-                        let array = useStore.getState().getFiles();
-                        console.log("Files in viewer", array);
-                        return array.map((file) => {
-                            return <File fileData={file} key={file.id} />;
-                        });
-                    })()}
-                </tbody>
-            </table>
+            <div className={"content-body"}>
+                <div className={"file-table file-header file-item"}>
+                    <div className={"id-column"}>ID</div>
+                    <div className={"date-column"}>Date</div>
+                    <div className={"type-column"}>Type</div>
+                    <div className={"owner-column"}>Owner</div>
+                    <div className={"name-column"}>Name</div>
+                    <div className={"button-column"}></div>
+                </div>
+                <div className={"file-table file-list"}>
+                    {useStore
+                        .getState()
+                        .getFiles()
+                        .map((file) => {
+                            return <File key={file.id} fileData={file} />;
+                        })}
+                </div>
+            </div>
         </div>
     );
 };

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import ".Sidebar.css";
+import "../Components/Sidebar.css"; // Import your CSS file for styling
 import {
     Link2,
     Upload,
@@ -18,7 +18,6 @@ import {
 const Sidebar = () => {
     const [isFavoritesOpen, setIsFavoritesOpen] = useState(true);
     const [favorites, setFavorites] = useState([]);
-
 
     // Sample favorite items with tags
     const favoriteItems = [
@@ -62,14 +61,13 @@ const Sidebar = () => {
 
     const toggleFavorite = (itemId) => {
         if (favorites.includes(itemId)) {
-            setFavorites(favorites.filter(id => id !== itemId));
+            setFavorites(favorites.filter((id) => id !== itemId));
         } else {
             setFavorites([...favorites, itemId]);
         }
     };
 
     const isItemFavorite = (itemId) => favorites.includes(itemId);
-
 
     return (
         <div className="w-auto h-100% bg-white px-4 py-2 rounded border-2 border-purple-500">
@@ -97,7 +95,6 @@ const Sidebar = () => {
                         Create
                     </a>
                 </li>
-
             </ul>
 
             <hr className="my-4" />

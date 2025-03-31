@@ -9,6 +9,13 @@ const useStore = create((set) => ({
             return new Date(b.createdAt) - new Date(a.createdAt);
         });
     },
+    getFileById: (fileID) => {
+        const file = useStore.getState().files.get(fileID);
+        if (file) {
+            return file;
+        }
+        return null;
+    },
     setFiles: (files) => set({ files }),
     selectFile: (fileID, selectionState) => {
         set((state) => {

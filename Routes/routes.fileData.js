@@ -11,6 +11,7 @@ import {
     ConnectFiles,
     generateUploadUrl
 } from "../Modules/Data Process/module.fileData.js";
+import { createFileInDb } from "../Modules/Data Process/module.uploadfile.js";
 
 const fileDataRouter = Router();
 
@@ -23,6 +24,7 @@ fileDataRouter.post("/send/:other_id/:file_id", sendFileToUser);
 fileDataRouter.patch("/update/:id", updateFileLedger);
 fileDataRouter.post("/connect", ConnectFiles);
 fileDataRouter.get("/s3url", generateUploadUrl);
+fileDataRouter.put("/upload", createFileInDb);
 
 // Test the creation of a user data
 fileDataRouter.post("/createtest", testCreateUserData);

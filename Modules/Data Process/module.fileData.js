@@ -490,7 +490,9 @@ const generateUploadUrl = async (req, res) => {
 
     const url = await getSignedUrl(s3Client, command, { expiresIn: 60 });
 
-    res.status(200).send(url);
+    res.status(200).json({
+        url: url
+    });
 };
 
 export {

@@ -73,7 +73,7 @@ export const UserProvider = ({ children }) => {
                     console.error(error);
                 }
             },
-            SignUp: async (email, password) => {
+            SignUp: async (username, email, password) => {
                 try {
                     const response = await fetch(`api/auth/signup`, {
                         method: "POST",
@@ -81,7 +81,7 @@ export const UserProvider = ({ children }) => {
                             "Content-Type": "application/json",
                         },
                         credentials: "include",
-                        body: JSON.stringify({ email, password }),
+                        body: JSON.stringify({ email, password, username }),
                     });
                     if (response.ok) {
                         user.ValidateSession();

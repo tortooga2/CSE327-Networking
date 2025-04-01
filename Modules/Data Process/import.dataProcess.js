@@ -6,6 +6,7 @@ import { getFileById } from "./module.getFileById.js";
 import { sendFileToUser } from "./module.sendFileToUser.js";
 import { updateFileLedger } from "./module.updateFileLedger.js";
 import { testCreateUserData } from "./module.test.createData.js";
+import { createFileInDb } from "./module.uploadfile.js";
 
 export {
     ConnectFiles,
@@ -16,4 +17,5 @@ export {
     sendFileToUser,
     updateFileLedger,
     testCreateUserData,
+    createFileInDb,
 };

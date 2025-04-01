@@ -4,10 +4,8 @@ import { useUser } from "../Contexts/ctx.user";
 
 import Button from "../Button/Button";
 
-
 const SignupWindow = ({ setState }) => {
     const { user } = useUser();
-
 
     const formRef = useRef(null);
     const navigate = useNavigate();
@@ -56,13 +54,20 @@ const SignupWindow = ({ setState }) => {
 
         formRef.current.addEventListener("submit", async (e) => {
             e.preventDefault();
-            const email = e.target[0].value;
-            const password = e.target[1].value;
+            const username = e.target[0].value;
+            const email = e.target[1].value;
+            const password = e.target[2].value;
 
-            console.log("Signup with email:", email, "and password", password);
+            console.log(
+                "Signup with username:",
+                username,
+                "email:",
+                email,
+                "and password",
+                password
+            );
 
-
-            await user.SignUp(email, password);
+            await user.SignUp(username, email, password);
         });
     }, [navigate]);
 
@@ -70,12 +75,14 @@ const SignupWindow = ({ setState }) => {
         <div style={style}>
             <h1 style={{ width: "fit-content" }}>Sign up</h1>
             <form style={formStyle} ref={formRef}>
+                <input style={inputStyle} type="text" placeholder="Username" />
                 <input style={inputStyle} type="text" placeholder="Email" />
                 <input
                     style={inputStyle}
                     type="password"
                     placeholder="Password"
                 />
+
                 <Button
                     style={{
                         maxWidth: "100px",

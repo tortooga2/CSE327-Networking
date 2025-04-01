@@ -12,10 +12,11 @@ const createFileInDb = async (req, res) => {
             error: "Bad request",
             message: "You did not send file information",
         });
-    };
+    }
 
-    try {        
-        const sentFile = await Data.create({
+    try {
+        const sentFile = await Data.create(
+            {
                 owner_id: profile_id,
                 creator_id: profile_id,
                 creator_username: username_base,
@@ -25,7 +26,7 @@ const createFileInDb = async (req, res) => {
                     key: key,
                 },
             },
-            { transaction: transaction },
+            { transaction: transaction }
         );
 
         await transaction.commit();
@@ -50,8 +51,8 @@ const createFileInDb = async (req, res) => {
             okay: false,
             error: "Unhandled exception",
             message: "The server encountered an unexpected condition",
-        });        
-    };
+        });
+    }
 };
 
 export { createFileInDb };

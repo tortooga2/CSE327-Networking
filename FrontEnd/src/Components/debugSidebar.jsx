@@ -2,7 +2,6 @@ import { useEffect, useState, useRef } from "react";
 import { useFileManager } from "./Contexts/ctx.file_manager";
 
 import { useStore } from "./Contexts/zus.fileManager";
-import { isFileLoadingAllowed } from "vite";
 
 const DebugSidebar = () => {
     const selectedFiles = useStore((state) => state.selectedFiles);

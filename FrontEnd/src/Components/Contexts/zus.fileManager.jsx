@@ -98,7 +98,15 @@ const useStore = create((set) => ({
 
             const { url, key } = await fetch("/api/bin/getuploadpath", {
                 method: "GET",
-            }).then((res) => res.json());
+                credentials: "include",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            })
+                .then((res) => res.json())
+                .catch((err) => {
+                    console.log("endpoint incorrent i think");
+                });
 
             await fetch(url, {
                 method: "PUT",
@@ -109,7 +117,8 @@ const useStore = create((set) => ({
             });
 
             await fetch("/api/file/upload", {
-                method: "PUT",
+                method: "POST",
+                credentials: "include",
                 headers: {
                     "Content-Type": "application/json",
                 },

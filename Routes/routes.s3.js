@@ -18,6 +18,6 @@ s3Router.use(auth.Verify);
 s3Router.post("/upload", upload.single("file"), fileUpload);
 s3Router.get("/download/:id", fileDownload);
 s3Router.delete("/delete/:id", deleteFile);
-s3Router.post("/getuploadpath", generateUploadUrl);
+s3Router.get("/getuploadpath", generateUploadUrl);
 
 export default s3Router;

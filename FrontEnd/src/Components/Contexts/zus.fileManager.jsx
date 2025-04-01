@@ -105,7 +105,7 @@ const useStore = create((set) => ({
             })
                 .then((res) => res.json())
                 .catch((err) => {
-                    console.log("endpoint incorrent i think");
+                    console.error("Error fetching upload path:", err);
                 });
 
             await fetch(url, {

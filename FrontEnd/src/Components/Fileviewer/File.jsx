@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import propTypes from "prop-types";
 import "./File.css";
 
@@ -7,6 +8,7 @@ import { useStore } from "../Contexts/zus.fileManager";
 import FileButtonLess from "./File.buttonless";
 
 const File = ({ fileData }) => {
+    const navigate = useNavigate();
     const fileContent = useState(fileData);
     const buttonSection = useRef(null);
     const checkboxRef = useRef(null);
@@ -74,6 +76,13 @@ const File = ({ fileData }) => {
                         ref={checkboxRef}
                         onChange={handleChange}
                     />
+                    <button
+                        onClick={(e) => {
+                            navigate(`/file/owner_id/${fileContent[0].id}`);
+                        }}
+                    >
+                        view
+                    </button>
                     {(() => {
                         if (fileContent[0].type === "bundle") {
                             return (
@@ -86,7 +95,7 @@ const File = ({ fileData }) => {
                                     }}
                                 >
                                     <span className={"file-button-text"}>
-                                        View
+                                        expand
                                     </span>
                                 </button>
                             );

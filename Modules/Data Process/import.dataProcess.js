@@ -7,6 +7,7 @@ import { sendFileToUser } from "./module.sendFileToUser.js";
 import { updateFileLedger } from "./module.updateFileLedger.js";
 import { testCreateUserData } from "./module.test.createData.js";
 import { createFileInDb } from "./module.uploadfile.js";
+import { loadDataForFocusPage } from "./module.loadDataforFocusPage.js";
 
 export {
     ConnectFiles,
@@ -18,4 +19,5 @@ export {
     updateFileLedger,
     testCreateUserData,
     createFileInDb,
+    loadDataForFocusPage,
 };

@@ -40,11 +40,12 @@
 }
 .button-column {
     background-color: #f0f0f0;
-    width: 100px;
+    width: 200px;
 
     display: flex;
-    justify-content: space-evenly;
+    justify-content: left;
     align-items: center;
+    gap: 0.5rem;
 }
 
 .file-header > .id-column {

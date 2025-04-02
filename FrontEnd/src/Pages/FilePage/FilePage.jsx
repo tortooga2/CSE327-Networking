@@ -7,6 +7,14 @@ const FilePage = () => {
     const [fileData, setFileData] = useState(null);
     const [fileContent, setFileContent] = useState(null);
 
+    const copyLink = (e, fileId) => {
+        e.stopPropagation();
+        navigator.clipboard.writeText(
+            `${window.location.origin}/file/owner_id/${fileId}`
+        );
+        alert("Link copied to clipboard");
+    };
+
     useEffect(() => {
         console.log(`File ID: ${fileId}`);
         console.log(`Owner ID: ${ownerId}`);
@@ -48,22 +56,67 @@ const FilePage = () => {
     }, [fileId, ownerId]);
 
     return (
-        <div>
+        <div style={{ margin: "6rem 10rem" }}>
             <h1>File Page</h1>
             <p>Owner ID: {ownerId}</p>
             <p>File ID: {fileId}</p>
-            <p>-----------------</p>
-            <p>-----------------</p>
-            {fileContent
-                ? fileContent.map((file, index) => {
-                      return (
-                          <div key={index}>
-                              <p>{file.name}</p>
-                              <img src={file.metadata.url} />
-                          </div>
-                      );
-                  })
-                : null}
+            <div style={{ marginBottom: "2rem" }}></div>
+
+            <div
+                className="content"
+                style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    gap: "100px",
+                }}
+            >
+                {fileContent
+                    ? fileContent.map((file, index) => {
+                          return (
+                              <div
+                                  key={index}
+                                  style={{
+                                      display: "flex",
+                                      flexDirection: "row",
+
+                                      borderTop: "2px solid black",
+                                  }}
+                              >
+                                  <div
+                                      style={{
+                                          display: "flex",
+                                          flexDirection: "column",
+                                          width: "20rem",
+                                          alignItems: "center",
+                                          padding: "1rem",
+                                      }}
+                                  >
+                                      <p>{file.id}</p>
+                                      <p>{file.name}</p>
+                                      <p>{file.type}</p>
+                                      <button
+                                          onClick={(e) => {
+                                              e.stopPropagation();
+                                              copyLink(e, file.id);
+                                          }}
+                                      >
+                                          Copy Link
+                                      </button>
+                                  </div>
+                                  <div>
+                                      <img
+                                          src={file.metadata.url}
+                                          style={{
+                                              width: "100%",
+                                          }}
+                                      />
+                                  </div>
+                              </div>
+                          );
+                      })
+                    : null}
+            </div>
         </div>
     );
 };

@@ -29,6 +29,14 @@ const File = ({ fileData }) => {
         setIsSelected(fileContent[0].id, !isSelected);
     };
 
+    const copyLink = (e) => {
+        e.stopPropagation();
+        navigator.clipboard.writeText(
+            `${window.location.origin}/file/owner_id/${fileContent[0].id}`
+        );
+        alert("Link copied to clipboard");
+    };
+
     const className = isSelected ? "file-item selected" : "file-item";
     const dropDownClass = isExpanded
         ? dropDownClassName + " open"
@@ -82,6 +90,14 @@ const File = ({ fileData }) => {
                         }}
                     >
                         view
+                    </button>
+                    <button
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            copyLink(e);
+                        }}
+                    >
+                        copy link
                     </button>
                     {(() => {
                         if (fileContent[0].type === "bundle") {

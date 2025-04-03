@@ -58,7 +58,7 @@ const FilePage = () => {
     return (
         <div style={{ margin: "6rem 10rem" }}>
             <h1>File Page</h1>
-            <p>Owner ID: {ownerId}</p>
+            <p>Owner Id: {ownerId}</p>
             <p>File ID: {fileId}</p>
             <div style={{ marginBottom: "2rem" }}></div>
 
@@ -90,9 +90,11 @@ const FilePage = () => {
                                           width: "20rem",
                                           alignItems: "center",
                                           padding: "1rem",
+                                          gap: "1rem",
                                       }}
                                   >
                                       <p>{file.id}</p>
+                                      <p>{file.creator_username}</p>
                                       <p>{file.name}</p>
                                       <p>{file.type}</p>
                                       <button

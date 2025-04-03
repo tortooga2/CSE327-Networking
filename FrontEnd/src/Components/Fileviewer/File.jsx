@@ -25,6 +25,7 @@ const File = ({ fileData }) => {
     }, [isSelected]);
 
     const handleChange = (e) => {
+        e.stopPropagation();
         console.log("Checkbox changed:", e.target.checked);
         setIsSelected(fileContent[0].id, !isSelected);
     };
@@ -86,7 +87,10 @@ const File = ({ fileData }) => {
                     />
                     <button
                         onClick={(e) => {
-                            navigate(`/file/owner_id/${fileContent[0].id}`);
+                            e.stopPropagation();
+                            useStore
+                                .getState()
+                                .setPreviewedFile(fileContent[0].id);
                         }}
                     >
                         view
@@ -94,10 +98,30 @@ const File = ({ fileData }) => {
                     <button
                         onClick={(e) => {
                             e.stopPropagation();
+
                             copyLink(e);
                         }}
+                        className={"copy-link"}
                     >
-                        copy link
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="#000000"
+                            className="bi bi-files"
+                            viewBox="0 0 16 16"
+                            id="Files--Streamline-Bootstrap"
+                            height={16}
+                            width={16}
+                        >
+                            <desc>
+                                {
+                                    "Files Streamline Icon: https://streamlinehq.com"
+                                }
+                            </desc>
+                            <path
+                                d="M13 0H6a2 2 0 0 0 -2 2 2 2 0 0 0 -2 2v10a2 2 0 0 0 2 2h7a2 2 0 0 0 2 -2 2 2 0 0 0 2 -2V2a2 2 0 0 0 -2 -2m0 13V4a2 2 0 0 0 -2 -2H5a1 1 0 0 1 1 -1h7a1 1 0 0 1 1 1v10a1 1 0 0 1 -1 1M3 4a1 1 0 0 1 1 -1h7a1 1 0 0 1 1 1v10a1 1 0 0 1 -1 1H4a1 1 0 0 1 -1 -1z"
+                                strokeWidth={1}
+                            />
+                        </svg>
                     </button>
                     {(() => {
                         if (fileContent[0].type === "bundle") {
@@ -110,9 +134,28 @@ const File = ({ fileData }) => {
                                         setIsExpanded(!isExpanded);
                                     }}
                                 >
-                                    <span className={"file-button-text"}>
-                                        expand
-                                    </span>
+                                    <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        fill="#000000"
+                                        className={
+                                            "bi bi-caret-right" +
+                                            (isExpanded ? " expanded" : "")
+                                        }
+                                        viewBox="0 0 16 16"
+                                        id="Caret-Right--Streamline-Bootstrap"
+                                        height={16}
+                                        width={16}
+                                    >
+                                        <desc>
+                                            {
+                                                "Caret Right Streamline Icon: https://streamlinehq.com"
+                                            }
+                                        </desc>
+                                        <path
+                                            d="M6 12.796V3.204L11.481 8zm0.659 0.753 5.48 -4.796a1 1 0 0 0 0 -1.506L6.66 2.451C6.011 1.885 5 2.345 5 3.204v9.592a1 1 0 0 0 1.659 0.753"
+                                            strokeWidth={1}
+                                        />
+                                    </svg>
                                 </button>
                             );
                         }

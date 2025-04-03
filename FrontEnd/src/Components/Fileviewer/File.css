@@ -25,3 +25,24 @@
     max-height: 300px;
     transition: max-height 0.5s ease;
 }
+
+.bi {
+    transition: transform 0.3s ease;
+}
+
+.bi.expanded {
+    transform: rotate(90deg);
+    transition: transform 0.3s ease;
+}
+
+.copy-link:focus {
+    fill-opacity: 1;
+}
+
+.file-item > .button-column > .copy-link:not(:focus) {
+    fill-opacity: 0;
+}
+
+.file-item:hover > .button-column > .copy-link:not(:focus) {
+    fill-opacity: 1;
+}

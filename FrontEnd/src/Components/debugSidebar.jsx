@@ -36,7 +36,10 @@ const DebugSidebar = () => {
     }, []);
 
     return (
-        <div className="debug-sidebar">
+        <div
+            className="debug-sidebar"
+            style={{ padding: "1rem", height: "90vh" }}
+        >
             <h2>Debug Sidebar</h2>
             <p>Debugging information will be displayed here</p>
             <div
@@ -60,7 +63,11 @@ const DebugSidebar = () => {
                 <button onClick={connectFiles}>Connect Files</button>
 
                 <form id="fileForm" ref={formRef}>
-                    <input id="fileInput" type="file" accepts="file/*" />
+                    <label htmlFor="fileInput">
+                        <i>Upload File: </i>
+                    </label>
+                    <input type="file" />
+
                     <button type="submit">Upload</button>
                 </form>
             </div>

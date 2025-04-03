@@ -3,6 +3,10 @@ import { create } from "zustand";
 const useStore = create((set) => ({
     files: new Map(),
     selectedFiles: new Set(),
+    previewedFile: 1,
+    setPreviewedFile: (fileID) => {
+        set({ previewedFile: fileID });
+    },
     loading: false,
     getFiles: (paramaters) => {
         return Array.from(useStore.getState().files.values()).sort((a, b) => {

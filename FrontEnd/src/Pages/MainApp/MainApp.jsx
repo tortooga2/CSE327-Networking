@@ -17,6 +17,7 @@ import { useUser } from "../../Components/Contexts/ctx.user.jsx";
 import DebugSidebar from "../../Components/debugSidebar.jsx";
 
 import { useStore } from "../../Components/Contexts/zus.fileManager";
+import FilePreview from "../../Components/FilePreview/FilePreview.jsx";
 
 const MainApp = () => {
     const { user } = useUser();
@@ -29,7 +30,16 @@ const MainApp = () => {
         <FileManagerProvider>
             <div style={{ display: "flex" }}>
                 <DebugSidebar />
-                <FileViewer />
+                <div
+                    style={{
+                        display: "flex",
+                        flexDirection: "row",
+                        width: "100%",
+                    }}
+                >
+                    <FileViewer />
+                    <FilePreview />
+                </div>
             </div>
         </FileManagerProvider>
     );

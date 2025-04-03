@@ -21,7 +21,13 @@ const FileViewer = () => {
 
     return (
         <div
-            style={{ display: "flex", flexDirection: "column", width: "100%" }}
+            style={{
+                display: "flex",
+                flexDirection: "column",
+                width: "100%",
+                height: "fit-content",
+                overflowY: "auto",
+            }}
         >
             <h1>File Viewer</h1>
             <div className={"content-body"}>

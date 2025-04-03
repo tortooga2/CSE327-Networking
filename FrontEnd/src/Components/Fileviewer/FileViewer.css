@@ -36,16 +36,19 @@
 
 .name-column {
     background-color: #f0f0f0;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
     width: 200px;
 }
+
 .button-column {
     background-color: #f0f0f0;
     width: 200px;
-
     display: flex;
     justify-content: left;
     align-items: center;
-    gap: 0.5rem;
+    gap: 1rem;
 }
 
 .file-header > .id-column {

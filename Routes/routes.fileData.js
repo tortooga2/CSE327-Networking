@@ -10,6 +10,7 @@ import {
     updateFileLedger,
     testCreateUserData,
     createFileInDb,
+    loadDataForFocusPage,
 } from "../Modules/Data Process/import.dataProcess.js";
 
 const fileDataRouter = Router();
@@ -23,6 +24,7 @@ fileDataRouter.post("/send/:other_id/:file_id", sendFileToUser);
 fileDataRouter.patch("/update/:id", updateFileLedger);
 fileDataRouter.post("/connect", ConnectFiles);
 fileDataRouter.post("/upload", createFileInDb);
+fileDataRouter.get("/focus/:fileId", loadDataForFocusPage);
 
 // Test the creation of a user data
 fileDataRouter.post("/createtest", testCreateUserData);

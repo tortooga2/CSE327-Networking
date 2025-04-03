@@ -44,17 +44,28 @@ h2 {
     margin: 0;
 }
 
-button {
+/* button {
     border: 1px solid #eaeaea;
     width: fit-content;
-}
+} */
 
 button:hover {
-    border-color: #646cff;
+    background-color: #646cff;
 }
+/*
 button:focus,
 button:focus-visible {
     outline: 4px auto -webkit-focus-ring-color;
+} */
+
+input[type="checkbox"] {
+    width: 1.2em;
+    height: 1.2em;
+    margin: 0;
+    padding: 0;
+    border-radius: 0.2em;
+    background-color: #f9f9f9;
+    border: 1px solid #eaeaea;
 }
 
 @media (prefers-color-scheme: light) {

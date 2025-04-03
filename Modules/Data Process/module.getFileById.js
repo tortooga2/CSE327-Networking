@@ -16,7 +16,7 @@ import { s3Client, bucketName } from "../S3 Stuff/module.s3client.js";
 export const getFileById = async (req, res) => {
     const { profile_id } = req.user;
     try {
-        const file = await Data.findByPk(req.params.id);
+        const file = await Data.findByPk(req.params.fileId);
 
         if (!file) {
             return res.status(404).json({

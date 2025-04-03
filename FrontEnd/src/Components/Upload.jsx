@@ -1,6 +1,4 @@
 import { Route, Routes } from "react-router-dom";
-
-
 import "./Upload.css";
 import propTypes from "prop-types";
 import { useState } from "react";

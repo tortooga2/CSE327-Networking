@@ -1,78 +1,121 @@
+/* Main container styling */
+.content-body {
+    background-color: #FFFFFF;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(30, 11, 51, 0.05);
+    margin: 16px;
+    overflow: hidden;
+}
+
+/* Header styling */
+.file-header {
+    background-color: #F8F6FD;
+    border-bottom: 1px solid #E0E0E0;
+    font-weight: 600;
+}
+
+/* Column headers */
+.file-header > div {
+    padding: 8px 16px;  /* Match the padding with file items */
+    color: #1E0B33;
+    cursor: pointer;
+    user-select: none;
+    display: flex;
+    align-items: center;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    text-align: left; /* Align headers to the start */
+    justify-content: flex-start;
+    height: 40px; /* Fixed height for consistency */
+    line-height: normal; /* Remove fixed line height */
+}
+
+.file-header > div:hover {
+    background-color: rgba(30, 11, 51, 0.05);
+}
+
+/* File item styling */
 .file-item {
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    padding: 0.5rem;
-    border-bottom: 1px solid #ccc;
+    padding: 0; /* Remove padding from container */
+    border-bottom: 1px solid #F0F0F0;
+    transition: background-color 0.2s ease;
+    margin-bottom: 0; /* Remove margin between rows */
 }
 
 .file-item:hover {
-    background-color: #f0f0f0;
+    background-color: rgba(30, 11, 51, 0.02);
 }
 
 .file-item.selected {
-    background-color: #e0e0e0;
+    background-color: rgba(30, 11, 51, 0.1);
 }
 
-.id-column {
-    background-color: #f0f0f0;
-    width: 100px;
+.file-item > div {
+    text-align: left; /* Align data to the start */
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    height: 40px; /* Fixed height for consistency */
+    line-height: normal; /* Remove fixed line height */
 }
 
-.date-column {
-    background-color: #f0f0f0;
-    width: 250px;
+/* Column styles */
+.id-column,
+.date-column,
+.type-column,
+.owner-column,
+.name-column,
+.button-column {
+    padding: 8px 16px;
+    font-size: 0.9rem;
 }
 
 .type-column {
-    background-color: #f0f0f0;
     width: 100px;
 }
 
-.owner-column {
-    background-color: #f0f0f0;
-    width: 100px;
+/* Type pill styling */
+.type-pill {
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    text-align: center;
+    background-color: #1E0B33;
+    color: white;
+    border: none;
+    display: inline-block;
+    transition: opacity 0.2s ease;
 }
 
-.name-column {
-    background-color: #f0f0f0;
-    text-overflow: ellipsis;
-    overflow: hidden;
-    white-space: nowrap;
-    width: 200px;
+.type-pill:hover {
+    opacity: 0.9;
 }
 
-.button-column {
-    background-color: #f0f0f0;
-    width: 200px;
-    display: flex;
-    justify-content: left;
-    align-items: center;
-    gap: 1rem;
+/* Remove individual type styles since we're standardizing them */
+.type-pill.note,
+.type-pill.bundle,
+.type-pill.image,
+.type-pill.video,
+.type-pill.pdf { 
+    background-color: #1E0B33;
+    color: white;
+    border: none;
 }
 
-.file-header > .id-column {
-    font-weight: bold;
-    background-color: #e0e0e0;
+/* Button styling */
+.button-column button {
+    background-color: transparent;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    color: #1E0B33;
+    transition: background-color 0.2s ease;
 }
 
-.file-header > .date-column {
-    font-weight: bold;
-    background-color: #e0e0e0;
-}
-.file-header > .type-column {
-    font-weight: bold;
-    background-color: #e0e0e0;
-}
-.file-header > .owner-column {
-    font-weight: bold;
-    background-color: #e0e0e0;
-}
-.file-header > .name-column {
-    font-weight: bold;
-    background-color: #e0e0e0;
-}
-.file-header > .checkbox-column {
-    font-weight: bold;
-    background-color: #e0e0e0;
+.button-column button:hover {
+    background-color: rgba(30, 11, 51, 0.05);
 }

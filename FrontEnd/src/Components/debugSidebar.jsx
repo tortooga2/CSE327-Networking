@@ -19,7 +19,6 @@ const DebugSidebar = () => {
         formRef.current.addEventListener("submit", async (e) => {
             e.preventDefault();
 
-            // Access files from the file input element within the form
             const fileInput = e.target.querySelector('input[type="file"]');
             const files = fileInput.files;
             if (!files || files.length === 0) {
@@ -28,22 +27,18 @@ const DebugSidebar = () => {
             }
 
             try {
-                // Upload all files
                 for (let i = 0; i < files.length; i++) {
                     const file = files[i];
                     console.log("Uploading file:", file.name);
                     await uploadFile(file);
                 }
 
-                // Ensure files are refreshed after all uploads complete
                 console.log("Refreshing file list...");
                 await refreshFiles();
                 console.log("Files refreshed:", useStore.getState().files); // Debug log
                 
-                // Clear the file input
                 fileInput.value = '';
 
-                // Optional: Add visual feedback for successful upload
                 alert("Files uploaded successfully!");
             } catch (error) {
                 console.error("Error during upload:", error);

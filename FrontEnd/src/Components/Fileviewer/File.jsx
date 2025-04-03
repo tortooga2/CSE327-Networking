@@ -51,6 +51,19 @@ const File = ({ fileData }) => {
         };
     };
 
+    const getFileType = (mimeType, filename) => {
+        const ext = filename.split('.').pop().toLowerCase();
+        if (['jpg', 'jpeg', 'png', 'gif', 'webp'].includes(ext)) return 'image';
+        if (['mp4', 'webm', 'ogg'].includes(ext)) return 'video';
+        if (ext === 'pdf') return 'pdf';
+        if (['doc', 'docx'].includes(ext)) return 'word';
+        if (['xls', 'xlsx'].includes(ext)) return 'excel';
+        if (['txt', 'text', 'md'].includes(ext)) return 'plain';
+        return ext;
+    };
+
+    const fileType = getFileType(fileContent[0].type, fileContent[0].name);
+
     return (
         <div
             className={isSelected ? "file-row selected" : "file-row"}
@@ -73,8 +86,8 @@ const File = ({ fileData }) => {
                 day: 'numeric'
             })}</div>
             <div>
-                <span style={getTypePillClass(fileContent[0].type)}>
-                    {fileContent[0].type}
+                <span style={getTypePillClass(fileType)}>
+                    {fileType}
                 </span>
             </div>
             <div>{fileContent[0].creator_username}</div>

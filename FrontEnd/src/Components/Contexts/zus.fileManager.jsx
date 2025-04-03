@@ -136,6 +136,20 @@ const useStore = create((set) => ({
             console.log(err);
         }
     },
+    deleteFiles: async () => {
+        try {
+            for (const file_id of Array.from(useStore.getState().selectedFiles)) {
+                const response = fetch(`/api/file/delete/${file_id}`, {
+                    method: "DELETE",
+                    credentials: "include",
+                });
+
+                console.log("DELETED");
+            }
+        } catch (err) {
+            console.log(err);
+        }
+    },
 }));
 
 export { useStore };

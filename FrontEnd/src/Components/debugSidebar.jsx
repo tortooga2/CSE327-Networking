@@ -8,6 +8,7 @@ const DebugSidebar = () => {
     const UnSelectAll = useStore((state) => state.unSelectAll);
     const connectFiles = useStore((state) => state.connectFiles);
     const uploadFile = useStore((state) => state.uploadFiles);
+    const deleteFiles = useStore((state) => state.deleteFiles);
 
     const formRef = useRef(null);
 
@@ -70,6 +71,8 @@ const DebugSidebar = () => {
 
                     <button type="submit">Upload</button>
                 </form>
+
+                <button onClick={deleteFiles}>Delete Files ({selectedFiles.size})</button>
             </div>
         </div>
     );

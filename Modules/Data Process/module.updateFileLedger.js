@@ -1,16 +1,6 @@
-import { Data, Users, sequelize } from "../Database/module.db.js";
-import { debugMessage, debugError } from "../module.debugHelpers.js";
+import { Data, sequelize } from "../Database/module.db.js";
+import { debugError } from "../module.debugHelpers.js";
 import { Sequelize } from "sequelize";
-import crypto from "crypto";
-
-//S3 stuff
-import {
-    GetObjectCommand,
-    PutObjectCommand,
-    DeleteObjectCommand,
-} from "@aws-sdk/client-s3";
-import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
-import { s3Client, bucketName } from "../S3 Stuff/module.s3client.js";
 
 export const updateFileLedger = async (req, res) => {
     const transaction = await sequelize.transaction();

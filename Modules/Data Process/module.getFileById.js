@@ -1,16 +1,5 @@
-import { Data, Users, sequelize } from "../Database/module.db.js";
-import { debugMessage, debugError } from "../module.debugHelpers.js";
-import { Sequelize } from "sequelize";
-import crypto from "crypto";
-
-//S3 stuff
-import {
-    GetObjectCommand,
-    PutObjectCommand,
-    DeleteObjectCommand,
-} from "@aws-sdk/client-s3";
-import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
-import { s3Client, bucketName } from "../S3 Stuff/module.s3client.js";
+import { Data } from "../Database/module.db.js";
+import { debugError } from "../module.debugHelpers.js";
 
 //Should send the file back to the client when given proper file ID
 export const getFileById = async (req, res) => {
@@ -34,17 +23,9 @@ export const getFileById = async (req, res) => {
             });
         }
 
-        const command = new GetObjectCommand({
-            Bucket: bucketName,
-            Key: file.metadata.key,
-        });
-
-        const url = await getSignedUrl(s3Client, command, { expiresIn: 10 }); //Url is currently set to expire in 10 seconds
-
         res.status(200).json({
             okay: true,
             file: file,
-            url: url,
         });
     } catch (err) {
         debugError(err);

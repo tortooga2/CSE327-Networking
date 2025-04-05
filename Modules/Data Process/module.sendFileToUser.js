@@ -1,16 +1,6 @@
 import { Data, Users, sequelize } from "../Database/module.db.js";
-import { debugMessage, debugError } from "../module.debugHelpers.js";
-import { Sequelize } from "sequelize";
-import crypto from "crypto";
+import { debugError } from "../module.debugHelpers.js";
 
-//S3 stuff
-import {
-    GetObjectCommand,
-    PutObjectCommand,
-    DeleteObjectCommand,
-} from "@aws-sdk/client-s3";
-import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
-import { s3Client, bucketName } from "../S3 Stuff/module.s3client.js";
 
 //Sends a file to another user by simply cloning the row
 export const sendFileToUser = async (req, res) => {

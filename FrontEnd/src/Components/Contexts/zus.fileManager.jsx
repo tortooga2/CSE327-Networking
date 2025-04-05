@@ -138,14 +138,17 @@ const useStore = create((set) => ({
     },
     deleteFiles: async () => {
         try {
-            for (const file_id of Array.from(useStore.getState().selectedFiles)) {
-                const response = fetch(`/api/file/delete/${file_id}`, {
-                    method: "DELETE",
-                    credentials: "include",
-                });
-
-                console.log("DELETED");
-            }
+            const response = fetch("/api/file/delete/", {
+                method: "DELETE",
+                credentials: "include",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    file_ids: Array.from(useStore.getState().selectedFiles),
+                }),
+            });
+            console.log(response);
         } catch (err) {
             console.log(err);
         }

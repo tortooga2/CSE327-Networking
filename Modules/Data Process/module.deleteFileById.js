@@ -16,6 +16,14 @@ export const deleteFileById = async (req, res) => {
         });
     }
 
+    if (file_ids.length === 0) {
+        return res.status(400).json({
+            okay: false,
+            error: "Invalid input",
+            message: "No file ids were sent in request",
+        });
+    }
+
     const transaction = await sequelize.transaction(); //Start transaction with database
     try {
         //Obtain all file keys

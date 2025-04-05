@@ -137,20 +137,22 @@ const useStore = create((set) => ({
         }
     },
     deleteFiles: async () => {
-        try {
-            const response = fetch("/api/file/delete/", {
-                method: "DELETE",
-                credentials: "include",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    file_ids: Array.from(useStore.getState().selectedFiles),
-                }),
-            });
-            console.log(response);
-        } catch (err) {
-            console.log(err);
+        if (Array.from(useStore.getState().selectedFiles).length > 0) {
+            try {
+                const response = fetch("/api/file/delete/", {
+                    method: "DELETE",
+                    credentials: "include",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        file_ids: Array.from(useStore.getState().selectedFiles),
+                    }),
+                });
+                console.log(response);
+            } catch (err) {
+                console.log(err);
+            }
         }
     },
 }));

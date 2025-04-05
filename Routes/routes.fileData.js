@@ -7,7 +7,6 @@ import {
     getAllUserData,
     getFileById,
     sendFileToUser,
-    updateFileLedger,
     testCreateUserData,
     createFileInDb,
     loadDataForFocusPage,
@@ -21,7 +20,6 @@ fileDataRouter.get("/user/:fileId", getFileById);
 fileDataRouter.get("/all", getAllUserData);
 fileDataRouter.post("/create", createUserData);
 fileDataRouter.post("/send/:other_id/:file_id", sendFileToUser);
-fileDataRouter.patch("/update/:id", updateFileLedger);
 fileDataRouter.post("/connect", ConnectFiles);
 fileDataRouter.post("/upload", createFileInDb);
 fileDataRouter.get("/focus/:fileId", loadDataForFocusPage);

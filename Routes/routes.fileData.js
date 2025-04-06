@@ -21,7 +21,7 @@ fileDataRouter.get("/all", getAllUserData);
 fileDataRouter.post("/create", createUserData);
 fileDataRouter.post("/send/:other_id/:file_id", sendFileToUser);
 fileDataRouter.post("/connect", ConnectFiles);
-fileDataRouter.post("/upload", createFileInDb);
+fileDataRouter.put("/upload", createFileInDb);
 fileDataRouter.get("/focus/:fileId", loadDataForFocusPage);
 
 // Test the creation of a user data

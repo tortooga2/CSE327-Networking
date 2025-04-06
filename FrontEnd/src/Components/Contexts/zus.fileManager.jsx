@@ -121,7 +121,7 @@ const useStore = create((set) => ({
             });
 
             await fetch("/api/file/upload", {
-                method: "POST",
+                method: "PUT",
                 credentials: "include",
                 headers: {
                     "Content-Type": "application/json",

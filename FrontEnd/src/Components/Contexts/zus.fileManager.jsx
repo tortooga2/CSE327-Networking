@@ -96,45 +96,63 @@ const useStore = create((set) => ({
             console.error(error);
         }
     },
-    uploadFiles: async (file) => {
+    uploadFiles: async (files) => {
+        const fileDataArray = [];
+        console.log("DO YOU SEE ME??? ", files.length);
         try {
-            console.log("FILE NAME: ", file.name);
-
-            const { url, key } = await fetch("/api/bin/getuploadpath", {
-                method: "GET",
+            //Get an array of urls and keys for our files
+            const { urls, keys } = await fetch("/api/bin/getuploadpath", {
+                method: "POST",
                 credentials: "include",
                 headers: {
                     "Content-Type": "application/json",
                 },
+                body: JSON.stringify({ fileCount: files.length })
             })
                 .then((res) => res.json())
                 .catch((err) => {
-                    console.error("Error fetching upload path:", err);
-                });
-
-            await fetch(url, {
-                method: "PUT",
-                headers: {
-                    ContentType: file.type,
-                },
-                body: file,
+                    console.error("Error fetching upload paths:", err);
             });
 
+            if (!urls || !keys || urls.length !== files.length || keys.length !== files.length) {
+                throw new Error("Mismatch between number of files and S3 upload paths.");
+            }            
+
+            //Push file data to fileDataArray for bulk insert to Postgres
+            for (let file = 0; file < files.length; file++) {
+                fileDataArray.push({
+                    fileName: files[file].name,
+                    fileType: (files[file].type).split("/")[1],
+                    metadata: {
+                        key: keys[file],
+                    },
+                    // key: keys[file],
+                });
+            }
+
+            //Upload each individual file to s3
+            for (let index = 0; index < files.length; index++) {
+                await fetch(urls[index], {
+                    method: "PUT",
+                    headers: {
+                        "Content-Type": files[index].type,
+                    },
+                    body: files[index],
+                });
+            }
+
+            //Actually bulk create in our database
             await fetch("/api/file/upload", {
                 method: "PUT",
                 credentials: "include",
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify({
-                    fileName: file.name,
-                    fileType: file.type,
-                    key: key,
-                }),
+                body: JSON.stringify(fileDataArray),
             });
         } catch (err) {
             console.log(err);
-        }
+        };
     },
     deleteFiles: async () => {
         if (Array.from(useStore.getState().selectedFiles).length > 0) {

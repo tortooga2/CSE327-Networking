@@ -3,10 +3,10 @@ import { Sequelize } from "sequelize";
 
 const createFileInDb = async (req, res) => {
     const { profile_id, username_base } = req.user;
-    const { fileName, fileType, key } = req.body;
+    const { fileDataArray } = req.body;
     const transaction = await sequelize.transaction(); //Start a transaction to our database
 
-    if (!req.body) {
+    if (fileDataArray.length === 0) {
         return res.status(400).json({
             okay: false,
             error: "Bad request",
@@ -15,24 +15,25 @@ const createFileInDb = async (req, res) => {
     }
 
     try {
-        const sentFile = await Data.create(
-            {
+        await fileDataArray.forEach((file) => {
+            file = {
+                ...file,
                 owner_id: profile_id,
                 creator_id: profile_id,
                 creator_username: username_base,
-                name: fileName,
-                type: fileType.split("/")[1],
-                metadata: {
-                    key: key,
-                },
-            },
-            { transaction: transaction }
+            }
+        });
+
+        await Data.bulkCreate(
+            fileDataArray, 
+            { validate: true }, 
+            { transaction: transaction },
         );
 
         await transaction.commit();
         res.status(201).json({
             okay: true,
-            data: sentFile,
+            message: "File data stored in ledger",
         });
     } catch (err) {
         await transaction.rollback(); //Rollback the transaction since error was thrown

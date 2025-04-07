@@ -98,7 +98,6 @@ const useStore = create((set) => ({
     },
     uploadFiles: async (files) => {
         const fileDataArray = [];
-        console.log("DO YOU SEE ME??? ", files.length);
         try {
             //Get an array of urls and keys for our files
             const { urls, keys } = await fetch("/api/bin/getuploadpath", {
@@ -120,14 +119,21 @@ const useStore = create((set) => ({
 
             //Push file data to fileDataArray for bulk insert to Postgres
             for (let file = 0; file < files.length; file++) {
-                fileDataArray.push({
-                    fileName: files[file].name,
-                    fileType: (files[file].type).split("/")[1],
-                    metadata: {
-                        key: keys[file],
-                    },
-                    // key: keys[file],
-                });
+                try {
+                    fileDataArray.push({
+                        name: files[file].name,
+                        type: (files[file].type).split("/")[1],
+                        metadata: {
+                            key: keys[file],
+                        },
+                    });
+
+                    if (!response.ok) {
+                        throw new Error(`Failed to upload file: ${response.statusText}`);
+                    }
+                } catch (err) {
+                    console.log(err);
+                };
             }
 
             //Upload each individual file to s3
@@ -148,7 +154,7 @@ const useStore = create((set) => ({
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify(fileDataArray),
+                body: JSON.stringify({ fileDataArray: fileDataArray}),
             });
         } catch (err) {
             console.log(err);

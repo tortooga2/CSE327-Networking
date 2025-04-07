@@ -3,29 +3,18 @@ import { Sequelize } from "sequelize";
 
 const createFileInDb = async (req, res) => {
     const { profile_id, username_base } = req.user;
-    const { fileDataArray } = req.body;
     const transaction = await sequelize.transaction(); //Start a transaction to our database
 
-    if (fileDataArray.length === 0) {
-        return res.status(400).json({
-            okay: false,
-            error: "Bad request",
-            message: "You did not send file information",
-        });
-    }
-
     try {
-        await fileDataArray.forEach((file) => {
-            file = {
-                ...file,
-                owner_id: profile_id,
-                creator_id: profile_id,
-                creator_username: username_base,
-            }
-        });
+        const updatedFileData = req.body.fileDataArray.map((file) => ({
+            ...file,
+            owner_id: profile_id,
+            creator_id: profile_id,
+            creator_username: username_base,
+        }));
 
         await Data.bulkCreate(
-            fileDataArray, 
+            updatedFileData, 
             { validate: true }, 
             { transaction: transaction },
         );

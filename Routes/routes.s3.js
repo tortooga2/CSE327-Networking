@@ -6,6 +6,6 @@ import { generateUploadUrl } from "../Modules/S3 Stuff/module.genUploadUrl.js";
 const s3Router = Router();
 
 s3Router.use(auth.Verify);
-s3Router.post("/getuploadpath", generateUploadUrl);
+s3Router.get("/getuploadpath", generateUploadUrl);
 
 export default s3Router;

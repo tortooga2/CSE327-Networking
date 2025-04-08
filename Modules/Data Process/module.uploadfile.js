@@ -3,26 +3,36 @@ import { Sequelize } from "sequelize";
 
 const createFileInDb = async (req, res) => {
     const { profile_id, username_base } = req.user;
+    const { fileName, fileType, key } = req.body;
     const transaction = await sequelize.transaction(); //Start a transaction to our database
 
-    try {
-        const updatedFileData = req.body.fileDataArray.map((file) => ({
-            ...file,
-            owner_id: profile_id,
-            creator_id: profile_id,
-            creator_username: username_base,
-        }));
+    if (!req.body) {
+        return res.status(400).json({
+            okay: false,
+            error: "Bad request",
+            message: "You did not send file information",
+        });
+    }
 
-        await Data.bulkCreate(
-            updatedFileData, 
-            { validate: true }, 
-            { transaction: transaction },
+    try {
+        const sentFile = await Data.create(
+            {
+                owner_id: profile_id,
+                creator_id: profile_id,
+                creator_username: username_base,
+                name: fileName,
+                type: fileType.split("/")[1],
+                metadata: {
+                    key: key,
+                },
+            },
+            { transaction: transaction }
         );
 
         await transaction.commit();
         res.status(201).json({
             okay: true,
-            message: "File data stored in ledger",
+            data: sentFile,
         });
     } catch (err) {
         await transaction.rollback(); //Rollback the transaction since error was thrown

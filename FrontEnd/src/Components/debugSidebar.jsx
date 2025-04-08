@@ -26,12 +26,11 @@ const DebugSidebar = () => {
                 console.error("No files selected");
                 return;
             }
-            await uploadFile(files);
-            // for (let i = 0; i < files.length; i++) {
-            //     const file = files[i];
-            //     console.log("FILE NAME: ", file.name);
-            //     await uploadFile(file);
-            // }
+            for (let i = 0; i < files.length; i++) {
+                const file = files[i];
+                console.log("FILE NAME: ", file.name);
+                await uploadFile(file);
+            }
             // You can also access the file input value if needed
             console.log(files);
         });
@@ -68,7 +67,7 @@ const DebugSidebar = () => {
                     <label htmlFor="fileInput">
                         <i>Upload File: </i>
                     </label>
-                    <input type="file" multiple/>
+                    <input type="file" />
 
                     <button type="submit">Upload</button>
                 </form>

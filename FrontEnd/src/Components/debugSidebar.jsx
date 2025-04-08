@@ -36,8 +36,8 @@ const DebugSidebar = () => {
                 console.log("Refreshing file list...");
                 await refreshFiles();
                 console.log("Files refreshed:", useStore.getState().files); // Debug log
-                
-                fileInput.value = '';
+
+                fileInput.value = "";
 
                 alert("Files uploaded successfully!");
             } catch (error) {
@@ -58,22 +58,28 @@ const DebugSidebar = () => {
                 boxShadow: "-2px 0 10px rgba(0,0,0,0.05)",
                 display: "flex",
                 flexDirection: "column",
-                gap: "1.5rem"
+                gap: "1.5rem",
             }}
         >
-            <h2 style={{
-                fontSize: "1.5rem",
-                fontWeight: "600",
-                color: "#1E0B33",
-                marginBottom: "1rem"
-            }}>Debug Console</h2>
+            <h2
+                style={{
+                    fontSize: "1.5rem",
+                    fontWeight: "600",
+                    color: "#1E0B33",
+                    marginBottom: "1rem",
+                }}
+            >
+                Debug Console
+            </h2>
 
-            <div style={{
-                display: "flex",
-                flexDirection: "column",
-                gap: "1rem",
-            }}>
-                <button 
+            <div
+                style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: "1rem",
+                }}
+            >
+                <button
                     onClick={UnSelectAll}
                     style={{
                         padding: "0.75rem 1rem",
@@ -83,13 +89,13 @@ const DebugSidebar = () => {
                         borderRadius: "6px",
                         cursor: "pointer",
                         transition: "background-color 0.2s",
-                        fontSize: "0.9rem"
+                        fontSize: "0.9rem",
                     }}
                 >
                     Unselect All ({selectedFiles.size})
                 </button>
 
-                <button 
+                <button
                     onClick={connectFiles}
                     style={{
                         padding: "0.75rem 1rem",
@@ -99,42 +105,42 @@ const DebugSidebar = () => {
                         borderRadius: "6px",
                         cursor: "pointer",
                         transition: "background-color 0.2s",
-                        fontSize: "0.9rem"
+                        fontSize: "0.9rem",
                     }}
                 >
                     Connect Files
                 </button>
 
-                <form 
-                    id="fileForm" 
+                <form
+                    id="fileForm"
                     ref={formRef}
                     style={{
                         marginTop: "1rem",
                         padding: "1.5rem",
                         backgroundColor: "#ffffff",
                         borderRadius: "8px",
-                        border: "1px solid #E2E8F0"
+                        border: "1px solid #E2E8F0",
                     }}
                 >
-                    <label 
+                    <label
                         htmlFor="fileInput"
                         style={{
                             display: "block",
                             marginBottom: "0.5rem",
                             color: "#4A5568",
-                            fontSize: "0.9rem"
+                            fontSize: "0.9rem",
                         }}
                     >
                         Upload File
                     </label>
-                    <input 
+                    <input
                         type="file"
                         style={{
                             marginBottom: "1rem",
-                            width: "100%"
+                            width: "100%",
                         }}
                     />
-                    <button 
+                    <button
                         type="submit"
                         style={{
                             padding: "0.75rem 1rem",
@@ -145,12 +151,16 @@ const DebugSidebar = () => {
                             cursor: "pointer",
                             transition: "background-color 0.2s",
                             width: "100%",
-                            fontSize: "0.9rem"
+                            fontSize: "0.9rem",
                         }}
                     >
                         Upload
                     </button>
                 </form>
+
+                <button onClick={deleteFiles}>
+                    Delete Files ({selectedFiles.size})
+                </button>
             </div>
         </div>
     );

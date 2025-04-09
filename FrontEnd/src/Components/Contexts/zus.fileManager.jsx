@@ -126,11 +126,11 @@ const useStore = create((set) => ({
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: {
+                body: JSON.stringify({
                     fileName: file.name,
                     fileType: file.type,
                     key: key,
-                },
+                }),
             });
         } catch (err) {
             console.log(err);

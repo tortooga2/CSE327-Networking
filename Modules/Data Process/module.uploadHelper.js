@@ -45,10 +45,6 @@ const uploadHelper = async (req, res) => {
     
     if (fileCount < 1) {
         throw new TypeError("fileCount must be 1 or greater");
-    } 
-
-    if (typeof fileName !== "string" || typeof fileType !== "string") {
-        throw new TypeError("fileName and fileType must be strings!");
     }
 
     if (!Array.isArray(fileNames) || !Array.isArray(fileTypes)) {

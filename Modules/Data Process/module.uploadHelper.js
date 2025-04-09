@@ -2,11 +2,10 @@ import { Data } from "../Database/module.db.js";
 import { genPresignedUrl } from "../S3 Stuff/module.genPresignedUrl.js";
 import crypto from "crypto";
 
-//This function takes advantage of models being classes to create instances without saving (fucking awesome)
+//This function takes advantage of models being classes to create instances without saving
 const genDataInstance = async (profile_id, key, fileName, fileType, username) => {
     //Validate inputs (This looks so ugly idk how to make this readable)
-    if (
-        typeof key !== "string" 
+    if (typeof key !== "string" 
         || typeof fileName !== "string" 
         || typeof fileType !== "string"
         || typeof profile_id !== "string"

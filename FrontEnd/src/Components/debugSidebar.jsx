@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef } from "react";
 import { useFileManager } from "./Contexts/ctx.file_manager";
-
+import React from 'react';
 import { useStore } from "./Contexts/zus.fileManager";
 
 const DebugSidebar = () => {
@@ -91,9 +91,12 @@ const DebugSidebar = () => {
                         cursor: "pointer",
                         transition: "background-color 0.2s",
                         fontSize: "0.9rem",
+                        marginRight: "0.5rem",
+                        display: "flex",
+                        alignItems: "center",
                     }}
                 >
-                    Unselect All ({selectedFiles.size})
+                   <FaTimes style = {{ marginRight: '0.5rem' }} /> Unselect All ({selectedFiles.size})
                 </button>
 
                 <button
@@ -107,10 +110,15 @@ const DebugSidebar = () => {
                         cursor: "pointer",
                         transition: "background-color 0.2s",
                         fontSize: "0.9rem",
+                        display: "flex",
+                        alignItems: "center",
                     }}
                 >
-                    Connect Files
+                    <FaLink style = {{ marginRight: '0.5rem' }} /> Connect Files
                 </button>
+            </div>
+
+            <hr style = {{ borderColor: "#E2E8F0", margin: "1rem 0"}} />
 
                 <form
                     id="fileForm"
@@ -130,15 +138,22 @@ const DebugSidebar = () => {
                             marginBottom: "0.5rem",
                             color: "#4A5568",
                             fontSize: "0.9rem",
+                            display: "flex", 
+                            alignItems: "center"
                         }}
                     >
-                        Upload File
+                       <FaUpload style = {{ marginRight: '0.5rem' }} /> Upload File
                     </label>
                     <input
                         type="file"
                         style={{
-                            marginBottom: "1rem",
+                            padding: "0.75rem",
+                            border: "1px solid #CBD5E0",
+                            borderRadius: "6px",
                             width: "100%",
+                            fontSize: "0.9rem",
+                            backgroundColor: "#F7FAFC",
+                            marginBottom: "1rem",
                         }}
                     />
                     <button
@@ -161,8 +176,21 @@ const DebugSidebar = () => {
 
                 <button onClick={deleteFiles}>
                     Delete Files ({selectedFiles.size})
+                    style = {{
+                        padding: "0.75rem 1rem",
+                        backgroundColor: "#FF8A8A",
+                        color: "white",
+                        border: "none",
+                        borderRadius: "6px",
+                        cursor: "pointer",
+                        transition: "background-color 0.2s",
+                        fontSize: "0.9rem",
+                        display: "flex",
+                        alignItems: "center",
+                    }}
+                
+                    <FaTrash style = {{ marginRight: '0.5rem' }} /> Delete Files ({selectedFiles.size})
                 </button>
-            </div>
         </div>
     );
 };

@@ -8,6 +8,7 @@ const DebugSidebar = () => {
     const UnSelectAll = useStore((state) => state.unSelectAll);
     const connectFiles = useStore((state) => state.connectFiles);
     const uploadFiles = useStore((state) => state.uploadFiles);
+    const refreshFiles = useStore((state) => state.refreshFiles);
     const deleteFiles = useStore((state) => state.deleteFiles);
 
     const formRef = useRef(null);
@@ -19,57 +20,145 @@ const DebugSidebar = () => {
         formRef.current.addEventListener("submit", async (e) => {
             e.preventDefault();
 
-            // Access files from the file input element within the form
             const fileInput = e.target.querySelector('input[type="file"]');
             const files = fileInput.files;
             if (!files || files.length === 0) {
                 console.error("No files selected");
                 return;
             }
+          
+            try {
+                await uploadFiles(files);
 
-            await uploadFiles(files)
-            // You can also access the file input value if needed
-            console.log(files);
+                console.log("Refreshing file list...");
+                await refreshFiles();
+                console.log("Files refreshed:", useStore.getState().files); // Debug log
+
+                fileInput.value = "";
+
+                alert("Files uploaded successfully!");
+            } catch (error) {
+                console.error("Error during upload:", error);
+                alert("Error uploading files. Please try again.");
         });
-    }, []);
+    }, [uploadFile, refreshFiles]);
 
     return (
         <div
             className="debug-sidebar"
-            style={{ padding: "1rem", height: "90vh" }}
+            style={{
+                padding: "1.5rem",
+                height: "90vh",
+                backgroundColor: "#F8F6FD",
+                borderLeft: "1px solid #E2E8F0",
+                boxShadow: "-2px 0 10px rgba(0,0,0,0.05)",
+                display: "flex",
+                flexDirection: "column",
+                gap: "1.5rem",
+            }}
         >
-            <h2>Debug Sidebar</h2>
-            <p>Debugging information will be displayed here</p>
+            <h2
+                style={{
+                    fontSize: "1.5rem",
+                    fontWeight: "600",
+                    color: "#1E0B33",
+                    marginBottom: "1rem",
+                }}
+            >
+                Debug Console
+            </h2>
+
             <div
                 style={{
                     display: "flex",
                     flexDirection: "column",
                     gap: "1rem",
-                    justifyContent: "center",
-                    alignItems: "center",
                 }}
             >
-                {/* <button onClick={() => fileManager.TestFunction()}>
-                    Create new file.
-                </button>
-                <button onClick={() => fileManager.ConnectFiles()}>
-                    Connect File(s): {fileManager.selectedFiles.length}
-                </button> */}
-                <button onClick={UnSelectAll}>
+                <button
+                    onClick={UnSelectAll}
+                    style={{
+                        padding: "0.75rem 1rem",
+                        backgroundColor: "#1E0B33",
+                        color: "white",
+                        border: "none",
+                        borderRadius: "6px",
+                        cursor: "pointer",
+                        transition: "background-color 0.2s",
+                        fontSize: "0.9rem",
+                    }}
+                >
                     Unselect All ({selectedFiles.size})
                 </button>
-                <button onClick={connectFiles}>Connect Files</button>
 
-                <form id="fileForm" ref={formRef}>
-                    <label htmlFor="fileInput">
-                        <i>Upload File: </i>
+
+                <button
+                    onClick={connectFiles}
+                    style={{
+                        padding: "0.75rem 1rem",
+                        backgroundColor: "#C8B0FF",
+                        color: "#1E0B33",
+                        border: "none",
+                        borderRadius: "6px",
+                        cursor: "pointer",
+                        transition: "background-color 0.2s",
+                        fontSize: "0.9rem",
+                    }}
+                >
+                    Connect Files
+                </button>
+
+
+                <form
+                    id="fileForm"
+                    ref={formRef}
+                    style={{
+                        marginTop: "1rem",
+                        padding: "1.5rem",
+                        backgroundColor: "#ffffff",
+                        borderRadius: "8px",
+                        border: "1px solid #E2E8F0",
+                    }}
+                >
+                    <label
+                        htmlFor="fileInput"
+                        style={{
+                            display: "block",
+                            marginBottom: "0.5rem",
+                            color: "#4A5568",
+                            fontSize: "0.9rem",
+                        }}
+                    >
+                        Upload File
                     </label>
-                    <input type="file" multiple/>
-
-                    <button type="submit">Upload</button>
+                    <input
+                        type="file"
+                        style={{
+                            marginBottom: "1rem",
+                            width: "100%",
+                        }}
+                    multiple/>
+                    <button
+                        type="submit"
+                        style={{
+                            padding: "0.75rem 1rem",
+                            backgroundColor: "#8BFFB0",
+                            color: "#1E0B33",
+                            border: "none",
+                            borderRadius: "6px",
+                            cursor: "pointer",
+                            transition: "background-color 0.2s",
+                            width: "100%",
+                            fontSize: "0.9rem",
+                        }}
+                    >
+                        Upload
+                    </button>
                 </form>
 
-                <button onClick={deleteFiles}>Delete Files ({selectedFiles.size})</button>
+                <button onClick={deleteFiles}>
+                    Delete Files ({selectedFiles.size})
+                </button>
             </div>
         </div>
     );

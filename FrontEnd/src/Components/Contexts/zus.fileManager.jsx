@@ -3,7 +3,7 @@ import { create } from "zustand";
 const useStore = create((set) => ({
     files: new Map(),
     selectedFiles: new Set(),
-    previewedFile: 1,
+    previewedFile: null,
     setPreviewedFile: (fileID) => {
         set({ previewedFile: fileID });
     },

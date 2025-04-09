@@ -24,7 +24,8 @@ const FileContent = ({ file }) => {
                     <img
                         src={file.metadata.url}
                         style={{
-                            width: "100%",
+                            maxWidth: "500px",
+                            aspectRatio: "calc(16/9)",
                             borderRadius: "8px",
                             display: "block",
                         }}
@@ -329,7 +330,16 @@ const FilePreview = () => {
                                       Copy Link
                                   </button>
                               </div>
-                              <FileContent file={file} />
+                              <div
+                                  style={{
+                                      padding: "16px",
+                                      display: "flex",
+                                      justifyContent: "center",
+                                      alignItems: "center",
+                                  }}
+                              >
+                                  <FileContent file={file} />
+                              </div>
                           </div>
                       ))
                     : null}

@@ -35,7 +35,7 @@ const DebugSidebar = () => {
                 }
 
                 console.log("Refreshing file list...");
-                await refreshFiles();
+                await useStore.getState().updateFiles(files);
                 console.log("Files refreshed:", useStore.getState().files); // Debug log
 
                 fileInput.value = "";
@@ -46,7 +46,7 @@ const DebugSidebar = () => {
                 alert("Error uploading files. Please try again.");
             }
         });
-    }, [uploadFile, refreshFiles]);
+    }, [uploadFile]);
 
     return (
         <div

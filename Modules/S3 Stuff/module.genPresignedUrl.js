@@ -3,13 +3,13 @@ import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { PutObjectCommand, GetObjectCommand } from "@aws-sdk/client-s3";
 
 //Generates a presigned url for either putting or getting an object from s3
-export const genPresignedUrl = async (profile_id, key, method, expirationInSec = 30) => {
+export const genPresignedUrl = async (profile_id, key, method, expirationInSec = 60) => {
     //Validate inputs
-    if(isNaN(expirationInSec)) {
+    if(!Number.isInteger(expirationInSec)) {
         throw new TypeError("Expected expiration to be a number");
     } 
     
-    if (!(expirationInSec >= 1)) {
+    if (expirationInSec < 1) {
         throw new TypeError("Expiration must be set to at least 1 second");
     }
     

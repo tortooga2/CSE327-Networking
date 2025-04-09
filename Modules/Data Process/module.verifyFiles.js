@@ -16,7 +16,7 @@ const checkObjExistence = async (profile_id, key) => {
         await s3Client.send(command);
         return true; //No errors thrown, so the object exists
     } catch (err) {
-        if (err.name === "NotFound") {
+        if (err.$metadata.httpStatusCode === 404 || err.$metadata.httpStatusCode === 403) {
             return false; //File doesn't exist if Amazon throws this error
         }
 
@@ -36,12 +36,22 @@ const verifyFiles = async (req, res) => {
     }
 
     try {
+        const keys = data.map((file) => file.metadata.key); //Extract keys from the data
+
         //Check if each file exists in bucket
         for (let i = 0; i < data.length; i++) {
-            const { key } = data[i];
-            if (await checkObjExistence(profile_id, key)) {
+            if (await checkObjExistence(profile_id, keys[i])) {
                 sentFiles.push(data[i]); //Push the existing files into another array
             }
+        }
+
+        
+        if (sentFiles.length === 0) { //This fucking line wasted so much of my life
+            return res.status(404).json({
+                okay: false,
+                error: "Files not found",
+                message: "Files were not uploaded to the bucket",
+            });
         }
 
         const transaction = await sequelize.transaction(); //Start transaction with database
@@ -53,14 +63,6 @@ const verifyFiles = async (req, res) => {
         await transaction.commit();
 
         //Check to see if all files were validated
-        if (sentFiles.length() === 0) {
-            return res.status(404).json({
-                okay: false,
-                error: "Files not found",
-                message: "Files were never uploaded to the bucket",
-            });
-        }
-
         if (data.length === sentFiles.length) {
             return res.status(201).json({
                 okay: true,

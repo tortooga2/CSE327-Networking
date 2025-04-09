@@ -7,7 +7,7 @@ const DebugSidebar = () => {
     const selectedFiles = useStore((state) => state.selectedFiles);
     const UnSelectAll = useStore((state) => state.unSelectAll);
     const connectFiles = useStore((state) => state.connectFiles);
-    const uploadFiles = useStore((state) => state.uploadFiles);
+    const uploadFile = useStore((state) => state.uploadFiles);
     const refreshFiles = useStore((state) => state.refreshFiles);
     const deleteFiles = useStore((state) => state.deleteFiles);
 
@@ -28,7 +28,7 @@ const DebugSidebar = () => {
             }
           
             try {
-                await uploadFiles(files);
+                await uploadFile(files);
 
                 console.log("Refreshing file list...");
                 await refreshFiles();
@@ -40,6 +40,7 @@ const DebugSidebar = () => {
             } catch (error) {
                 console.error("Error during upload:", error);
                 alert("Error uploading files. Please try again.");
+            };
         });
     }, [uploadFile, refreshFiles]);
 

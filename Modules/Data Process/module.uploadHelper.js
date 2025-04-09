@@ -34,7 +34,7 @@ const genDataInstance = async (profile_id, key, fileName, fileType, username) =>
 
 const uploadHelper = async (req, res) => {
     const {profile_id, username_base } = req.user;
-    const { fileCount, fileName, fileType } = req.body;
+    const { fileCount, fileNames, fileTypes } = req.body;
     const urls = []; //Will store our urls that we return to the client
     const data = []; //Will store instances of our model
 
@@ -51,11 +51,15 @@ const uploadHelper = async (req, res) => {
         throw new TypeError("fileName and fileType must be strings!");
     }
 
+    if (!Array.isArray(fileNames) || !Array.isArray(fileTypes)) {
+        throw new TypeError("Expected fileNames and fileTypes to be sent as arrays");
+    }
+
     try {
         for (let i = 0; i < fileCount; i++) {
             const key = crypto.randomBytes(16).toString("hex");
             urls.push(await genPresignedUrl(profile_id, key, "PUT"));
-            data.push(await genDataInstance(profile_id, key, fileName, mime.getExtension(fileType), username_base));
+            data.push(await genDataInstance(profile_id, key, fileNames[i], mime.getExtension(fileTypes[i]), username_base));
         }
         
         res.status(200).json({

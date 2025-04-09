@@ -97,10 +97,9 @@ const useStore = create((set) => ({
         }
     },
     uploadFiles: async (files) => {
-        //Separate name and type from each file and put in array
+        //Separate name from each file
         const fileList = Array.from(files); //Since a FilesList doesn't actually have map, I decided to make a shallow copy to use .map()
         const fileNames = fileList.map(file => file.name);
-        const fileTypes = fileList.map(file => file.type);
 
         try {
             const response = await fetch("/api/file/upload-helper", {
@@ -112,7 +111,6 @@ const useStore = create((set) => ({
                 body: JSON.stringify({
                     fileCount: files.length,
                     fileNames: fileNames,
-                    fileTypes: fileTypes,
                 }),
             });
 
@@ -122,9 +120,6 @@ const useStore = create((set) => ({
             for (let index = 0; index < files.length; index++) {
                 await fetch(urls[index], {
                     method: "PUT",
-                    headers: {
-                        "Content-Type": fileTypes[index], 
-                    },
                     body: files[index],
                 });
             }

@@ -120,7 +120,7 @@ const useStore = create((set) => ({
                 body: file,
             });
 
-            await fetch("/api/file/upload", {
+            const response = await fetch("/api/file/upload", {
                 method: "POST",
                 credentials: "include",
                 headers: {
@@ -132,6 +132,13 @@ const useStore = create((set) => ({
                     key: key,
                 }),
             });
+
+            if (response.ok) {
+                const data = await response.json();
+                console.log("Data from upload", data);
+                useStore.getState().updateFiles([data.data]);
+                useStore.getState().unSelectAll();
+            }
         } catch (err) {
             console.log(err);
         }

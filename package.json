@@ -7,7 +7,7 @@
     "scripts": {
         "setup": "cd frontend && npm install && cd .. && npm install",
         "dev": "cross-env DEBUG=true nodemon server.js",
-        "prod": "cross-env DEBUG=false node server.js",
+        "prod": "cd FrontEnd && npm run build && cross-env DEBUG=false node server.js",
         "test": "echo \"Error: no test specified\" && exit 1"
     },
     "author": "",

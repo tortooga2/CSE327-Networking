@@ -53,13 +53,21 @@ const verifyFiles = async (req, res) => {
         await transaction.commit();
 
         //Check to see if all files were validated
+        if (sentFiles.length() === 0) {
+            return res.status(404).json({
+                okay: false,
+                error: "Files not found",
+                message: "Files were never uploaded to the bucket",
+            });
+        }
+
         if (data.length === sentFiles.length) {
-            res.status(201).json({
+            return res.status(201).json({
                 okay: true,
                 message: "All files were successfully uploaded!"
             });
         } else {
-            res.status(201).json({
+            return res.status(201).json({
                 okay: true,
                 message: "Some files did not upload successfully",
             });

@@ -54,17 +54,27 @@ const uploadHelper = async (req, res) => {
     try {
         for (let i = 0; i < fileCount; i++) {
             const key = crypto.randomBytes(16).toString("hex");
+
             urls.push(await genPresignedUrl(profile_id, key, "PUT"));
-            data.push(await genDataInstance(profile_id, key, fileNames[i], mime.getExtension(fileTypes[i]), username_base));
+
+            //We need to test for unknown file types
+            let fileExtension;
+            if (fileTypes[i] === "") {
+                fileExtension = "unrecognized";
+            } else { 
+                fileExtension = mime.getExtension(fileTypes[i]);
+            }
+
+            data.push(await genDataInstance(profile_id, key, fileNames[i], fileExtension, username_base));
         }
         
-        res.status(200).json({
+        return res.status(200).json({
             okay: true,
             urls: urls,
             data: data,            
         });
     } catch (err) {
-        res.status(500).json({
+        return res.status(500).json({
             okay: false,
             error: err,
             message: "The server encountered an unexpected condition",

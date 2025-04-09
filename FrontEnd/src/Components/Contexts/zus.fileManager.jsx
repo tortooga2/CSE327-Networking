@@ -96,42 +96,51 @@ const useStore = create((set) => ({
             console.error(error);
         }
     },
-    uploadFiles: async (file) => {
+    uploadFiles: async (files) => {
+        //Separate name and type from each file and put in array
+        const fileList = Array.from(files); //Since a FilesList doesn't actually have map, I decided to make a shallow copy to use .map()
+        const fileNames = fileList.map(file => file.name);
+        const fileTypes = fileList.map(file => file.type);
+
         try {
-            console.log("FILE NAME: ", file.name);
-
-            const { url, key } = await fetch("/api/bin/getuploadpath", {
-                method: "GET",
-                credentials: "include",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-            })
-                .then((res) => res.json())
-                .catch((err) => {
-                    console.error("Error fetching upload path:", err);
-                });
-
-            await fetch(url, {
-                method: "PUT",
-                headers: {
-                    ContentType: file.type,
-                },
-                body: file,
-            });
-
-            await fetch("/api/file/upload", {
+            const response = await fetch("/api/file/upload-helper", {
                 method: "POST",
                 credentials: "include",
                 headers: {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify({
-                    fileName: file.name,
-                    fileType: file.type,
-                    key: key,
+                    fileCount: files.length,
+                    fileNames: fileNames,
+                    fileTypes: fileTypes,
                 }),
             });
+
+            const { urls, data } = await response.json();
+
+            // okay now lets push to S3
+            for (let index = 0; index < files.length; index++) {
+                await fetch(urls[index], {
+                    method: "PUT",
+                    headers: {
+                        "Content-Type": fileTypes[index], 
+                    },
+                    body: files[index],
+                });
+            }
+
+            // // Okay now we just check to see if the files were uploaded successfully
+            await fetch("/api/file/verify", {
+                method: "POST",
+                credentials: "include",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    data: data,
+                }),                
+            });
+
         } catch (err) {
             console.log(err);
         }

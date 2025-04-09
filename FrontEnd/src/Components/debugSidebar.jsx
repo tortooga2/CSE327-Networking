@@ -7,7 +7,7 @@ const DebugSidebar = () => {
     const selectedFiles = useStore((state) => state.selectedFiles);
     const UnSelectAll = useStore((state) => state.unSelectAll);
     const connectFiles = useStore((state) => state.connectFiles);
-    const uploadFile = useStore((state) => state.uploadFiles);
+    const uploadFiles = useStore((state) => state.uploadFiles);
     const deleteFiles = useStore((state) => state.deleteFiles);
 
     const formRef = useRef(null);
@@ -26,11 +26,8 @@ const DebugSidebar = () => {
                 console.error("No files selected");
                 return;
             }
-            for (let i = 0; i < files.length; i++) {
-                const file = files[i];
-                console.log("FILE NAME: ", file.name);
-                await uploadFile(file);
-            }
+
+            await uploadFiles(files)
             // You can also access the file input value if needed
             console.log(files);
         });
@@ -67,7 +64,7 @@ const DebugSidebar = () => {
                     <label htmlFor="fileInput">
                         <i>Upload File: </i>
                     </label>
-                    <input type="file" />
+                    <input type="file" multiple/>
 
                     <button type="submit">Upload</button>
                 </form>

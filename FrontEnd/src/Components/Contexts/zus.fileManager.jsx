@@ -98,8 +98,10 @@ const useStore = create((set) => ({
     },
     uploadFiles: async (files) => {
         //Separate name from each file
-        const fileList = Array.from(files); //Since a FilesList doesn't actually have map, I decided to make a shallow copy to use .map()
-        const fileNames = fileList.map(file => file.name);
+        const fileNames = [];
+        for (let index = 0; index < files.length; index++) {
+            fileNames.push(files[index].name);
+        }
 
         try {
             const response = await fetch("/api/file/upload-helper", {
@@ -116,7 +118,7 @@ const useStore = create((set) => ({
 
             const { urls, data } = await response.json();
 
-            // okay now lets push to S3
+            //Push each file to s3
             for (let index = 0; index < files.length; index++) {
                 await fetch(urls[index], {
                     method: "PUT",
@@ -124,7 +126,7 @@ const useStore = create((set) => ({
                 });
             }
 
-            // // Okay now we just check to see if the files were uploaded successfully
+            //Now check to see if the files were uploaded successfully and if so, save to db
             await fetch("/api/file/verify", {
                 method: "POST",
                 credentials: "include",

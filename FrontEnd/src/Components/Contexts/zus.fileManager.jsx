@@ -115,7 +115,7 @@ const useStore = create((set) => ({
                     fileNames: fileNames,
                 }),
             });
-
+          
             const { urls, data } = await response.json();
 
             //Push each file to s3
@@ -137,7 +137,12 @@ const useStore = create((set) => ({
                     data: data,
                 }),                
             });
-
+//             if (response.ok) {
+//                 const data = await response.json();
+//                 console.log("Data from upload", data);
+//                 useStore.getState().updateFiles([data.data]);
+//                 useStore.getState().unSelectAll();
+//             }
         } catch (err) {
             console.log(err);
         }

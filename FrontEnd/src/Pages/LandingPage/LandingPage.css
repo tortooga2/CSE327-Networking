@@ -1,10 +1,5 @@
 @import url("https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400..800;1,400..800&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap");
-#root { 
-    /* can change the following two lines of code as necessary */
-    text-align: left;
-    margin-bottom: 2rem;
-}
 
 .special {
     width: fit-content;

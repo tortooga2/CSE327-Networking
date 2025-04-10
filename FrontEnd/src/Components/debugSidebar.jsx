@@ -1,6 +1,6 @@
-import { useEffect, useState, useRef } from "react";
-import { useFileManager } from "./Contexts/ctx.file_manager";
+import { useEffect, useRef } from "react";
 
+import { FaUpload, FaLink, FaTimes, FaTrash } from "react-icons/fa";
 import { useStore } from "./Contexts/zus.fileManager";
 
 const DebugSidebar = () => {
@@ -29,10 +29,14 @@ const DebugSidebar = () => {
           
             try {
                 await uploadFile(files);
-
-                console.log("Refreshing file list...");
-                await refreshFiles();
-                console.log("Files refreshed:", useStore.getState().files); // Debug log
+//             let filesArray = [];
+//             try {
+//                 for (let i = 0; i < files.length; i++) {
+//                     const file = files[i];
+//                     console.log("Uploading file:", file.name);
+//                     const fileResponse = await uploadFile(file);
+//                     filesArray.push(fileResponse);
+//                 }
 
                 fileInput.value = "";
 
@@ -42,14 +46,14 @@ const DebugSidebar = () => {
                 alert("Error uploading files. Please try again.");
             };
         });
-    }, [uploadFile, refreshFiles]);
+    }, [uploadFile]);
 
     return (
         <div
             className="debug-sidebar"
             style={{
                 padding: "1.5rem",
-                height: "90vh",
+                height: "100%",
                 backgroundColor: "#F8F6FD",
                 borderLeft: "1px solid #E2E8F0",
                 boxShadow: "-2px 0 10px rgba(0,0,0,0.05)",
@@ -76,7 +80,7 @@ const DebugSidebar = () => {
                     gap: "1rem",
                 }}
             >
-                <button
+                <div
                     onClick={UnSelectAll}
                     style={{
                         padding: "0.75rem 1rem",
@@ -87,13 +91,15 @@ const DebugSidebar = () => {
                         cursor: "pointer",
                         transition: "background-color 0.2s",
                         fontSize: "0.9rem",
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "0.5rem",
                     }}
                 >
-                    Unselect All ({selectedFiles.size})
-                </button>
+                    <FaTimes /> Unselect All ({selectedFiles.size})
+                </div>
 
-
-                <button
+                <div
                     onClick={connectFiles}
                     style={{
                         padding: "0.75rem 1rem",
@@ -104,62 +110,97 @@ const DebugSidebar = () => {
                         cursor: "pointer",
                         transition: "background-color 0.2s",
                         fontSize: "0.9rem",
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "0.5rem",
                     }}
                 >
+                    <FaLink />
                     Connect Files
-                </button>
+                </div>
+            </div>
+
+            <hr style={{ borderColor: "#E2E8F0", margin: "1rem 0" }} />
 
 
-                <form
-                    id="fileForm"
-                    ref={formRef}
+            <form
+                id="fileForm"
+                ref={formRef}
+                style={{
+                    marginTop: "1rem",
+                    padding: "1.5rem",
+                    backgroundColor: "#ffffff",
+                    borderRadius: "8px",
+                    border: "1px solid #E2E8F0",
+                }}
+            >
+                <label
+                    htmlFor="fileInput"
                     style={{
-                        marginTop: "1rem",
-                        padding: "1.5rem",
-                        backgroundColor: "#ffffff",
-                        borderRadius: "8px",
-                        border: "1px solid #E2E8F0",
+                        display: "block",
+                        marginBottom: "0.5rem",
+                        color: "#4A5568",
+                        fontSize: "0.9rem",
+                        alignItems: "center",
                     }}
                 >
-                    <label
-                        htmlFor="fileInput"
+                    <div
                         style={{
-                            display: "block",
-                            marginBottom: "0.5rem",
-                            color: "#4A5568",
-                            fontSize: "0.9rem",
+                            display: "flex",
+                            alignItems: "center",
+                            gap: "0.5rem",
                         }}
                     >
-                        Upload File
-                    </label>
-                    <input
-                        type="file"
-                        style={{
-                            marginBottom: "1rem",
-                            width: "100%",
-                        }}
-                    multiple/>
-                    <button
-                        type="submit"
-                        style={{
-                            padding: "0.75rem 1rem",
-                            backgroundColor: "#8BFFB0",
-                            color: "#1E0B33",
-                            border: "none",
-                            borderRadius: "6px",
-                            cursor: "pointer",
-                            transition: "background-color 0.2s",
-                            width: "100%",
-                            fontSize: "0.9rem",
-                        }}
-                    >
-                        Upload
-                    </button>
-                </form>
-
-                <button onClick={deleteFiles}>
-                    Delete Files ({selectedFiles.size})
+                        <FaUpload /> <p>Upload File</p>
+                    </div>
+                </label>
+                <input
+                    type="file"
+                    style={{
+                        padding: "0.75rem",
+                        border: "1px solid #CBD5E0",
+                        borderRadius: "6px",
+                        width: "100%",
+                        fontSize: "0.9rem",
+                        backgroundColor: "#F7FAFC",
+                        marginBottom: "1rem",
+                    }}
+                multiple/>
+                <button
+                    type="submit"
+                    style={{
+                        padding: "0.75rem 1rem",
+                        backgroundColor: "#8BFFB0",
+                        color: "#1E0B33",
+                        border: "none",
+                        borderRadius: "6px",
+                        cursor: "pointer",
+                        transition: "background-color 0.2s",
+                        width: "100%",
+                        fontSize: "0.9rem",
+                    }}
+                >
+                    Upload
                 </button>
+            </form>
+
+            <div
+                onClick={deleteFiles}
+                style={{
+                    padding: "0.75rem 1rem",
+                    backgroundColor: "#FF8A8A",
+                    color: "white",
+                    border: "none",
+                    borderRadius: "6px",
+                    cursor: "pointer",
+                    transition: "background-color 0.2s",
+                    fontSize: "0.9rem",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "0.5rem",
+                }}
+            >
+                <FaTrash /> <p>Delete Files ({selectedFiles.size})</p>
             </div>
         </div>
     );

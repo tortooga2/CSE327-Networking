@@ -5,9 +5,9 @@
     "main": "server.js",
     "type": "module",
     "scripts": {
-        "setup": "cd frontend && npm install && cd .. && npm install",
+        "setup": "cd FrontEnd && npm install && cd .. && npm install",
         "dev": "cross-env DEBUG=true nodemon server.js",
-        "prod": "cross-env DEBUG=false node server.js",
+        "prod": "cd FrontEnd && npm run build && cd .. && cross-env DEBUG=false node server.js",
         "test": "echo \"Error: no test specified\" && exit 1"
     },
     "author": "",
@@ -33,6 +33,7 @@
         "path": "^0.12.7",
         "pg": "^8.13.3",
         "pg-hstore": "^2.3.4",
+        "react-icons": "^5.5.0",
         "sequelize": "^6.37.6",
         "uuid": "^11.1.0",
         "vite": "^6.2.3"

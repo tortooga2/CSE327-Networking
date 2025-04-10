@@ -57,11 +57,6 @@ export const createDataTable = (sequelize) => {
             type: {
                 type: DataTypes.STRING,
                 allowNull: false,
-                validate: {
-                    isAlphanumeric: {
-                        msg: "File type is not supported or is invalid",
-                    },
-                },
             },
             metadata: {
                 type: DataTypes.JSONB,

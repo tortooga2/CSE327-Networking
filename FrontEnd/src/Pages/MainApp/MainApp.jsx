@@ -34,6 +34,8 @@ const MainApp = () => {
                     height: "100vh",
                     width: "100vw",
                     overflow: "hidden",
+                    padding: "1rem",
+                    position: "relative",
                 }}
             >
                 <DebugSidebar />

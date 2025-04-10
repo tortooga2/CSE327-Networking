@@ -40,12 +40,13 @@ const FilePreview = () => {
                 width: "0",
                 overflow: "hidden",
                 transition: "width 400ms ease-in",
+                boxSizing: "border-box",
             });
         } else {
             setStyle({
                 width: "100%",
                 backgroundColor: "#FFFFFF",
-
+                height: "100%",
                 position: "relative",
                 transition: "width 400ms cubic-bezier(.47,1.64,.41,.8)",
             });
@@ -99,11 +100,11 @@ const FilePreview = () => {
             <div
                 className="preview-header"
                 style={{
-                    padding: "24px",
                     borderBottom: "1px solid #E0E0E0",
                     display: "flex",
                     justifyContent: "space-between",
                     alignItems: "center",
+                    paddingBottom: "1rem",
                 }}
             >
                 <div
@@ -156,9 +157,10 @@ const FilePreview = () => {
                     flexDirection: "column",
                     justifyContent: "flex-start",
                     alignItems: "center",
-                    gap: "24px",
-                    padding: "24px",
-                    height: "93%",
+                    gap: "1rem",
+
+                    height: "100%",
+                    scrollbarWidth: "none",
                     overflowY: "auto",
                 }}
             >

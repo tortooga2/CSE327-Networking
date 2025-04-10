@@ -121,16 +121,17 @@ const FileViewer = () => {
                 display: "flex",
                 flexDirection: "column",
                 width: "100%",
-                height: "100vh",
+                height: "100%",
                 backgroundColor: "#FFFFFF",
             }}
         >
             <div
                 className="table-container"
                 style={{
-                    padding: "24px",
+                    backgroundColor: "#F8F6FD",
+                    borderRadius: "12px",
+                    width: "100%",
                     height: "100%",
-                    overflow: "hidden",
                     display: "flex",
                     flexDirection: "column",
                 }}

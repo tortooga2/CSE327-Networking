@@ -93,8 +93,7 @@ const DebugSidebar = () => {
                         gap: "0.5rem",
                     }}
                 >
-                    <FaTimes style={{ marginLeft: "0.5rem" }} /> Unselect All (
-                    {selectedFiles.size})
+                    <FaTimes /> Unselect All ({selectedFiles.size})
                 </div>
 
                 <div

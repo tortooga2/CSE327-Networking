@@ -168,6 +168,9 @@ const DebugSidebar = () => {
                 />
                 <div
                     type="submit"
+                    onClick={(e) => {
+                        e.preventDefault();
+                    }}
                     style={{
                         padding: "0.75rem 1rem",
                         backgroundColor: "#8BFFB0",

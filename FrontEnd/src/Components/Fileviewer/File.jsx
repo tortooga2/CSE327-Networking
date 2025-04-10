@@ -143,44 +143,6 @@ const File = ({ fileData }) => {
                         />
                     </svg>
                 </button>
-                {(() => {
-                    if (fileContent[0].type === "bundle") {
-                        return (
-                            <button
-                                className={"file-button"}
-                                onClick={(e) => {
-                                    e.stopPropagation();
-                                    // Handle bundle view
-                                    setIsExpanded(!isExpanded);
-                                }}
-                            >
-                                <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    fill="#000000"
-                                    className={
-                                        "bi bi-caret-right" +
-                                        (isExpanded ? " expanded" : "")
-                                    }
-                                    viewBox="0 0 16 16"
-                                    id="Caret-Right--Streamline-Bootstrap"
-                                    height={16}
-                                    width={16}
-                                >
-                                    <desc>
-                                        {
-                                            "Caret Right Streamline Icon: https://streamlinehq.com"
-                                        }
-                                    </desc>
-                                    <path
-                                        d="M6 12.796V3.204L11.481 8zm0.659 0.753 5.48 -4.796a1 1 0 0 0 0 -1.506L6.66 2.451C6.011 1.885 5 2.345 5 3.204v9.592a1 1 0 0 0 1.659 0.753"
-                                        strokeWidth={1}
-                                    />
-                                </svg>
-                            </button>
-                        );
-                    }
-                    return <div className={"file-button"}></div>;
-                })()}
             </div>
         </div>
     );

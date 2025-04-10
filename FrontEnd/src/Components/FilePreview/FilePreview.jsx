@@ -24,8 +24,8 @@ const FileContent = ({ file }) => {
                     <img
                         src={file.metadata.url}
                         style={{
-                            maxWidth: "500px",
-                            aspectRatio: "calc(16/9)",
+                            width: "100%",
+                            height: "auto",
                             borderRadius: "8px",
                             display: "block",
                         }}
@@ -132,8 +132,11 @@ const FilePreview = () => {
     const [style, setStyle] = useState({
         width: 0,
         backgroundColor: "#FFFFFF",
-        height: "100vh",
+        height: "100%",
         position: "relative",
+        transition: "width 400ms ease-in",
+        padding: "0",
+        margin: "0",
     });
 
     const copyLink = (e, fileId) => {
@@ -227,15 +230,15 @@ const FilePreview = () => {
                         gap: "16px",
                     }}
                 >
-                    <h1
+                    <div
                         style={{
                             fontSize: "24px",
                             color: "#1E0B33",
-                            margin: 0,
+                            fontWeight: "900",
                         }}
                     >
-                        {fileData?.name || "File Preview"}
-                    </h1>
+                        {"File Preview"}
+                    </div>
                     <span
                         style={{
                             padding: "4px 12px",
@@ -270,7 +273,6 @@ const FilePreview = () => {
                     flexDirection: "column",
                     gap: "24px",
                     overflowY: "auto",
-                    height: "calc(100vh - 80px)",
                 }}
             >
                 {fileContent
@@ -286,49 +288,55 @@ const FilePreview = () => {
                               <div
                                   style={{
                                       padding: "16px",
+                                      width: "100%",
                                       display: "flex",
+                                      flexDirection: "column",
                                       justifyContent: "space-between",
-                                      alignItems: "center",
+                                      alignItems: "left",
                                       borderBottom: "1px solid #E0E0E0",
+                                      gap: "8px",
                                   }}
                               >
+                                  <p
+                                      style={{
+                                          fontSize: "16px",
+                                          fontWeight: "500",
+                                      }}
+                                  >
+                                      {file.name}
+                                  </p>
                                   <div
                                       style={{
                                           display: "flex",
-                                          flexDirection: "column",
-                                          gap: "8px",
+                                          flexDirection: "row",
+                                          width: "100%",
+                                          justifyContent: "space-between",
+                                          alignItems: "flex-start",
                                       }}
                                   >
-                                      <span
-                                          style={{
-                                              fontSize: "16px",
-                                              fontWeight: "500",
-                                          }}
-                                      >
-                                          {file.name}
-                                      </span>
-                                      <span
+                                      <p
                                           style={{
                                               fontSize: "14px",
                                               color: "#666",
                                           }}
                                       >
                                           Created by {file.creator_username}
-                                      </span>
+                                      </p>
+
+                                      <button
+                                          onClick={(e) => copyLink(e, file.id)}
+                                          style={{
+                                              padding: "8px 16px",
+                                              border: "1px solid #1E0B33",
+                                              borderRadius: "6px",
+                                              backgroundColor: "transparent",
+                                              color: "#1E0B33",
+                                              cursor: "pointer",
+                                          }}
+                                      >
+                                          Copy Link
+                                      </button>
                                   </div>
-                                  <button
-                                      onClick={(e) => copyLink(e, file.id)}
-                                      style={{
-                                          padding: "8px 16px",
-                                          border: "1px solid #1E0B33",
-                                          borderRadius: "6px",
-                                          backgroundColor: "transparent",
-                                          color: "#1E0B33",
-                                          cursor: "pointer",
-                                      }}
-                                  >
-                                      Copy Link
-                                  </button>
                               </div>
                               <div
                                   style={{

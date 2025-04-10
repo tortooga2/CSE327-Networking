@@ -15,6 +15,20 @@ import {
     Code,
 } from "lucide-react";
 
+function App() {
+    return (
+        <div className = "App">
+            <div className = "flex h-screen">
+                <Sidebar />
+                {/* Here is where my main content will do */}
+            <div className = "flex-1 bg-gray-100 p-4">
+                {/* Something goes here */}
+            </div>
+            </div>
+        </div>
+    )
+}
+
 const Sidebar = () => {
     const [isFavoritesOpen, setIsFavoritesOpen] = useState(true);
     const [favorites, setFavorites] = useState([]);

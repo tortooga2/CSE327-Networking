@@ -28,7 +28,14 @@ const MainApp = () => {
 
     return (
         <FileManagerProvider>
-            <div style={{ display: "flex" }}>
+            <div
+                style={{
+                    display: "flex",
+                    height: "100vh",
+                    width: "100vw",
+                    overflow: "hidden",
+                }}
+            >
                 <DebugSidebar />
                 <div
                     style={{

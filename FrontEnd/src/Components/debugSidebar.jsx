@@ -3,6 +3,8 @@ import { useEffect, useRef } from "react";
 import { FaUpload, FaLink, FaTimes, FaTrash } from "react-icons/fa";
 import { useStore } from "./Contexts/zus.fileManager";
 
+import NoteCreation from "./NoteCreation";
+
 const DebugSidebar = () => {
     const selectedFiles = useStore((state) => state.selectedFiles);
     const UnSelectAll = useStore((state) => state.unSelectAll);
@@ -26,17 +28,17 @@ const DebugSidebar = () => {
                 console.error("No files selected");
                 return;
             }
-          
+
             try {
                 await uploadFile(files);
-//             let filesArray = [];
-//             try {
-//                 for (let i = 0; i < files.length; i++) {
-//                     const file = files[i];
-//                     console.log("Uploading file:", file.name);
-//                     const fileResponse = await uploadFile(file);
-//                     filesArray.push(fileResponse);
-//                 }
+                //             let filesArray = [];
+                //             try {
+                //                 for (let i = 0; i < files.length; i++) {
+                //                     const file = files[i];
+                //                     console.log("Uploading file:", file.name);
+                //                     const fileResponse = await uploadFile(file);
+                //                     filesArray.push(fileResponse);
+                //                 }
 
                 fileInput.value = "";
 
@@ -44,7 +46,7 @@ const DebugSidebar = () => {
             } catch (error) {
                 console.error("Error during upload:", error);
                 alert("Error uploading files. Please try again.");
-            };
+            }
         });
     }, [uploadFile]);
 
@@ -122,7 +124,6 @@ const DebugSidebar = () => {
 
             <hr style={{ borderColor: "#E2E8F0", margin: "1rem 0" }} />
 
-
             <form
                 id="fileForm"
                 ref={formRef}
@@ -165,7 +166,8 @@ const DebugSidebar = () => {
                         backgroundColor: "#F7FAFC",
                         marginBottom: "1rem",
                     }}
-                multiple/>
+                    multiple
+                />
                 <button
                     type="submit"
                     style={{
@@ -202,6 +204,7 @@ const DebugSidebar = () => {
             >
                 <FaTrash /> <p>Delete Files ({selectedFiles.size})</p>
             </div>
+            <NoteCreation />
         </div>
     );
 };

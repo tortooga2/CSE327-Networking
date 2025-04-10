@@ -26,17 +26,14 @@ const DebugSidebar = () => {
                 console.error("No files selected");
                 return;
             }
-
+            let filesArray = [];
             try {
                 for (let i = 0; i < files.length; i++) {
                     const file = files[i];
                     console.log("Uploading file:", file.name);
-                    await uploadFile(file);
+                    const fileResponse = await uploadFile(file);
+                    filesArray.push(fileResponse);
                 }
-
-                console.log("Refreshing file list...");
-                await refreshFiles();
-                console.log("Files refreshed:", useStore.getState().files); // Debug log
 
                 fileInput.value = "";
 
@@ -46,7 +43,7 @@ const DebugSidebar = () => {
                 alert("Error uploading files. Please try again.");
             }
         });
-    }, [uploadFile, refreshFiles]);
+    }, [uploadFile]);
 
     return (
         <div

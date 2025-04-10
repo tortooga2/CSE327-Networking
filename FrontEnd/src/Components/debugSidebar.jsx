@@ -26,14 +26,17 @@ const DebugSidebar = () => {
                 console.error("No files selected");
                 return;
             }
-            let filesArray = [];
+          
             try {
-                for (let i = 0; i < files.length; i++) {
-                    const file = files[i];
-                    console.log("Uploading file:", file.name);
-                    const fileResponse = await uploadFile(file);
-                    filesArray.push(fileResponse);
-                }
+                await uploadFile(files);
+//             let filesArray = [];
+//             try {
+//                 for (let i = 0; i < files.length; i++) {
+//                     const file = files[i];
+//                     console.log("Uploading file:", file.name);
+//                     const fileResponse = await uploadFile(file);
+//                     filesArray.push(fileResponse);
+//                 }
 
                 fileInput.value = "";
 
@@ -41,7 +44,7 @@ const DebugSidebar = () => {
             } catch (error) {
                 console.error("Error during upload:", error);
                 alert("Error uploading files. Please try again.");
-            }
+            };
         });
     }, [uploadFile]);
 
@@ -119,6 +122,7 @@ const DebugSidebar = () => {
 
             <hr style={{ borderColor: "#E2E8F0", margin: "1rem 0" }} />
 
+
             <form
                 id="fileForm"
                 ref={formRef}
@@ -161,7 +165,7 @@ const DebugSidebar = () => {
                         backgroundColor: "#F7FAFC",
                         marginBottom: "1rem",
                     }}
-                />
+                multiple/>
                 <button
                     type="submit"
                     style={{

@@ -96,49 +96,53 @@ const useStore = create((set) => ({
             console.error(error);
         }
     },
-    uploadFiles: async (file) => {
+    uploadFiles: async (files) => {
+        //Separate name from each file
+        const fileNames = [];
+        for (let index = 0; index < files.length; index++) {
+            fileNames.push(files[index].name);
+        }
+
         try {
-            console.log("FILE NAME: ", file.name);
-
-            const { url, key } = await fetch("/api/bin/getuploadpath", {
-                method: "GET",
-                credentials: "include",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-            })
-                .then((res) => res.json())
-                .catch((err) => {
-                    console.error("Error fetching upload path:", err);
-                });
-
-            await fetch(url, {
-                method: "PUT",
-                headers: {
-                    ContentType: file.type,
-                },
-                body: file,
-            });
-
-            const response = await fetch("/api/file/upload", {
+            const response = await fetch("/api/file/upload-helper", {
                 method: "POST",
                 credentials: "include",
                 headers: {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify({
-                    fileName: file.name,
-                    fileType: file.type,
-                    key: key,
+                    fileCount: files.length,
+                    fileNames: fileNames,
                 }),
             });
+          
+            const { urls, data } = await response.json();
 
-            if (response.ok) {
-                const data = await response.json();
-                console.log("Data from upload", data);
-                useStore.getState().updateFiles([data.data]);
-                useStore.getState().unSelectAll();
+            //Push each file to s3
+            for (let index = 0; index < files.length; index++) {
+                await fetch(urls[index], {
+                    method: "PUT",
+                    body: files[index],
+                });
             }
+
+            //Now check to see if the files were uploaded successfully and if so, save to db
+            await fetch("/api/file/verify", {
+                method: "POST",
+                credentials: "include",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    data: data,
+                }),                
+            });
+//             if (response.ok) {
+//                 const data = await response.json();
+//                 console.log("Data from upload", data);
+//                 useStore.getState().updateFiles([data.data]);
+//                 useStore.getState().unSelectAll();
+//             }
         } catch (err) {
             console.log(err);
         }

@@ -7,42 +7,30 @@
     position: relative;
 }
 
-.drop-down {
-    overflow: auto;
-    width: 100%;
-    max-height: 0;
-    bottom: -100%;
-    display: flex;
-    flex-direction: column;
-    scrollbar-width: none;
-
-    justify-content: right;
-    align-items: left;
-    transition: max-height 0.5s ease;
+button{
+    background-color: transparent;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    color: #1E0B33;
+    transition: background-color 0.2s ease;
 }
 
-.drop-down.open {
-    max-height: 300px;
-    transition: max-height 0.5s ease;
+button:hover {
+    
+    background-color: rgba(30, 30, 30, 0.1); /* Keep existing hover */
 }
 
-.bi {
-    transition: transform 0.3s ease;
+
+
+input[type="checkbox"] {
+    width: 1.2em;
+    height: 1.2em;
+    margin: 0;
+    padding: 0;
+    border-radius: 0.2em;
+    background-color: #f9f9f9;
+    border: 1px solid #eaeaea;
 }
 
-.bi.expanded {
-    transform: rotate(90deg);
-    transition: transform 0.3s ease;
-}
-
-.copy-link:focus {
-    fill-opacity: 1;
-}
-
-.file-item > .button-column > .copy-link:not(:focus) {
-    fill-opacity: 0;
-}
-
-.file-item:hover > .button-column > .copy-link:not(:focus) {
-    fill-opacity: 1;
-}

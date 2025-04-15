@@ -1,0 +1,28 @@
+name: Update EC2
+
+on:
+    push:
+        branches: ["main"] # or your chosen branch(es)
+
+##"ssh -i "login-cred.pem" ubuntu@ec2-54-67-6-5.us-west-1.compute.amazonaws.com"
+jobs:
+    deploy:
+        runs-on: ubuntu-latest
+        steps:
+            # 2. Use SSH action to connect to EC2 and run commands
+            - name: SSH Remote Commands
+              uses: appleboy/ssh-action@master
+              with:
+                  host: ec2-54-67-6-5.us-west-1.compute.amazonaws.com
+                  username: ubuntu
+                  key: ${{ secrets.EC2_KEY }}
+                  script: |
+                      export NVM_DIR=~/.nvm
+                      source ~/.nvm/nvm.sh
+                      pm2 -v
+                      cd ~/CSE327-Networking
+                      git pull
+                      sp25-cse327
+                      npm run setup
+                      npm run prod
+                      pm2 restart all

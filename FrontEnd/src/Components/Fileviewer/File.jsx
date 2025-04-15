@@ -98,8 +98,10 @@ const File = ({ fileData }) => {
             <div
                 style={{
                     display: "flex",
-                    gap: "8px",
-                    justifyContent: "flex-end",
+                    gap: "1rem",
+                    justifyContent: "center",
+                    alignItems: "center",
+
                 }}
             >
                 <input
@@ -107,7 +109,7 @@ const File = ({ fileData }) => {
                     ref={checkboxRef}
                     onChange={handleChange}
                     checked={isSelected}
-                    style={{ margin: 0 }}
+
                 />
                 <button
                     onClick={(e) => {

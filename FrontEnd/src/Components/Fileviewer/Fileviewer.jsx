@@ -163,7 +163,6 @@ const FileViewer = ({ width }) => {
                 >
                     Name {getSortIcon("name")}
                 </div>
-                <div style={{ cursor: "pointer" }}>Notes</div>
                 {/* <div style={{ textAlign: "right" }}>Actions</div> */}
             </div>
             <VerticalDiv gap="0rem" padding="0rem">

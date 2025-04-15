@@ -1,5 +1,6 @@
 import dotenv from "dotenv";
 import chalk from "chalk";
+import { DEBUG } from "../module.debugHelpers.js";
 import { Sequelize } from "sequelize";
 import { createUsersTable } from "../../Models/model.users.js";
 import { createDataTable } from "../../Models/model.data.js";
@@ -13,12 +14,16 @@ const sequelize = new Sequelize(
     {
         host: process.env.DB_HOST,
         dialect: "postgres",
-        dialectOptions: {
-            ssl: {
-                require: true,
-                rejectUnauthorized: false, // You might want to set this to true in production with proper certs
-            },
-        },
+        ...(process.env.DEBUG !== "true"
+            ? {
+                  dialectOptions: {
+                      ssl: {
+                          require: true,
+                          rejectUnauthorized: false, // You might want to set this to true in production with proper certs
+                      },
+                  },
+              }
+            : {}),
     }
 );
 

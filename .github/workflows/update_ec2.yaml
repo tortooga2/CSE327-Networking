@@ -21,8 +21,18 @@ jobs:
                       source ~/.nvm/nvm.sh
                       pm2 -v
                       cd ~/CSE327-Networking
-                      # Set up Git to use the password from secrets
-                      git remote set-url origin https://${{ secrets.GIT_PASSWORD }}@https://github.com/tortooga2/CSE327-Networking.git
-                      git pull origin main
+                      mkdir -p ~/.ssh
+                      echo "${{ secrets.GIT_PASSWORD }}" > ~/.ssh/github_deploy_key
+                      chmod 600 ~/.ssh/github_deploy_key
+
+                      # Configure SSH to use this key for GitHub
+                      cat > ~/.ssh/config << EOF
+                      Host github.com
+                        IdentityFile ~/.ssh/github_deploy_key
+                        StrictHostKeyChecking no
+                      EOF
+
+                      # Make sure Git uses SSH
+                      git remote set-url origin git@github.com:tortooga2/CSE327-Networking.git
                       npm run setup
                       pm2 restart all

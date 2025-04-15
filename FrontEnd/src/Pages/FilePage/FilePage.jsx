@@ -1,19 +1,13 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
+import FileContent from "../../Components/FileContent";
+
 const FilePage = () => {
     const { fileId, ownerId } = useParams();
 
     const [fileData, setFileData] = useState(null);
     const [fileContent, setFileContent] = useState(null);
-
-    const copyLink = (e, fileId) => {
-        e.stopPropagation();
-        navigator.clipboard.writeText(
-            `${window.location.origin}/file/owner_id/${fileId}`
-        );
-        alert("Link copied to clipboard");
-    };
 
     useEffect(() => {
         console.log(`File ID: ${fileId}`);
@@ -73,49 +67,7 @@ const FilePage = () => {
             >
                 {fileContent
                     ? fileContent.map((file, index) => {
-                          return (
-                              <div
-                                  key={index}
-                                  style={{
-                                      display: "flex",
-                                      flexDirection: "row",
-
-                                      borderTop: "2px solid black",
-                                  }}
-                              >
-                                  <div
-                                      style={{
-                                          display: "flex",
-                                          flexDirection: "column",
-                                          width: "20rem",
-                                          alignItems: "center",
-                                          padding: "1rem",
-                                          gap: "1rem",
-                                      }}
-                                  >
-                                      <p>{file.id}</p>
-                                      <p>{file.creator_username}</p>
-                                      <p>{file.name}</p>
-                                      <p>{file.type}</p>
-                                      <button
-                                          onClick={(e) => {
-                                              e.stopPropagation();
-                                              copyLink(e, file.id);
-                                          }}
-                                      >
-                                          Copy Link
-                                      </button>
-                                  </div>
-                                  <div>
-                                      <img
-                                          src={file.metadata.url}
-                                          style={{
-                                              width: "100%",
-                                          }}
-                                      />
-                                  </div>
-                              </div>
-                          );
+                          return <FileContent key={index} file={file} />;
                       })
                     : null}
             </div>

@@ -1,0 +1,38 @@
+name: Update EC2
+
+on:
+    push:
+        branches: ["main"] # or your chosen branch(es)
+
+##"ssh -i "login-cred.pem" ubuntu@ec2-54-67-6-5.us-west-1.compute.amazonaws.com"
+jobs:
+    deploy:
+        runs-on: ubuntu-latest
+        steps:
+            # 2. Use SSH action to connect to EC2 and run commands
+            - name: SSH Remote Commands
+              uses: appleboy/ssh-action@master
+              with:
+                  host: ec2-54-67-6-5.us-west-1.compute.amazonaws.com
+                  username: ubuntu
+                  key: ${{ secrets.EC2_KEY }}
+                  script: |
+                      export NVM_DIR=~/.nvm
+                      source ~/.nvm/nvm.sh
+                      pm2 -v
+                      cd ~/CSE327-Networking
+                      mkdir -p ~/.ssh
+                      echo "${{ secrets.GIT_PASSWORD }}" > ~/.ssh/github_deploy_key
+                      chmod 600 ~/.ssh/github_deploy_key
+
+                      # Configure SSH to use this key for GitHub
+                      cat > ~/.ssh/config << EOF
+                      Host github.com
+                        IdentityFile ~/.ssh/github_deploy_key
+                        StrictHostKeyChecking no
+                      EOF
+
+                      # Make sure Git uses SSH
+                      git remote set-url origin git@github.com:tortooga2/CSE327-Networking.git
+                      npm run setup
+                      pm2 restart all

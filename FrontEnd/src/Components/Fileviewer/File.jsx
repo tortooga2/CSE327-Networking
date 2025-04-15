@@ -94,12 +94,14 @@ const File = ({ fileData }) => {
                 <span style={getTypePillClass(fileType)}>{fileType}</span>
             </div>
             <div>{fileContent[0].creator_username}</div>
-            <div style={{ fontWeight: "500" }}>{fileContent[0].name}</div>
+            <div style={{ fontWeight: "500", minWidth: "100px", textWrap: "nowrap", overflowX: "hidden", textOverflow: "ellipsis" }}>{fileContent[0].name}</div>
             <div
                 style={{
                     display: "flex",
-                    gap: "8px",
-                    justifyContent: "flex-end",
+                    gap: "1rem",
+                    justifyContent: "center",
+                    alignItems: "center",
+
                 }}
             >
                 <input
@@ -107,7 +109,7 @@ const File = ({ fileData }) => {
                     ref={checkboxRef}
                     onChange={handleChange}
                     checked={isSelected}
-                    style={{ margin: 0 }}
+
                 />
                 <button
                     onClick={(e) => {

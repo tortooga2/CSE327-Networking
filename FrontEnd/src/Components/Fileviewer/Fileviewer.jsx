@@ -4,7 +4,9 @@ import "./FileViewer.css";
 import File from "./File";
 import { useStore } from "../Contexts/zus.fileManager";
 
-const FileViewer = () => {
+import VerticalDiv from "../UILayout/VerticalDiv";
+
+const FileViewer = ({ width }) => {
     const [sortConfig, setSortConfig] = useState({
         key: "createdAt",
         direction: "desc",
@@ -116,129 +118,60 @@ const FileViewer = () => {
     };
 
     return (
-        <div
-            style={{
-                display: "flex",
-                flexDirection: "column",
-                width: "100%",
-                height: "100vh",
-                backgroundColor: "#FFFFFF",
-            }}
-        >
+
+        <VerticalDiv gap="0rem" width={width} padding="0rem" style={{ borderRadius: "1rem" }}>
             <div
-                className="table-container"
+                className="table-header-row"
                 style={{
-                    padding: "24px",
-                    height: "100%",
-                    overflow: "hidden",
-                    display: "flex",
-                    flexDirection: "column",
+                    display: "grid",
+                    gridTemplateColumns:
+                        "50px 180px 120px 150px 1fr 200px 120px",
+                    padding: "16px 24px",
+                    backgroundColor: "#1E0B33",
+                    color: "white",
+                    fontWeight: "500",
+                    fontSize: "14px",
                 }}
             >
                 <div
-                    className="table-header"
-                    style={{
-                        display: "flex",
-                        justifyContent: "space-between",
-                        alignItems: "center",
-                        marginBottom: "24px",
-                    }}
+                    onClick={() => handleSort("id")}
+                    style={{ cursor: "pointer" }}
                 >
-                    <h1
-                        style={{
-                            color: "#1E0B33",
-                            fontSize: "24px",
-                            fontWeight: "600",
-                            margin: 0,
-                        }}
-                    >
-                        Files
-                    </h1>
-                    <input
-                        type="text"
-                        placeholder="Search files..."
-                        value={searchTerm}
-                        onChange={handleSearch}
-                        style={{
-                            padding: "8px 16px",
-                            borderRadius: "6px",
-                            border: "1px solid #E2E8F0",
-                            width: "240px",
-                            fontSize: "14px",
-                        }}
-                    />
+                    ID {getSortIcon("id")}
                 </div>
-
                 <div
-                    className="table-wrapper"
-                    style={{
-                        backgroundColor: "#F8F6FD",
-                        borderRadius: "12px",
-                        overflow: "hidden",
-                        height: "100%",
-                    }}
+                    onClick={() => handleSort("createdAt")}
+                    style={{ cursor: "pointer" }}
                 >
-                    <div
-                        className="table-header-row"
-                        style={{
-                            display: "grid",
-                            gridTemplateColumns:
-                                "50px 180px 120px 150px 1fr 200px 120px",
-                            padding: "16px 24px",
-                            backgroundColor: "#1E0B33",
-                            color: "white",
-                            fontWeight: "500",
-                            fontSize: "14px",
-                        }}
-                    >
-                        <div
-                            onClick={() => handleSort("id")}
-                            style={{ cursor: "pointer" }}
-                        >
-                            ID {getSortIcon("id")}
-                        </div>
-                        <div
-                            onClick={() => handleSort("createdAt")}
-                            style={{ cursor: "pointer" }}
-                        >
-                            Date {getSortIcon("createdAt")}
-                        </div>
-                        <div
-                            onClick={() => handleSort("type")}
-                            style={{ cursor: "pointer" }}
-                        >
-                            Type {getSortIcon("type")}
-                        </div>
-                        <div
-                            onClick={() => handleSort("creator_username")}
-                            style={{ cursor: "pointer" }}
-                        >
-                            Owner {getSortIcon("creator_username")}
-                        </div>
-                        <div
-                            onClick={() => handleSort("name")}
-                            style={{ cursor: "pointer" }}
-                        >
-                            Name {getSortIcon("name")}
-                        </div>
-                        <div style={{ cursor: "pointer" }}>Notes</div>
-                        {/* <div style={{ textAlign: "right" }}>Actions</div> */}
-                    </div>
-
-                    <div
-                        className="table-body"
-                        style={{
-                            height: "calc(100% - 52px)",
-                            overflowY: "auto",
-                        }}
-                    >
-                        {filteredAndSortedFiles().map((file) => (
-                            <File key={file.id} fileData={file} />
-                        ))}
-                    </div>
+                    Date {getSortIcon("createdAt")}
                 </div>
+                <div
+                    onClick={() => handleSort("type")}
+                    style={{ cursor: "pointer" }}
+                >
+                    Type {getSortIcon("type")}
+                </div>
+                <div
+                    onClick={() => handleSort("creator_username")}
+                    style={{ cursor: "pointer" }}
+                >
+                    Owner {getSortIcon("creator_username")}
+                </div>
+                <div
+                    onClick={() => handleSort("name")}
+                    style={{ cursor: "pointer", minWidth: "100px", textWrap: "nowrap", overflowX: "hidden", textOverflow: "ellipsis" }}
+                >
+                    Name {getSortIcon("name")}
+                </div>
+                {/* <div style={{ textAlign: "right" }}>Actions</div> */}
             </div>
-        </div>
+            <VerticalDiv gap="0rem" padding="0rem">
+                {filteredAndSortedFiles().map((file) => (
+                    <File key={file.id} fileData={file} />
+                ))}
+            </VerticalDiv>
+        </VerticalDiv>
+
     );
 };
 

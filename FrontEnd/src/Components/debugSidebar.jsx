@@ -3,6 +3,9 @@ import { useEffect, useRef } from "react";
 import { FaUpload, FaLink, FaTimes, FaTrash } from "react-icons/fa";
 import { useStore } from "./Contexts/zus.fileManager";
 
+import NoteCreation from "./NoteCreation";
+import VerticalDiv from "../Components/UILayout/VerticalDiv";
+
 const DebugSidebar = () => {
     const selectedFiles = useStore((state) => state.selectedFiles);
     const UnSelectAll = useStore((state) => state.unSelectAll);
@@ -26,14 +29,17 @@ const DebugSidebar = () => {
                 console.error("No files selected");
                 return;
             }
-            let filesArray = [];
+
             try {
-                for (let i = 0; i < files.length; i++) {
-                    const file = files[i];
-                    console.log("Uploading file:", file.name);
-                    const fileResponse = await uploadFile(file);
-                    filesArray.push(fileResponse);
-                }
+                await uploadFile(files);
+                //             let filesArray = [];
+                //             try {
+                //                 for (let i = 0; i < files.length; i++) {
+                //                     const file = files[i];
+                //                     console.log("Uploading file:", file.name);
+                //                     const fileResponse = await uploadFile(file);
+                //                     filesArray.push(fileResponse);
+                //                 }
 
                 fileInput.value = "";
 
@@ -46,19 +52,7 @@ const DebugSidebar = () => {
     }, [uploadFile]);
 
     return (
-        <div
-            className="debug-sidebar"
-            style={{
-                padding: "1.5rem",
-                height: "100%",
-                backgroundColor: "#F8F6FD",
-                borderLeft: "1px solid #E2E8F0",
-                boxShadow: "-2px 0 10px rgba(0,0,0,0.05)",
-                display: "flex",
-                flexDirection: "column",
-                gap: "1.5rem",
-            }}
-        >
+        <VerticalDiv width="300px">
             <h2
                 style={{
                     fontSize: "1.5rem",
@@ -117,13 +111,12 @@ const DebugSidebar = () => {
                 </div>
             </div>
 
-            <hr style={{ borderColor: "#E2E8F0", margin: "1rem 0" }} />
+            <hr style={{ borderColor: "#E2E8F0" }} />
 
             <form
                 id="fileForm"
                 ref={formRef}
                 style={{
-                    marginTop: "1rem",
                     padding: "1.5rem",
                     backgroundColor: "#ffffff",
                     borderRadius: "8px",
@@ -161,6 +154,7 @@ const DebugSidebar = () => {
                         backgroundColor: "#F7FAFC",
                         marginBottom: "1rem",
                     }}
+                    multiple
                 />
                 <button
                     type="submit"
@@ -198,7 +192,8 @@ const DebugSidebar = () => {
             >
                 <FaTrash /> <p>Delete Files ({selectedFiles.size})</p>
             </div>
-        </div>
+            <NoteCreation />
+        </VerticalDiv>
     );
 };
 

@@ -138,16 +138,8 @@
 }
 
 .button-column button {
-    background-color: transparent;
-    border: none;
-    padding: 6px 12px;
-    border-radius: 4px;
-    cursor: pointer;
-    color: #1E0B33;
-    transition: background-color 0.2s ease;
+    
 }
 
-.button-column button:hover {
-    background-color: rgba(30, 11, 51, 0.05);
-}
+
 

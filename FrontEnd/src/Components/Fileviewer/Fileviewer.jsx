@@ -1,15 +1,17 @@
 import { useState, useEffect, useMemo } from "react";
-import Fuse from 'fuse.js';
+import Fuse from "fuse.js";
 import "./FileViewer.css";
 import File from "./File";
 import { useStore } from "../Contexts/zus.fileManager";
 
-const FileViewer = () => {
+import VerticalDiv from "../UILayout/VerticalDiv";
+
+const FileViewer = ({ width }) => {
     const [sortConfig, setSortConfig] = useState({
-        key: 'createdAt',
-        direction: 'desc'
+        key: "createdAt",
+        direction: "desc",
     });
-    const [searchTerm, setSearchTerm] = useState('');
+    const [searchTerm, setSearchTerm] = useState("");
     const [notes, setNotes] = useState({}); // State to store notes for each file
 
     const files = useStore((state) => state.files);
@@ -25,8 +27,8 @@ const FileViewer = () => {
     useEffect(() => {
         if (files && files.length > 0) {
             const initialNotes = {};
-            files.forEach(file => {
-                initialNotes[file.id] = file.note || '';
+            files.forEach((file) => {
+                initialNotes[file.id] = file.note || "";
             });
             setNotes(initialNotes);
         }
@@ -35,7 +37,7 @@ const FileViewer = () => {
     const handleNoteChange = (fileId, event) => {
         const newNotes = { ...notes, [fileId]: event.target.value };
         setNotes(newNotes);
-        const updatedFiles = files.map(file =>
+        const updatedFiles = files.map((file) =>
             file.id === fileId ? { ...file, note: event.target.value } : file
         );
         useStore.getState().setFiles(updatedFiles);
@@ -48,9 +50,9 @@ const FileViewer = () => {
 
     const fuseOptions = {
         keys: [
-            { name: 'name', weight: 2 },
-            { name: 'type', weight: 1 },
-            { name: 'creator_username', weight: 1 }
+            { name: "name", weight: 2 },
+            { name: "type", weight: 1 },
+            { name: "creator_username", weight: 1 },
         ],
         threshold: 0.3,
         distance: 100,
@@ -60,7 +62,7 @@ const FileViewer = () => {
         ignoreLocation: false,
         includeScore: true,
         location: 0,
-        maxPatternLength: 32
+        maxPatternLength: 32,
     };
 
     const fuse = useMemo(() => {
@@ -70,21 +72,24 @@ const FileViewer = () => {
 
     const sortData = (data, key, direction) => {
         return [...data].sort((a, b) => {
-            if (key === 'createdAt') {
-                return direction === 'asc'
+            if (key === "createdAt") {
+                return direction === "asc"
                     ? new Date(a[key]) - new Date(b[key])
                     : new Date(b[key]) - new Date(a[key]);
             }
-            if (a[key] < b[key]) return direction === 'asc' ? -1 : 1;
-            if (a[key] > b[key]) return direction === 'asc' ? 1 : -1;
+            if (a[key] < b[key]) return direction === "asc" ? -1 : 1;
+            if (a[key] > b[key]) return direction === "asc" ? 1 : -1;
             return 0;
         });
     };
 
     const handleSort = (key) => {
-        setSortConfig(prevConfig => ({
+        setSortConfig((prevConfig) => ({
             key,
-            direction: prevConfig.key === key && prevConfig.direction === 'asc' ? 'desc' : 'asc'
+            direction:
+                prevConfig.key === key && prevConfig.direction === "asc"
+                    ? "desc"
+                    : "asc",
         }));
     };
 
@@ -92,7 +97,7 @@ const FileViewer = () => {
         if (sortConfig.key !== columnKey) {
             return "↓";
         }
-        return sortConfig.direction === 'asc' ? "↑" : "↓";
+        return sortConfig.direction === "asc" ? "↑" : "↓";
     };
 
     const filteredAndSortedFiles = () => {
@@ -101,7 +106,7 @@ const FileViewer = () => {
         if (searchTerm) {
             const searchResults = fuse.search(searchTerm);
             searchResults.sort((a, b) => a.score - b.score);
-            resultFiles = searchResults.map(result => result.item);
+            resultFiles = searchResults.map((result) => result.item);
             return resultFiles;
         }
 
@@ -113,112 +118,60 @@ const FileViewer = () => {
     };
 
     return (
-        <div style={{ display: "flex", flexDirection: "column", width: "100%", height: "100vh", backgroundColor: "#FFFFFF" }}>
-            <div className="table-container" style={{
-                padding: "24px",
-                height: "100%",
-                overflow: "hidden",
-                display: "flex",
-                flexDirection: "column",
-            }}>
-                <div className="table-header" style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                    marginBottom: "24px"
-                }}>
-                    <h1 style={{
-                        color: "#1E0B33",
-                        fontSize: "24px",
-                        fontWeight: "600",
-                        margin: 0
-                    }}>Files</h1>
-                    <input
-                        type="text"
-                        placeholder="Search files..."
-                        value={searchTerm}
-                        onChange={handleSearch}
-                        style={{
-                            padding: "8px 16px",
-                            borderRadius: "6px",
-                            border: "1px solid #E2E8F0",
-                            width: "240px",
-                            fontSize: "14px"
-                        }}
-                    />
-                </div>
 
-                <div className="table-wrapper" style={{
-                    backgroundColor: "#F8F6FD",
-                    borderRadius: "12px",
-                    overflow: "hidden",
-                    height: "100%",
-                }}>
-                    <div className="table-header-row" style={{
-                        display: "grid",
-                        gridTemplateColumns: "50px 180px 120px 150px 1fr 200px 120px",
-                        padding: "16px 24px",
-                        backgroundColor: "#1E0B33",
-                        color: "white",
-                        fontWeight: "500",
-                        fontSize: "14px"
-                    }}>
-                        <div onClick={() => handleSort('id')} style={{ cursor: 'pointer' }}>
-                            ID {getSortIcon('id')}
-                        </div>
-                        <div onClick={() => handleSort('createdAt')} style={{ cursor: 'pointer' }}>
-                            Date {getSortIcon('createdAt')}
-                        </div>
-                        <div onClick={() => handleSort('type')} style={{ cursor: 'pointer' }}>
-                            Type {getSortIcon('type')}
-                        </div>
-                        <div onClick={() => handleSort('creator_username')} style={{ cursor: 'pointer' }}>
-                            Owner {getSortIcon('creator_username')}
-                        </div>
-                        <div onClick={() => handleSort('name')} style={{ cursor: 'pointer' }}>
-                            Name {getSortIcon('name')}
-                        </div>
-                        <div style={{ cursor: 'pointer' }}>Notes</div>
-                        {/* <div style={{ textAlign: "right" }}>Actions</div> */}
-                    </div>
-
-                    <div className="table-body" style={{
-                        height: "calc(100% - 52px)",
-                        overflowY: "auto"
-                    }}>
-                        {filteredAndSortedFiles().map((file) => (
-                            <div key={file.id} className="table-row" style={{
-                                display: "grid",
-                                gridTemplateColumns: "50px 180px 120px 150px 1fr 200px 120px",
-                                padding: "16px 24px",
-                                borderBottom: "1px solid #E2E8F0",
-                                alignItems: "center"
-                            }}>
-                                <div>{file.id}</div>
-                                <div>{new Date(file.createdAt).toLocaleDateString()}</div>
-                                <div>{file.type}</div>
-                                <div>{file.creator_username}</div>
-                                <div>{file.name}</div>
-                                <div>
-                                    <textarea
-                                        id={`note-${file.id}`}
-                                        name={`note-${file.id}`}
-                                        rows="3"
-                                        cols="25"
-                                        value={notes[file.id] || ''}
-                                        onChange={(event) => handleNoteChange(file.id, event)}
-                                        style={{ fontSize: "12px", width: "100%", height: "100%", boxSizing: "border-box" }}
-                                    />
-                                </div>
-                                <div style={{ textAlign: "right" }}>
-                                    <File key={file.id} fileData={file} />
-                                </div>
-                            </div>
-                        ))}
-                    </div>
+        <VerticalDiv gap="0rem" width={width} padding="0rem" style={{ borderRadius: "1rem" }}>
+            <div
+                className="table-header-row"
+                style={{
+                    display: "grid",
+                    gridTemplateColumns:
+                        "50px 180px 120px 150px 1fr 200px 120px",
+                    padding: "16px 24px",
+                    backgroundColor: "#1E0B33",
+                    color: "white",
+                    fontWeight: "500",
+                    fontSize: "14px",
+                }}
+            >
+                <div
+                    onClick={() => handleSort("id")}
+                    style={{ cursor: "pointer" }}
+                >
+                    ID {getSortIcon("id")}
                 </div>
+                <div
+                    onClick={() => handleSort("createdAt")}
+                    style={{ cursor: "pointer" }}
+                >
+                    Date {getSortIcon("createdAt")}
+                </div>
+                <div
+                    onClick={() => handleSort("type")}
+                    style={{ cursor: "pointer" }}
+                >
+                    Type {getSortIcon("type")}
+                </div>
+                <div
+                    onClick={() => handleSort("creator_username")}
+                    style={{ cursor: "pointer" }}
+                >
+                    Owner {getSortIcon("creator_username")}
+                </div>
+                <div
+                    onClick={() => handleSort("name")}
+                    style={{ cursor: "pointer", minWidth: "100px", textWrap: "nowrap", overflowX: "hidden", textOverflow: "ellipsis" }}
+                >
+                    Name {getSortIcon("name")}
+                </div>
+                {/* <div style={{ textAlign: "right" }}>Actions</div> */}
             </div>
-        </div>
+            <VerticalDiv gap="0rem" padding="0rem">
+                {filteredAndSortedFiles().map((file) => (
+                    <File key={file.id} fileData={file} />
+                ))}
+            </VerticalDiv>
+        </VerticalDiv>
+
     );
 };
 

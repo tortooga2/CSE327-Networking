@@ -2,11 +2,6 @@ import { useState, useRef, useEffect } from "react";
 
 import "./MainApp.css";
 
-import {
-    FileManagerProvider,
-    useFileManager,
-} from "../../Components/Contexts/ctx.file_manager.jsx";
-
 import FileViewer from "../../Components/Fileviewer/Fileviewer.jsx";
 
 import Dashboard from "../../Components/Dashboard.jsx";
@@ -22,7 +17,6 @@ import NewPage from "../../Components/UILayout/NewPage.jsx";
 import HorizontalDiv from "../../Components/UILayout/HorizontalDiv.jsx";
 import VerticalDiv from "../../Components/UILayout/VerticalDiv.jsx";
 
-
 const MainApp = () => {
     const { user } = useUser();
 
@@ -33,7 +27,6 @@ const MainApp = () => {
     return (
         <NewPage>
             <HorizontalDiv>
-
                 <DebugSidebar />
                 <HorizontalDiv padding="0rem" gap="0rem">
                     <FileViewer width="100%" />

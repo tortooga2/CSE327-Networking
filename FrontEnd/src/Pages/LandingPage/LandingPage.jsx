@@ -101,7 +101,7 @@ function LandingPage() {
                 }}
             >
                 @2025 Bundle,{" "}
-                <span style={{ fontStyle: "italic" }}> mio amore </span>. All
+                <span style={{ fontStyle: "italic" }}> Networking Application </span>. All
                 rights reserved.
             </div>
         </div>

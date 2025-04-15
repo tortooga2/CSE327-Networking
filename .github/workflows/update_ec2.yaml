@@ -34,5 +34,6 @@ jobs:
 
                       # Make sure Git uses SSH
                       git remote set-url origin git@github.com:tortooga2/CSE327-Networking.git
+                      git pull
                       npm run setup
                       pm2 restart all

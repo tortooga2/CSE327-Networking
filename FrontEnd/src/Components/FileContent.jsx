@@ -174,7 +174,7 @@ const FileContent = ({ file }) => {
                         style={{
                             padding: "8px 16px",
                             border: "1px solid #1E0B33",
-                            borderRadius: "6px",
+                            borderRadius: "1rem",
                             backgroundColor: "transparent",
                             color: "#1E0B33",
                             cursor: "pointer",

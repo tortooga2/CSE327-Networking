@@ -4,23 +4,18 @@ import PropTypes from "prop-types";
 
 import FileContent from "../FileContent";
 
+import VerticalDiv from "../UILayout/VerticalDiv";
+
+
 const FilePreview = () => {
     const fileId = useStore((state) => state.previewedFile);
     const closedFile = useStore((state) => {
-        return state.previewedFile === null;
+        return state.previewedFile !== null;
     });
     const [fileData, setFileData] = useState(null);
     const [fileContent, setFileContent] = useState(null);
 
-    const [style, setStyle] = useState({
-        width: 0,
-        backgroundColor: "#FFFFFF",
-        height: "100%",
-        position: "relative",
-        transition: "width 400ms ease-in",
-        padding: "0",
-        margin: "0",
-    });
+
 
     const copyLink = (e, fileId) => {
         e.stopPropagation();
@@ -32,26 +27,9 @@ const FilePreview = () => {
 
     const closePreview = () => {
         useStore.getState().setPreviewedFile(null);
+        console.log("Preview is", closedFile);
     };
 
-    useEffect(() => {
-        if (closedFile) {
-            setStyle({
-                width: "0",
-                overflow: "hidden",
-                transition: "width 400ms ease-in",
-                boxSizing: "border-box",
-            });
-        } else {
-            setStyle({
-                width: "100%",
-                backgroundColor: "#FFFFFF",
-                height: "100%",
-                position: "relative",
-                transition: "width 400ms cubic-bezier(.47,1.64,.41,.8)",
-            });
-        }
-    }, [closedFile]);
 
     useEffect(() => {
         console.log(`File ID: ${fileId}`);
@@ -96,7 +74,25 @@ const FilePreview = () => {
     }, [fileId]);
 
     return (
-        <div style={style}>
+        <VerticalDiv
+            before={{
+                marginLeft: "0rem",
+                width: "0%",
+                borderWidth: "0rem",
+
+                transition:
+                    "width 0.3s ease-in-out 0.1s, border-width 0.1s ease-in-out 0.1s, margin-left 0.1s ease-in-out 0.1s",
+            }}
+            after={{
+                marginLeft: "1rem",
+                width: "75%",
+                borderWidth: "0rem",
+
+                transition:
+                    "width 0.3s ease-in-out, border-width 0.2s ease-in-out 0.2s, margin-left 0.1s ease-in-out 0.2s",
+            }}
+            playAnimation={closedFile}
+        >
             <div
                 className="preview-header"
                 style={{
@@ -162,15 +158,16 @@ const FilePreview = () => {
                     height: "100%",
                     scrollbarWidth: "none",
                     overflowY: "auto",
+                    borderRadius: "1rem",
                 }}
             >
                 {fileContent
                     ? fileContent.map((file, index) => (
-                          <FileContent file={file} key={index} />
-                      ))
+                        <FileContent file={file} key={index} />
+                    ))
                     : null}
             </div>
-        </div>
+        </VerticalDiv>
     );
 };
 

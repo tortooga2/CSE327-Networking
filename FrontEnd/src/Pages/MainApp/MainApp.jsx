@@ -18,6 +18,10 @@ import DebugSidebar from "../../Components/debugSidebar.jsx";
 
 import { useStore } from "../../Components/Contexts/zus.fileManager";
 import FilePreview from "../../Components/FilePreview/FilePreview.jsx";
+import NewPage from "../../Components/UILayout/NewPage.jsx";
+import HorizontalDiv from "../../Components/UILayout/HorizontalDiv.jsx";
+import VerticalDiv from "../../Components/UILayout/VerticalDiv.jsx";
+
 
 const MainApp = () => {
     const { user } = useUser();
@@ -27,30 +31,16 @@ const MainApp = () => {
     }, [user]);
 
     return (
-        <FileManagerProvider>
-            <div
-                style={{
-                    display: "flex",
-                    height: "100vh",
-                    width: "100vw",
-                    overflow: "hidden",
-                    padding: "1rem",
-                    position: "relative",
-                }}
-            >
+        <NewPage>
+            <HorizontalDiv>
+
                 <DebugSidebar />
-                <div
-                    style={{
-                        display: "flex",
-                        flexDirection: "row",
-                        width: "100%",
-                    }}
-                >
-                    <FileViewer />
+                <HorizontalDiv padding="0rem" gap="0rem">
+                    <FileViewer width="100%" />
                     <FilePreview />
-                </div>
-            </div>
-        </FileManagerProvider>
+                </HorizontalDiv>
+            </HorizontalDiv>
+        </NewPage>
     );
 };
 

@@ -22,7 +22,7 @@ jobs:
                       pm2 -v
                       cd ~/CSE327-Networking
                       # Set up Git to use the password from secrets
-                      git config --global credential.helper '!f() { echo "password=${{ secrets.GIT_PASSWORD }}"; }; f'
-                      git pull
+                      git remote set-url origin https://${{ secrets.GIT_PASSWORD }}@https://github.com/tortooga2/CSE327-Networking.git
+                      git pull origin main
                       npm run setup
                       pm2 restart all

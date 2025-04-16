@@ -128,9 +128,11 @@ const FileContent = ({ file }) => {
     };
 
     const renderDoc = () => {
-        const src = `https://docs.google.com/gview?url=${encodeURIComponent(
-            file.metadata.url
-        )}&embedded=true`;
+        // const src = `https://docs.google.com/gview?url=${encodeURIComponent(
+        //     file.metadata.url
+        // )}&embedded=true`;
+        const src = file.metadata.url + "#view=FitH";
+        console.log(src);
         return (
             <iframe
                 className={"content" + (loaded ? " loaded" : "")}
@@ -139,6 +141,7 @@ const FileContent = ({ file }) => {
                     aspectRatio: "1/1.3",
                     maxWidth: "1000px",
                     ...(loaded ? afterLoad : beforeLoad),
+                    border: "none",
                 }}
                 onLoad={() => {
                     console.log("loaded");

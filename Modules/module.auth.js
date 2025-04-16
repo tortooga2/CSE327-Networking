@@ -352,17 +352,10 @@ const auth = {
         var user = null;
         try {
             //Get profile_id from session token (UUID).
-            try {
-                const userString = await auth.sessionDB.get(sessionToken);
-                console.log("userString: ", userString);
-            } catch (error) {
-                debugError(error);
-                return res.status(500).json({
-                    okay: false,
-                    error: "Unhandled exception",
-                    message: "The server encountered an unexpected condition",
-                });
-            }
+
+            const userString = await auth.sessionDB.get(sessionToken);
+            console.log("userString: ", userString);
+
             if (!userString) {
                 console.log("Profile ID not found");
                 return res.status(404).json({

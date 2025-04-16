@@ -91,32 +91,36 @@ const File = ({ fileData }) => {
                 )}
             </div>
             <div>
-                <span style={getTypePillClass(fileType)}>{fileType === 'bundle' ? 'bundle' : fileType}</span>
+                <span style={getTypePillClass(fileType)}>
+                    {fileType === "bundle" ? "bundle" : fileType}
+                </span>
             </div>
             <div>{fileContent[0].creator_username}</div>
-            <div style={{ fontWeight: "500", minWidth: "100px", textWrap: "nowrap", overflowX: "hidden", textOverflow: "ellipsis" }}>{fileContent[0].name}</div>
+            <div
+                style={{
+                    fontWeight: "500",
+                    minWidth: "100px",
+                    textWrap: "nowrap",
+                    overflowX: "hidden",
+                    textOverflow: "ellipsis",
+                }}
+            >
+                {fileContent[0].name}
+            </div>
             <div
                 style={{
                     display: "flex",
                     gap: "1rem",
                     justifyContent: "center",
                     alignItems: "center",
-
                 }}
             >
-                {fileType === 'bundle' && (
-                    <div style = {{ marginRight: '1rem', width: '100%' }}>
-                        <NoteCreation fileId = {fileContent[0].id} />
-                    </div>
-                )}
-
                 <input
                     type="checkbox"
                     ref={checkboxRef}
                     onChange={handleChange}
                     checked={isSelected}
-                    style = {{ marginRight: '1rem' }}
-
+                    style={{ marginRight: "1rem" }}
                 />
                 <button
                     onClick={(e) => {

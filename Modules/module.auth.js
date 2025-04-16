@@ -15,18 +15,49 @@ import { generateUsername } from "./module.usernameGenerator.js";
 // Or in other words, we sign out the user after 4 hours of inactivity
 
 //Helper function to connect to Redis. Done this way to propeply handle connection errors.
-const connectToRedis = async () => {
-    var redis = new Redis(process.env.REDIS_URL);
-    redis.on("error", (error) => {
-        //when error event is emitted, log the error
-        debugError(error);
-    });
 
-    redis.on("connect", () => {
-        //When connected, log the connection
-        debugMessage("Connected to Redis");
-    });
-    return redis;
+const connectToRedis = async () => {
+    if (process.env.DEBUG === "true") {
+        var redis = new Redis(process.env.REDIS_URL);
+        redis.on("error", (error) => {
+            //when error event is emitted, log the error
+            debugError(error);
+        });
+
+        redis.on("connect", () => {
+            //When connected, log the connection
+            debugMessage("Connected to Redis");
+        });
+        return redis;
+    } else {
+        const cluster = new Redis.Cluster(
+            [
+                {
+                    host: "user-session-4uvyfj.serverless.usw1.cache.amazonaws.com",
+                    port: 6379,
+                },
+                // If you have multiple nodes, you can list them here
+            ],
+            {
+                // ioredis cluster-level config here
+                redisOptions: {
+                    tls: { rejectUnauthorized: false },
+                },
+            }
+        );
+
+        // Now you can use the cluster normally
+        (async () => {
+            try {
+                await cluster.set("myKey", "myValue");
+                const result = await cluster.get("myKey");
+                console.log(result); // 'myValue'
+            } catch (err) {
+                console.error("Error with ioredis cluster:", err);
+            }
+        })();
+        return cluster;
+    }
 };
 
 const auth = {
@@ -321,7 +352,17 @@ const auth = {
         var user = null;
         try {
             //Get profile_id from session token (UUID).
-            const userString = await auth.sessionDB.get(sessionToken);
+            try {
+                const userString = await auth.sessionDB.get(sessionToken);
+                console.log("userString: ", userString);
+            } catch (error) {
+                debugError(error);
+                return res.status(500).json({
+                    okay: false,
+                    error: "Unhandled exception",
+                    message: "The server encountered an unexpected condition",
+                });
+            }
             if (!userString) {
                 console.log("Profile ID not found");
                 return res.status(404).json({

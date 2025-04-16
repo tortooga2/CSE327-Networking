@@ -1,19 +1,19 @@
 // NoteCreation.jsx
 import React, { useState, useEffect } from "react";
-import { useStore } from "./Contexts/zus.fileManager"; // Adjust the import path as necessary
+import { useStore } from "../Contexts/zus.fileManager"; // Adjust the import path as necessary
 
 const NoteCreation = ({ fileId }) => {
     const [noteText, setNoteText] = useState("");
     const updateFile = useStore((state) => state.updateFiles);
     const files = useStore((state) => state.files); // Access the files array
 
-    useEffect(() => {
-        // Load initial note from Zustand if it exists
-        const file = files.find((f) => f.id === fileId);
-        if (file && file.note) {
-            setNoteText(file.note);
-        }
-    }, [fileId, files]); // Depend on 'files' to react to external updates
+    // useEffect(() => {
+    //     // Load initial note from Zustand if it exists
+    //     const file = files.find((f) => f.id === fileId);
+    //     if (file && file.note) {
+    //         setNoteText(file.note);
+    //     }
+    // }, [fileId, files]); // Depend on 'files' to react to external updates
 
     const handleNoteChange = (event) => {
         setNoteText(event.target.value);

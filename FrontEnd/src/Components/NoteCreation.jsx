@@ -1,6 +1,6 @@
 // NoteCreation.jsx
 import React, { useState, useEffect } from "react";
-// import { useStore } from '../Contexts/zus.fileManager';
+import { useStore } from "./Contexts/zus.fileManager"; // Adjust the import path as necessary
 
 const NoteCreation = ({ fileId }) => {
     const [noteText, setNoteText] = useState("");

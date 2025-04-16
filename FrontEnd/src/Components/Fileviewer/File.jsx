@@ -4,7 +4,7 @@ import propTypes from "prop-types";
 import "./File.css";
 
 import { useStore } from "../Contexts/zus.fileManager";
-
+import NoteCreation from "../NoteCreation";
 import FileButtonLess from "./File.buttonless";
 
 const File = ({ fileData }) => {
@@ -70,7 +70,7 @@ const File = ({ fileData }) => {
             onClick={() => checkboxRef.current.click()}
             style={{
                 display: "grid",
-                gridTemplateColumns: "50px 180px 120px 150px 1fr 120px",
+                gridTemplateColumns: "50px 180px 120px 150px 1fr 200px",
                 padding: "16px 24px",
                 borderBottom: "1px solid #E2E8F0",
                 backgroundColor: isSelected ? "#F0EBFF" : "white",
@@ -91,7 +91,7 @@ const File = ({ fileData }) => {
                 )}
             </div>
             <div>
-                <span style={getTypePillClass(fileType)}>{fileType}</span>
+                <span style={getTypePillClass(fileType)}>{fileType === 'bundle' ? 'bundle' : fileType}</span>
             </div>
             <div>{fileContent[0].creator_username}</div>
             <div style={{ fontWeight: "500", minWidth: "100px", textWrap: "nowrap", overflowX: "hidden", textOverflow: "ellipsis" }}>{fileContent[0].name}</div>
@@ -104,11 +104,18 @@ const File = ({ fileData }) => {
 
                 }}
             >
+                {fileType === 'bundle' && (
+                    <div style = {{ marginRight: '1rem', width: '100%' }}>
+                        <NoteCreation fileId = {fileContent[0].id} />
+                    </div>
+                )}
+
                 <input
                     type="checkbox"
                     ref={checkboxRef}
                     onChange={handleChange}
                     checked={isSelected}
+                    style = {{ marginRight: '1rem' }}
 
                 />
                 <button

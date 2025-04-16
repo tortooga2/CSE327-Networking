@@ -52,7 +52,7 @@ const DebugSidebar = () => {
     }, [uploadFile]);
 
     return (
-        <VerticalDiv width="300px">
+        <VerticalDiv width="15%">
             <h2
                 style={{
                     fontSize: "1.5rem",

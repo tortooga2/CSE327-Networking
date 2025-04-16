@@ -6,7 +6,6 @@ import FileContent from "../FileContent";
 
 import VerticalDiv from "../UILayout/VerticalDiv";
 
-
 const FilePreview = () => {
     const fileId = useStore((state) => state.previewedFile);
     const closedFile = useStore((state) => {
@@ -14,8 +13,6 @@ const FilePreview = () => {
     });
     const [fileData, setFileData] = useState(null);
     const [fileContent, setFileContent] = useState(null);
-
-
 
     const copyLink = (e, fileId) => {
         e.stopPropagation();
@@ -29,7 +26,6 @@ const FilePreview = () => {
         useStore.getState().setPreviewedFile(null);
         console.log("Preview is", closedFile);
     };
-
 
     useEffect(() => {
         console.log(`File ID: ${fileId}`);
@@ -156,15 +152,16 @@ const FilePreview = () => {
                     gap: "1rem",
 
                     height: "100%",
-                    scrollbarWidth: "none",
+                    scrollbarWidth: "thin",
+                    scrollbarColor: "#1E0B33 #F8F6FD",
                     overflowY: "auto",
                     borderRadius: "1rem",
                 }}
             >
                 {fileContent
                     ? fileContent.map((file, index) => (
-                        <FileContent file={file} key={index} />
-                    ))
+                          <FileContent file={file} key={index} />
+                      ))
                     : null}
             </div>
         </VerticalDiv>

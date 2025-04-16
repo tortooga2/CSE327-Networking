@@ -4,17 +4,12 @@ import propTypes from "prop-types";
 import "./File.css";
 
 import { useStore } from "../Contexts/zus.fileManager";
-import NoteCreation from "../NoteCreation";
-import FileButtonLess from "./File.buttonless";
 
 const File = ({ fileData }) => {
-    const navigate = useNavigate();
     const fileContent = useState(fileData);
-    const buttonSection = useRef(null);
+
     const checkboxRef = useRef(null);
-    const dropDownRef = useRef(null);
-    const [isExpanded, setIsExpanded] = useState(false);
-    const dropDownClassName = "drop-down";
+
     const isSelected = useStore((state) =>
         state.selectedFiles.has(fileContent[0].id)
     );

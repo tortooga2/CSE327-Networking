@@ -97,13 +97,10 @@ const useStore = create((set) => ({
         }
     },
     uploadFiles: async (files) => {
-        //Separate name from each file
-        const fileNames = [];
-        for (let index = 0; index < files.length; index++) {
-            fileNames.push(files[index].name);
-        }
+        const fileNames = Array.from(files).map(file => file.name);
 
         try {
+            // Get upload URLs
             const response = await fetch("/api/file/upload-helper", {
                 method: "POST",
                 credentials: "include",
@@ -118,16 +115,19 @@ const useStore = create((set) => ({
           
             const { urls, data } = await response.json();
 
-            //Push each file to s3
+            // Upload files to S3
             for (let index = 0; index < files.length; index++) {
+                const formData = new FormData();
+                formData.append('file', files[index]);
+
                 await fetch(urls[index], {
                     method: "PUT",
                     body: files[index],
                 });
             }
 
-            //Now check to see if the files were uploaded successfully and if so, save to db
-            await fetch("/api/file/verify", {
+            // Verify uploads
+            const verifyResponse = await fetch("/api/file/verify", {
                 method: "POST",
                 credentials: "include",
                 headers: {
@@ -135,16 +135,17 @@ const useStore = create((set) => ({
                 },
                 body: JSON.stringify({
                     data: data,
-                }),                
+                }),
             });
-//             if (response.ok) {
-//                 const data = await response.json();
-//                 console.log("Data from upload", data);
-//                 useStore.getState().updateFiles([data.data]);
-//                 useStore.getState().unSelectAll();
-//             }
+
+            if (verifyResponse.ok) {
+                const verifyData = await verifyResponse.json();
+                useStore.getState().updateFiles([verifyData.data]);
+                return verifyData;
+            }
         } catch (err) {
-            console.log(err);
+            console.error(err);
+            throw err;
         }
     },
     deleteFiles: async () => {

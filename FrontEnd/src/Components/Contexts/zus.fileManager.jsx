@@ -97,10 +97,13 @@ const useStore = create((set) => ({
         }
     },
     uploadFiles: async (files) => {
-        const fileNames = Array.from(files).map(file => file.name);
+        //Separate name from each file
+        const fileNames = [];
+        for (let index = 0; index < files.length; index++) {
+            fileNames.push(files[index].name);
+        }
 
         try {
-            // Get upload URLs
             const response = await fetch("/api/file/upload-helper", {
                 method: "POST",
                 credentials: "include",
@@ -115,19 +118,16 @@ const useStore = create((set) => ({
           
             const { urls, data } = await response.json();
 
-            // Upload files to S3
+            //Push each file to s3
             for (let index = 0; index < files.length; index++) {
-                const formData = new FormData();
-                formData.append('file', files[index]);
-
                 await fetch(urls[index], {
                     method: "PUT",
                     body: files[index],
                 });
             }
 
-            // Verify uploads
-            const verifyResponse = await fetch("/api/file/verify", {
+            //Now check to see if the files were uploaded successfully and if so, save to db
+            await fetch("/api/file/verify", {
                 method: "POST",
                 credentials: "include",
                 headers: {
@@ -135,17 +135,16 @@ const useStore = create((set) => ({
                 },
                 body: JSON.stringify({
                     data: data,
-                }),
+                }),                
             });
-
-            if (verifyResponse.ok) {
-                const verifyData = await verifyResponse.json();
-                useStore.getState().updateFiles([verifyData.data]);
-                return verifyData;
-            }
+//             if (response.ok) {
+//                 const data = await response.json();
+//                 console.log("Data from upload", data);
+//                 useStore.getState().updateFiles([data.data]);
+//                 useStore.getState().unSelectAll();
+//             }
         } catch (err) {
-            console.error(err);
-            throw err;
+            console.log(err);
         }
     },
     deleteFiles: async () => {

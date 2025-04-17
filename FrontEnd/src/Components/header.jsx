@@ -1,10 +1,12 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
+import { UserContext } from "./Contexts/ctx.user";
 
 export const Header = () => {
     const [searchTerm, setSearchTerm] = useState("");
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const dropdownRef = useRef(null);
+    const user = useContext(UserContext);
     const navigate = useNavigate();
 
     const handleSearch = (e) => {
@@ -22,8 +24,8 @@ export const Header = () => {
         return () => document.removeEventListener("mousedown", handleClickOutside);
     }, []);
 
-    const handleSignOut = () => {
-        // sign out logic here
+    const handleSignOut = async () => {
+        await user.SignOut();
         navigate("/");
     };
 

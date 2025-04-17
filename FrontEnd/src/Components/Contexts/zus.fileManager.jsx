@@ -2,25 +2,21 @@ import { create } from "zustand";
 
 const useStore = create((set) => ({
     files: new Map(),
-    selectedFiles: new Set(),
-    previewedFile: null,
-    setPreviewedFile: (fileID) => {
-        set({ previewedFile: fileID });
-    },
-    loading: false,
-    getFiles: (paramaters) => {
-        return Array.from(useStore.getState().files.values()).sort((a, b) => {
-            return new Date(b.createdAt) - new Date(a.createdAt);
-        });
-    },
-    getFileById: (fileID) => {
-        const file = useStore.getState().files.get(fileID);
-        if (file) {
-            return file;
-        }
-        return null;
-    },
     setFiles: (files) => set({ files }),
+
+    newFiles: new Array(),
+    appendNewFiles: (state) => {
+        set((prevState) => ({
+            newFiles: [...prevState.newFiles, state],
+        }));
+    },
+    popNewFiles: () => {
+        set((prevState) => ({
+            newFiles: prevState.newFiles.slice(0, -1),
+        }));
+    },
+
+    selectedFiles: new Set(),
     selectFile: (fileID, selectionState) => {
         set((state) => {
             const newSelectedFiles = new Set(state.selectedFiles);
@@ -34,10 +30,14 @@ const useStore = create((set) => ({
         });
     },
     unSelectAll: () => {
-        set((state) => {
-            return { selectedFiles: new Set() };
-        });
+        set({ selectedFiles: new Set() });
     },
+    previewedFile: null,
+    setPreviewedFile: (fileID) => {
+        set({ previewedFile: fileID });
+    },
+    loading: false,
+
     loadFiles: async () => {
         set({ loading: true });
         try {
@@ -115,7 +115,7 @@ const useStore = create((set) => ({
                     fileNames: fileNames,
                 }),
             });
-          
+
             const { urls, data } = await response.json();
 
             //Push each file to s3
@@ -135,14 +135,14 @@ const useStore = create((set) => ({
                 },
                 body: JSON.stringify({
                     data: data,
-                }),                
+                }),
             });
-//             if (response.ok) {
-//                 const data = await response.json();
-//                 console.log("Data from upload", data);
-//                 useStore.getState().updateFiles([data.data]);
-//                 useStore.getState().unSelectAll();
-//             }
+            //             if (response.ok) {
+            //                 const data = await response.json();
+            //                 console.log("Data from upload", data);
+            //                 useStore.getState().updateFiles([data.data]);
+            //                 useStore.getState().unSelectAll();
+            //             }
         } catch (err) {
             console.log(err);
         }

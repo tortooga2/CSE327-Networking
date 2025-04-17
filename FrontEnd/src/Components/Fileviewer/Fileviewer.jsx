@@ -94,10 +94,10 @@ const FileViewer = ({ width }) => {
     };
 
     const getSortIcon = (columnKey) => {
-        if (sortConfig.key !== columnKey) {
-            return "↓";
+        if (sortConfig.key === columnKey) {
+            return sortConfig.direction === "asc" ? " ↑" : " ↓";
         }
-        return sortConfig.direction === "asc" ? "↑" : "↓";
+        return "";
     };
 
     const filteredAndSortedFiles = () => {
@@ -171,6 +171,12 @@ const FileViewer = ({ width }) => {
                 ))}
             </VerticalDiv>
         </VerticalDiv>
+
+    );
+};
+
+export default FileViewer;
+
 
     );
 };

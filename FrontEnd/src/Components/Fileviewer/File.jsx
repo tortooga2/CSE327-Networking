@@ -5,16 +5,11 @@ import "./File.css";
 
 import { useStore } from "../Contexts/zus.fileManager";
 
-import FileButtonLess from "./File.buttonless";
-
 const File = ({ fileData }) => {
-    const navigate = useNavigate();
     const fileContent = useState(fileData);
-    const buttonSection = useRef(null);
+
     const checkboxRef = useRef(null);
-    const dropDownRef = useRef(null);
-    const [isExpanded, setIsExpanded] = useState(false);
-    const dropDownClassName = "drop-down";
+
     const isSelected = useStore((state) =>
         state.selectedFiles.has(fileContent[0].id)
     );
@@ -70,7 +65,7 @@ const File = ({ fileData }) => {
             onClick={() => checkboxRef.current.click()}
             style={{
                 display: "grid",
-                gridTemplateColumns: "50px 180px 120px 150px 1fr 120px",
+                gridTemplateColumns: "50px 180px 120px 150px 1fr 200px",
                 padding: "16px 24px",
                 borderBottom: "1px solid #E2E8F0",
                 backgroundColor: isSelected ? "#F0EBFF" : "white",
@@ -91,17 +86,28 @@ const File = ({ fileData }) => {
                 )}
             </div>
             <div>
-                <span style={getTypePillClass(fileType)}>{fileType}</span>
+                <span style={getTypePillClass(fileType)}>
+                    {fileType === "bundle" ? "bundle" : fileType}
+                </span>
             </div>
             <div>{fileContent[0].creator_username}</div>
-            <div style={{ fontWeight: "500", minWidth: "100px", textWrap: "nowrap", overflowX: "hidden", textOverflow: "ellipsis" }}>{fileContent[0].name}</div>
+            <div
+                style={{
+                    fontWeight: "500",
+                    minWidth: "100px",
+                    textWrap: "nowrap",
+                    overflowX: "hidden",
+                    textOverflow: "ellipsis",
+                }}
+            >
+                {fileContent[0].name}
+            </div>
             <div
                 style={{
                     display: "flex",
                     gap: "1rem",
                     justifyContent: "center",
                     alignItems: "center",
-
                 }}
             >
                 <input
@@ -109,7 +115,7 @@ const File = ({ fileData }) => {
                     ref={checkboxRef}
                     onChange={handleChange}
                     checked={isSelected}
-
+                    style={{ marginRight: "1rem" }}
                 />
                 <button
                     onClick={(e) => {

@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useStore } from "../Contexts/zus.fileManager";
 import PropTypes from "prop-types";
 
-import FileContent from "../FileContent";
+import FileContent from "../fileContent/FileContent.jsx";
 
 import VerticalDiv from "../UILayout/VerticalDiv";
 

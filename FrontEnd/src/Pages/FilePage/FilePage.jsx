@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
-import FileContent from "../../Components/FileContent";
+import FileContent from "../../Components/fileContent/FileContent.jsx";
 
 const FilePage = () => {
     const { fileId, ownerId } = useParams();

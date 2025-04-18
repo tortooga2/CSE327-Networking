@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import propTypes from "prop-types";
 import "./File.css";
 
-import { useStore } from "../Contexts/zus.fileManager";
+import { useStore } from "../../Contexts/zus.fileManager";
 
 const File = ({ fileData }) => {
     const fileContent = useState(fileData);

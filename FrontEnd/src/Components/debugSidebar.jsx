@@ -193,6 +193,7 @@ const DebugSidebar = () => {
                 <FaTrash /> <p>Delete Files ({selectedFiles.size})</p>
             </div>
             <NoteCreation />
+    
         </VerticalDiv>
     );
 };

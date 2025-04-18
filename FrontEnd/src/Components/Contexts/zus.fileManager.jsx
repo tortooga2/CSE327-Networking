@@ -1,6 +1,8 @@
 import { create } from "zustand";
 
-const useStore = create((set) => ({
+const LOCAL_STORAGE_KEY = 'myGlobalMarkdownNote';
+
+const useStore = create((set, get) => ({
     files: new Map(),
     selectedFiles: new Set(),
     previewedFile: null,
@@ -66,12 +68,46 @@ const useStore = create((set) => ({
             console.error(error);
         }
     },
-    updateFiles: (data) => {
+    updateFile: async (fileId, newData) => {
         set((state) => {
-            const filesMap = new Map(state.files);
-            data.forEach((file) => filesMap.set(file.id, file));
-            return { files: filesMap };
+            const updatedFiles = new Map(state.files);
+            const existingFiles = updatedFiles.get(fileId);
+            if (existingFiles) {
+                updatedFiles.set(fileId, { ...existingFiles, ...newData });
+            }
+            // const filesMap = new Map(state.files);
+            // data.forEach((file) => filesMap.set(file.id, file));
+            return { files: updatedFiles };
         });
+        try {
+            const response = await fetch(`/api/file/user/${fileId}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ note: newData.note }),
+            });
+            if (!response.ok) {
+                console.error('Fail to save note to backend:', response.status);
+                return false;
+            } else {
+                console.log('Note saved to backend successfully');
+                const updatedFileData = await response.json();
+
+                set((state) => {
+                    const updatedFiles = new Map(state.files);
+                    const existingFile = updatedFiles.get(fileId);
+                    if (exisitingFile && updatedFileData.data) {
+                        updatedFiles.set(fileId, updatedFileData.data);
+                    }
+                    return { files: updatedFiles };
+                });
+                return true;
+            }
+        } catch (error) {
+          console.error('Error save note to backend:', error);
+          return false;
+      }
     },
     connectFiles: async () => {
         try {
@@ -89,7 +125,7 @@ const useStore = create((set) => ({
             if (response.ok) {
                 const data = await response.json();
                 console.log("Data from RTCPeerConnection", data);
-                useStore.getState().updateFiles(data.data);
+                useStore.getState().updateFile(data.data);
                 useStore.getState().unSelectAll();
             }
         } catch (error) {
@@ -97,7 +133,6 @@ const useStore = create((set) => ({
         }
     },
     uploadFiles: async (files) => {
-        //Separate name from each file
         const fileNames = [];
         for (let index = 0; index < files.length; index++) {
             fileNames.push(files[index].name);
@@ -115,10 +150,9 @@ const useStore = create((set) => ({
                     fileNames: fileNames,
                 }),
             });
-          
+
             const { urls, data } = await response.json();
 
-            //Push each file to s3
             for (let index = 0; index < files.length; index++) {
                 await fetch(urls[index], {
                     method: "PUT",
@@ -126,7 +160,6 @@ const useStore = create((set) => ({
                 });
             }
 
-            //Now check to see if the files were uploaded successfully and if so, save to db
             await fetch("/api/file/verify", {
                 method: "POST",
                 credentials: "include",
@@ -135,21 +168,21 @@ const useStore = create((set) => ({
                 },
                 body: JSON.stringify({
                     data: data,
-                }),                
+                }),
             });
-//             if (response.ok) {
-//                 const data = await response.json();
-//                 console.log("Data from upload", data);
-//                 useStore.getState().updateFiles([data.data]);
-//                 useStore.getState().unSelectAll();
-//             }
+            // if (response.ok) {
+            //     const data = await response.json();
+            //     console.log("Data from upload", data);
+            //     useStore.getState().updateFile([data.data]);
+            //     useStore.getState().unSelectAll();
+            // }
         } catch (err) {
             console.log(err);
         }
     },
     deleteFiles: async () => {
         try {
-            const response = fetch("/api/file/delete/", {
+            const response = await fetch("/api/file/delete/", {
                 method: "DELETE",
                 credentials: "include",
                 headers: {
@@ -163,6 +196,41 @@ const useStore = create((set) => ({
         } catch (err) {
             console.log(err);
         }
+    },
+    globalNote: localStorage.getItem(LOCAL_STORAGE_KEY) || '',
+
+    updateGlobalNote: (newNote) => {
+        set({ globalNote: newNote });
+        localStorage.setItem(LOCAL_STORAGE_KEY, newNote);
+        return true;
+    },
+    //     try {
+    //         const response = await fetch('/api/global-note', {
+    //             method: 'PUT',
+    //             headers: {
+    //                 'Content-Type' : 'application/json',
+    //             },
+    //             body: JSON.stringify({ note: newNote}),
+    //         });
+
+    //         if (!response.ok) {
+    //             console.error('Not bieng able to save the note:', response.status);
+    //             return false;
+    //         } else {
+    //             console.log('Note has been saved!');
+    //             const updatedData = await response.json();
+    //             set({ globalNote: updatedData.note || newNote });
+    //             return true;
+    //         }
+    //     } catch (error) {
+    //         console.error('Error save global note to backend:', error);
+    //         return false;
+    //     }
+    // },
+
+    loadGlobalNote: () => {
+        const savedNote = localStorage.getItem(LOCAL_STORAGE_KEY) || '';
+        set({ globalNote: savedNote});
     },
 }));
 

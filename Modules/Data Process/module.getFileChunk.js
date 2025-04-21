@@ -4,7 +4,7 @@ import { QueryTypes } from "sequelize";
 const buildQuery = async (profile_id, limit, chunk, sort, order, search, timezone) => {
     let query = new String(`
         SELECT * FROM "file_ledger"
-        WHERE "creator_id" = '${profile_id}'
+        WHERE "owner_id" = '${profile_id}'
         `
     );
 
@@ -13,10 +13,6 @@ const buildQuery = async (profile_id, limit, chunk, sort, order, search, timezon
             AND (
                 (
                     word_similarity('${search}', "name") >= 0.3
-                )
-                OR '${search}' IN (
-                    TO_CHAR(timezone('${timezone}',"createdAt"), 'Month DD YYYY'),
-                    TO_CHAR(timezone('${timezone}',"createdAt"), 'MM-DD-YYYY')
                 )
             )
             `

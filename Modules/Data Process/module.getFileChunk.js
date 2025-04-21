@@ -2,7 +2,7 @@ import { Data } from "../Database/module.db.js";
 
 const getFileChunk = async (req, res) => {
     const { profile_id } = req.user;
-    const { limit, chunk, sort = 'id', order = 'DESC' } = req.query; //setting id and descending order by default made the most sense imo
+    const { limit = 10, chunk = 1, sort = 'id', order = 'DESC' } = req.query; //setting id and descending order by default made the most sense imo. 5 and 1 are arbitrary 
 
     try {
         const { count, rows } = await Data.findAndCountAll({

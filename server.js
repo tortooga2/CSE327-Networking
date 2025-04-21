@@ -7,7 +7,7 @@ import { createServer as createViteServer } from "vite";
 import http from "http";
 
 //Import the router from the module
-import { sequelize, SyncDB } from "./Modules/Database/module.db.js";
+import { SyncDB, enablePG_TGRM } from "./Modules/Database/module.db.js";
 import authRouter from "./Routes/routes.auth.js";
 import fileDataRouter from "./Routes/routes.fileData.js";
 import s3Router from "./Routes/routes.s3.js";
@@ -49,6 +49,7 @@ async function startServer() {
         process.env.DB_PASSWORD
     );
     SyncDB();
+    enablePG_TGRM();
 
     // Add middleware to parse JSON
     app.use(cookieParser());

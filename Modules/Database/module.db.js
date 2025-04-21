@@ -60,4 +60,19 @@ const SyncDB = async () => {
     }
 };
 
-export { Users, Data, sequelize, SyncDB };
+const enablePG_TGRM = async () => {
+    const transaction = await sequelize.transaction();
+
+    try {
+        await sequelize.query('CREATE EXTENSION IF NOT EXISTS "pg_trgm"', {transaction: transaction});
+        await sequelize.query('CREATE INDEX IF NOT EXISTS trgm_idx_gin ON "file_ledger" USING GIN ("name" gin_trgm_ops)', {transaction: transaction});
+
+        await transaction.commit();
+        console.log(chalk.bgGreen("Postgres pg_tgrm enabled"));
+    } catch (error) {
+        await transaction.rollback();
+        console.log(chalk.bgRed("enableExtensions encountered an error:", error));
+    }
+};
+
+export { Users, Data, sequelize, SyncDB, enablePG_TGRM };

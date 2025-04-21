@@ -3,7 +3,8 @@ import { QueryTypes } from "sequelize";
 
 const buildQuery = async (profile_id, limit, chunk, sort, order, search, timezone) => {
     let query = new String(`
-        SELECT * FROM "file_ledger"
+        SELECT "id", "creator_username", "name", "type", "children", "createdAt"
+        FROM "file_ledger"
         WHERE "owner_id" = '${profile_id}'
         `
     );
@@ -11,9 +12,7 @@ const buildQuery = async (profile_id, limit, chunk, sort, order, search, timezon
     if (search !== '') {
         query = query.concat(`
             AND (
-                (
-                    word_similarity('${search}', "name") >= 0.3
-                )
+                word_similarity('${search}', "name") >= 0.3
             )
             `
         );

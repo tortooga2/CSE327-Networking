@@ -5,7 +5,7 @@ const getFileChunk = async (req, res) => {
     const { limit = 10, chunk = 1, sort = 'id', order = 'DESC' } = req.query; //setting id and descending order by default made the most sense imo. 5 and 1 are arbitrary 
 
     try {
-        const { count, rows } = await Data.findAndCountAll({
+        const files = await Data.findAll({
             where: {
                 creator_id: profile_id,
             },
@@ -17,7 +17,7 @@ const getFileChunk = async (req, res) => {
             ],
         });
 
-        if (count === 0) {
+        if (files.length === 0) {
             return res.status(404).json({
                 okay: true,
                 message: "No files found",
@@ -26,7 +26,7 @@ const getFileChunk = async (req, res) => {
 
         return res.status(200).json({
             okay: true,
-            files: rows,
+            files: files,
         });    
     } catch (err) {
         console.log(err);

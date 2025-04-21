@@ -1,6 +1,9 @@
+import React, { useState, useEffect } from "react";
 import DocViewer, { DocViewerRenderers } from "@cyntler/react-doc-viewer";
 
 const FileContent = ({ file }) => {
+    const [textContent, setTextContent] = useState("");
+
     const getFileType = (mimeType, filename) => {
         const ext = filename.split(".").pop().toLowerCase();
         if (["jpg", "jpeg", "png", "gif", "webp"].includes(ext)) return "image";
@@ -19,6 +22,29 @@ const FileContent = ({ file }) => {
         );
         alert("Link copied to clipboard");
     };
+
+    useEffect(() => {
+        const fetchTextContent = async () => {
+            if (file?.metadata?.url && (file.name.endsWith(".md") || file.name.endsWith(".txt") || file.type === "plain")) {
+                try {
+                    const response = await fetch(file.metadata.url);
+                    if (response.ok) {
+                        const text = await response.text();
+                        setTextContent(text);
+                    } else {
+                        console.error("Can't obtain the text:", response.statusText);
+                        setTextContent(`Error loading file: ${response.statusText}`);
+                    }
+                } catch (error) {
+                    console.error("Error can't fetch text content:", error);
+                    setTextContent(`Error loads file: ${error.message}`);
+                }
+            } else {
+                setTextContent("");
+            }
+        };
+        fetchTextContent();
+    }, [file]);
 
     const renderContent = () => {
         const fileType = getFileType(file.type, file.name);
@@ -81,17 +107,23 @@ const FileContent = ({ file }) => {
             case "txt":
             case "md":
                 return (
-                    <iframe
-                        src={file.metadata.url}
-                        style={{
+                    <pre style = {{
                             width: "100%",
                             height: "400px",
                             border: "1px solid #E0E0E0",
                             borderRadius: "8px",
                             backgroundColor: "white",
-                        }}
-                        title={file.name}
-                    />
+                            color: "black",
+                            padding: "16px",
+                            whiteSpace: "pre-wrap",
+                            overflowy: "auto",
+                            fontFamily: "monospace",
+                        }}>
+                            <div>
+                            {textContent}
+                            </div>
+                            {/* title={file.name} */}
+                        </pre>
                 );
             default:
                 return (
@@ -193,7 +225,7 @@ const FileContent = ({ file }) => {
                     margin: "auto",
                 }}
             >
-                <div style={{ padding: "16px" }}>{renderContent()}</div>
+                <div style={{ padding: "16px", width: "100%" }}>{renderContent()}</div>
             </div>
         </div>
     );

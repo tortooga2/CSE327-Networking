@@ -1,38 +1,43 @@
 import { sequelize } from "../Database/module.db.js";
 import { QueryTypes } from "sequelize";
 
-const getFileChunk = async (req, res) => {
-    const { profile_id } = req.user;
-    const { limit = 10, chunk = 1, sort = 'id', order = 'DESC', search = '', userTimezone = 'PST' } = req.query; //setting id and descending order by default made the most sense imo. 5 and 1 are arbitrary 
-
-    let searchQuery = new String(`
+const buildQuery = async (profile_id, limit, chunk, sort, order, search, timezone) => {
+    let query = new String(`
         SELECT * FROM "file_ledger"
         WHERE "creator_id" = '${profile_id}'
         `
     );
 
-    try {
-        if (search !== '') {
-            searchQuery = await searchQuery.concat(" ", `
-                AND (
-                    (
-                        word_similarity('${search}', "name") >= 0.3
-                    )
-                    OR '${search}' IN (
-                        TO_CHAR(timezone('${userTimezone}',"createdAt"), 'Month DD YYYY'),
-                        TO_CHAR(timezone('${userTimezone}',"createdAt"), 'MM-DD-YYYY')
-                    )
+    if (search !== '') {
+        query = query.concat(`
+            AND (
+                (
+                    word_similarity('${search}', "name") >= 0.3
                 )
-                `
-            );
-        };
-    
-        searchQuery = await searchQuery.concat(" ", `
-            ORDER BY "${sort}" ${order}
-            LIMIT ${limit} OFFSET ${(chunk - 1) * limit}
+                OR '${search}' IN (
+                    TO_CHAR(timezone('${timezone}',"createdAt"), 'Month DD YYYY'),
+                    TO_CHAR(timezone('${timezone}',"createdAt"), 'MM-DD-YYYY')
+                )
+            )
             `
         );
+    };
 
+    query = query.concat(" ", `
+        ORDER BY "${sort}" ${order}
+        LIMIT ${limit} OFFSET ${(chunk - 1) * limit}
+        `
+    );
+
+    return query;
+};
+
+const getFileChunk = async (req, res) => {
+    const { profile_id } = req.user;
+    const { limit = 10, chunk = 1, sort = 'id', order = 'DESC', search = '', timezone = 'PST' } = req.query; //setting id and descending order by default made the most sense imo. 5 and 1 are arbitrary
+    const searchQuery = await buildQuery(profile_id, limit, chunk, sort, order, search, timezone);
+
+    try {
         console.log("The String: ", searchQuery);
 
         const files = await sequelize.query(searchQuery, {

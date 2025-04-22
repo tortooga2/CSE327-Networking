@@ -40,7 +40,7 @@ const getFileChunk = async (req, res) => {
 
 //Function that constructs a raw SQL query based off given parameters
 const buildQuery = async (req) => {
-    const { sort = 'id', order = 'asc', search = '' } = req.query;
+    const { sort = 'id', order = 'asc', search = '', type = '' } = req.query;
     const { profile_id } = req.user;
 
     //Input Validation
@@ -77,6 +77,13 @@ const buildQuery = async (req) => {
             `
         );
     };
+
+    if (type !== '') {
+        query = query.concat(`
+            AND "type" = '${type}'
+            `
+        );
+    }
 
     query = query.concat(`
         ORDER BY "${sort}" ${order}

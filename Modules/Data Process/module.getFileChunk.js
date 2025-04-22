@@ -1,77 +1,7 @@
 import { sequelize } from "../Database/module.db.js";
 import { QueryTypes } from "sequelize";
 
-const parseQueryString = async (query, defaultVal) => {
-    if (query !== undefined) {
-        const queryValue = parseInt(query, 10);
-
-        // console.log("You're tailor made for this era: ", queryValue);
-
-        if (isNaN(queryValue)) {
-            throw new TypeError("Chunk and limit must be integers");
-        }
-    
-        if (queryValue < 1) {
-            throw new TypeError("Chunk and limit must be >= 1");
-        }
-
-        return queryValue
-    } else {
-        return defaultVal;
-    }
-};
-
-const buildQuery = async (req) => {
-    const { sort = 'id', order = 'asc', search = '' } = req.query;
-    const { profile_id } = req.user;
-    
-    const allowedColumns = ['id', 'type', 'name', 'createdAt'];
-    let isAllowed = false;
-
-    //Input Validation
-    const limit = await parseQueryString(req.query.limit, 10);
-    const chunk = await parseQueryString(req.query.chunk, 1);
-
-    for (let index = 0; index < allowedColumns.length; index++) {
-        if (sort === allowedColumns[index]) {
-            isAllowed = true;
-        }
-    }
-
-    if (!isAllowed) {
-        throw new TypeError("Tried to sort by an invalid column");
-    }
-
-    if (order.toLowerCase() !== 'desc' && order.toLowerCase() !== 'asc') {
-        throw new TypeError("Sorting order must be DESC or ASC");
-    }    
-
-    //Build the query to the database with given query string
-    let query = new String(`
-        SELECT "id", "creator_username", "name", "type", "children", "createdAt"
-        FROM "file_ledger"
-        WHERE "owner_id" = '${profile_id}'
-        `
-    );
-
-    if (search !== '') {
-        query = query.concat(`
-            AND (
-                word_similarity('${search}', "name") >= 0.3
-            )
-            `
-        );
-    };
-
-    query = query.concat(" ", `
-        ORDER BY "${sort}" ${order}
-        LIMIT ${limit} OFFSET ${(chunk - 1) * limit}
-        `
-    );
-
-    return query;
-};
-
+//The main function for getting files in chunks
 const getFileChunk = async (req, res) => {
     try {
         const searchQuery = await buildQuery(req);
@@ -106,6 +36,74 @@ const getFileChunk = async (req, res) => {
             message: "The server encountered an unexpected condition",
         });
     };
+};
+
+//Function that constructs a raw SQL query based off given parameters
+const buildQuery = async (req) => {
+    const { sort = 'id', order = 'asc', search = '' } = req.query;
+    const { profile_id } = req.user;
+
+    //Input Validation
+    const limit = await parseQueryString(req.query.limit, 10); //10 and 1 are arbitrary default values
+    const chunk = await parseQueryString(req.query.chunk, 1);
+
+    const allowedColumns = ['id', 'type', 'name', 'createdAt'];
+    let isAllowed = false;
+
+    for (let index = 0; index < allowedColumns.length; index++) {
+        if (sort === allowedColumns[index]) {
+            isAllowed = true;
+        }
+    }
+
+    if (!isAllowed) {
+        throw new TypeError("Tried to sort by an invalid column");
+    }
+
+    if (order.toLowerCase() !== 'desc' && order.toLowerCase() !== 'asc') {
+        throw new TypeError("Sorting order must be DESC or ASC");
+    }    
+
+    let query = new String(`
+        SELECT "id", "creator_username", "name", "type", "children", "createdAt"
+        FROM "file_ledger"
+        WHERE "owner_id" = '${profile_id}'
+        `
+    );
+
+    if (search !== '') {
+        query = query.concat(`
+            AND word_similarity('${search}', "name") >= 0.3
+            `
+        );
+    };
+
+    query = query.concat(`
+        ORDER BY "${sort}" ${order}
+        LIMIT ${limit} OFFSET ${(chunk - 1) * limit}
+        `
+    );
+
+    return query;
+};
+
+//Returns the provided default value if query is not an integer
+const parseQueryString = async (query, defaultVal) => {
+    if (query !== undefined) {
+        const queryValue = parseInt(query, 10);
+
+        if (isNaN(queryValue)) {
+            throw new TypeError("Chunk and limit must be integers");
+        }
+    
+        if (queryValue < 1) {
+            throw new TypeError("Chunk and limit must be >= 1");
+        }
+
+        return queryValue
+    } else {
+        return defaultVal;
+    }
 };
 
 export { getFileChunk };

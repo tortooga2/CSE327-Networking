@@ -3,9 +3,12 @@ import { IoLogOutOutline } from "react-icons/io5";
 
 import { FaUserCircle } from "react-icons/fa";
 
+import { useUser } from "../Components/Contexts/ctx.user";
+
 const UserButton = ({ username }) => {
     const [isHovered, setIsHovered] = useState(false);
     const [logoutHovered, setLogoutHovered] = useState(false);
+    const { user } = useUser();
 
     return (
         <div
@@ -58,6 +61,9 @@ const UserButton = ({ username }) => {
                 onMouseLeave={() => {
                     setLogoutHovered(false);
                     setIsHovered(false);
+                }}
+                onClick={() => {
+                    user.SignOut();
                 }}
             >
                 <IoLogOutOutline size={20} />

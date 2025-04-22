@@ -88,7 +88,7 @@ const auth = {
         res.cookie("sessionToken", sessionToken, {
             maxAge: Number(process.env.TOKEN_EXP) * 1000,
             httpOnly: true,
-            sameSite: "none", // Must be "none" for cross-origin
+            sameSite: "lax", // Must be "none" for cross-origin
             secure: true, // Must be true when sameSite is "none"
             path: "/", // Apply to all paths
         });

@@ -123,6 +123,7 @@ const DebugSidebar = () => {
                         backgroundColor: "#F7FAFC",
                         marginBottom: "1rem",
                     }}
+                    multiple
                 />
                 <button
                     type="submit"

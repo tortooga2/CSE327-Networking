@@ -1,7 +1,52 @@
 import { sequelize } from "../Database/module.db.js";
 import { QueryTypes } from "sequelize";
 
-const buildQuery = async (profile_id, limit, chunk, sort, order, search, timezone) => {
+const parseQueryString = async (query, defaultVal) => {
+    if (query !== undefined) {
+        const queryValue = parseInt(query, 10);
+
+        // console.log("You're tailor made for this era: ", queryValue);
+
+        if (isNaN(queryValue)) {
+            throw new TypeError("Chunk and limit must be integers");
+        }
+    
+        if (queryValue < 1) {
+            throw new TypeError("Chunk and limit must be >= 1");
+        }
+
+        return queryValue
+    } else {
+        return defaultVal;
+    }
+};
+
+const buildQuery = async (req) => {
+    const { sort = 'id', order = 'asc', search = '' } = req.query;
+    const { profile_id } = req.user;
+    
+    const allowedColumns = ['id', 'type', 'name', 'createdAt'];
+    let isAllowed = false;
+
+    //Input Validation
+    const limit = await parseQueryString(req.query.limit, 10);
+    const chunk = await parseQueryString(req.query.chunk, 1);
+
+    for (let index = 0; index < allowedColumns.length; index++) {
+        if (sort === allowedColumns[index]) {
+            isAllowed = true;
+        }
+    }
+
+    if (!isAllowed) {
+        throw new TypeError("Tried to sort by an invalid column");
+    }
+
+    if (order.toLowerCase() !== 'desc' && order.toLowerCase() !== 'asc') {
+        throw new TypeError("Sorting order must be DESC or ASC");
+    }    
+
+    //Build the query to the database with given query string
     let query = new String(`
         SELECT "id", "creator_username", "name", "type", "children", "createdAt"
         FROM "file_ledger"
@@ -28,12 +73,8 @@ const buildQuery = async (profile_id, limit, chunk, sort, order, search, timezon
 };
 
 const getFileChunk = async (req, res) => {
-    const { profile_id } = req.user;
-    const { limit = 10, chunk = 1, sort = 'id', order = 'DESC', search = '', timezone = 'PST' } = req.query; //setting id and descending order by default made the most sense imo. 5 and 1 are arbitrary
-    const searchQuery = await buildQuery(profile_id, limit, chunk, sort, order, search, timezone);
-
     try {
-        console.log("The String: ", searchQuery);
+        const searchQuery = await buildQuery(req);
 
         const files = await sequelize.query(searchQuery, {
             type: QueryTypes.SELECT,
@@ -51,8 +92,14 @@ const getFileChunk = async (req, res) => {
             files: files,
         });    
     } catch (err) {
-        console.log(err);
-
+        if (err instanceof TypeError) {
+            return res.status(400).json({
+                okay: false,
+                error: "Bad request",
+                message: err.message,
+            });
+        }
+        
         return res.status(500).json({
             okay: false,
             error: "Unhandled exception",

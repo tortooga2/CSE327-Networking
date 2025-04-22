@@ -24,7 +24,6 @@ const FileViewer = ({ width }) => {
             width={width}
             height="fit-content"
             padding="0rem"
-            style={{ borderRadius: "0.5rem", border: "1px solid black" }}
         >
             {fileEntries.map(([key, fileData]) => (
                 <File key={key} fileData={fileData} />

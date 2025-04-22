@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useStore } from "../Contexts/zus.fileManager";
 import PropTypes from "prop-types";
 
@@ -13,6 +13,7 @@ const FilePreview = () => {
     });
     const [fileData, setFileData] = useState(null);
     const [fileContent, setFileContent] = useState(null);
+    const scrollableRef = useRef(null);
 
     const copyLink = (e, fileId) => {
         e.stopPropagation();
@@ -69,8 +70,17 @@ const FilePreview = () => {
         getFileData();
     }, [fileId]);
 
+    const pdfContainerRef = useRef(null);
+
+    useEffect(() => {
+        if (pdfContainerRef.current) {
+            pdfContainerRef.current.scrollIntoView = () => {}; // Override scrolling method
+        }
+    }, []);
+
     return (
         <VerticalDiv
+            style={{}}
             before={{
                 marginLeft: "0rem",
                 width: "0%",
@@ -81,9 +91,8 @@ const FilePreview = () => {
             }}
             after={{
                 marginLeft: "1rem",
-                width: "75%",
+                width: "100%",
                 borderWidth: "0rem",
-
                 transition:
                     "width 0.3s ease-in-out, border-width 0.2s ease-in-out 0.2s, margin-left 0.1s ease-in-out 0.2s",
             }}
@@ -141,29 +150,13 @@ const FilePreview = () => {
                 </button>
             </div>
 
-            <div
-                className="preview-content"
-                style={{
-                    width: "100%",
-                    display: "flex",
-                    flexDirection: "column",
-                    justifyContent: "flex-start",
-                    alignItems: "center",
-                    gap: "1rem",
-
-                    height: "100%",
-                    scrollbarWidth: "thin",
-                    scrollbarColor: "#1E0B33 #F8F6FD",
-                    overflowY: "auto",
-                    borderRadius: "1rem",
-                }}
-            >
-                {fileContent
+            <VerticalDiv ref={pdfContainerRef}>
+                {fileContent && closedFile
                     ? fileContent.map((file, index) => (
-                          <FileContent file={file} key={index} />
+                          <FileContent key={index} file={file} />
                       ))
                     : null}
-            </div>
+            </VerticalDiv>
         </VerticalDiv>
     );
 };

@@ -1,8 +1,12 @@
 import PropTypes from "prop-types";
 import { useState } from "react";
+import { useStore } from "../Contexts/zus.fileManager";
 
 const docView = ({ src }) => {
     const [loaded, setLoaded] = useState(false);
+    const closedFile = useStore((state) => {
+        return state.previewedFile !== null;
+    });
     const fileSrc = src + "#view=FitH";
 
     const beforeLoad = {
@@ -16,18 +20,24 @@ const docView = ({ src }) => {
     };
 
     return (
-        <object
-            className={"content" + (loaded ? " loaded" : "")}
-            style={{
-                width: "200%",
-                aspectRatio: "1/1.3",
-                maxWidth: "1000px",
-                ...(loaded ? afterLoad : beforeLoad),
-                border: "none",
-            }}
-            onLoad={() => setLoaded(true)}
-            data={fileSrc}
-        />
+        <>
+            <object
+                className={"content" + (loaded ? " loaded" : "")}
+                style={{
+                    aspectRatio: "1/1.3",
+                    maxWidth: "1000px",
+                    ...(loaded && closedFile ? afterLoad : beforeLoad),
+                    borderRadius: "1rem",
+                }}
+                onLoad={() => setLoaded(true)}
+                data={fileSrc}
+            >
+                <p>
+                    {"Your browser doesn't support PDF viewing."}
+                    <a href={fileSrc}>Download instead</a>
+                </p>{" "}
+            </object>
+        </>
     );
 };
 

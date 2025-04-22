@@ -15,83 +15,81 @@ const FileContent = ({ file }) => {
         return imageTypes.includes(type);
     };
 
-    const [loaded, setLoaded] = useState(true);
-
     return (
         <div
             style={{
                 backgroundColor: "rgb(236, 202, 255)",
-                borderRadius: "12px",
-                width: "100%",
+                borderRadius: "1rem",
             }}
         >
-            <div
-                style={{
-                    padding: "16px",
-                    width: "100%",
-                    display: "flex",
-                    flexDirection: "column",
-                    justifyContent: "space-between",
-                    alignItems: "left",
-                    borderBottom: "1px solid #E0E0E0",
-                    gap: "8px",
-                }}
-            >
-                <p
-                    style={{
-                        fontSize: "16px",
-                        fontWeight: "500",
-                    }}
-                >
-                    {file.name}
-                </p>
+            <div style={{ width: "100%", height: "100%" }}>
                 <div
                     style={{
-                        display: "flex",
-                        flexDirection: "row",
+                        padding: "16px",
                         width: "100%",
+                        display: "flex",
+                        flexDirection: "column",
                         justifyContent: "space-between",
-                        alignItems: "flex-start",
+                        alignItems: "left",
+                        borderBottom: "1px solid #E0E0E0",
+                        gap: "8px",
                     }}
                 >
                     <p
                         style={{
-                            fontSize: "14px",
-                            color: "#666",
+                            fontSize: "16px",
+                            fontWeight: "500",
                         }}
                     >
-                        Created by {file.creator_username}
+                        {file.name}
                     </p>
-
-                    <button
-                        onClick={(e) => copyLink(e, file.id)}
+                    <div
                         style={{
-                            padding: "8px 16px",
-                            border: "1px solid #1E0B33",
-                            borderRadius: "1rem",
-                            backgroundColor: "transparent",
-                            color: "#1E0B33",
-                            cursor: "pointer",
+                            display: "flex",
+                            flexDirection: "row",
+                            width: "100%",
+                            justifyContent: "space-between",
+                            alignItems: "flex-start",
                         }}
                     >
-                        Copy Link
-                    </button>
+                        <p
+                            style={{
+                                fontSize: "14px",
+                                color: "#666",
+                            }}
+                        >
+                            Created by {file.creator_username}
+                        </p>
+
+                        <button
+                            onClick={(e) => copyLink(e, file.id)}
+                            style={{
+                                padding: "0.5rem",
+                                border: "1px solid #1E0B33",
+                                borderRadius: "0.5rem",
+                                backgroundColor: "transparent",
+                                color: "#1E0B33",
+                                cursor: "pointer",
+                            }}
+                        >
+                            Copy Link
+                        </button>
+                    </div>
                 </div>
-            </div>
-            <div
-                style={{
-                    padding: "1rem",
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    overflowX: "hidden",
-                }}
-            >
-                {!fileTypeImage(file.type) ? (
-                    <DocView src={file.metadata.url} />
-                ) : (
-                    <ImageView src={file.metadata.url} name={file.name} />
-                )}
+                <div
+                    style={{
+                        padding: "1rem",
+                        display: "flex",
+                        flexDirection: "column",
+                        gap: "1rem",
+                    }}
+                >
+                    {!fileTypeImage(file.type) ? (
+                        <DocView src={file.metadata.url} />
+                    ) : (
+                        <ImageView src={file.metadata.url} name={file.name} />
+                    )}
+                </div>
             </div>
         </div>
     );

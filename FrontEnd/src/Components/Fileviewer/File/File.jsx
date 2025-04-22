@@ -67,7 +67,6 @@ const File = ({ fileData }) => {
                 display: "grid",
                 gridTemplateColumns: "50px 180px 120px 150px 1fr 200px",
                 padding: "16px 24px",
-                borderBottom: "1px solid #E2E8F0",
                 backgroundColor: isSelected ? "#F0EBFF" : "white",
                 transition: "background-color 0.2s",
                 cursor: "pointer",
@@ -95,6 +94,7 @@ const File = ({ fileData }) => {
                 style={{
                     fontWeight: "500",
                     minWidth: "100px",
+
                     textWrap: "nowrap",
                     overflowX: "hidden",
                     textOverflow: "ellipsis",

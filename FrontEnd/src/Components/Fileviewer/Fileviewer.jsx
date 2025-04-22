@@ -19,12 +19,7 @@ const FileViewer = ({ width }) => {
     const fileEntries = useMemo(() => Array.from(files), [files]);
 
     return (
-        <VerticalDiv
-            gap="0rem"
-            width={width}
-            padding="0rem"
-            style={{ minHeight: "fit-content" }}
-        >
+        <VerticalDiv gap="0rem" width={width} padding="0rem">
             {fileEntries.map(([key, fileData]) => (
                 <File key={key} fileData={fileData} />
             ))}

@@ -25,27 +25,56 @@ const MainApp = () => {
         return state.previewedFile !== null;
     });
 
+    const layoutState = useStore((state) => state.layoutState);
+
     useEffect(() => {
         user.ValidateSession();
     }, [user]);
 
     return (
         <NewPage>
-            <HorizontalDiv>
-                <VerticalDiv width="400px" padding="0rem">
-                    <Header />
-                    <DebugSidebar />
-                    <VerticalDiv height="70%"></VerticalDiv>
-                </VerticalDiv>
-                <HorizontalDiv
-                    padding="0rem"
-                    gap="0rem"
-                    style={{ alignItems: "flex-start" }}
-                >
-                    <FileViewer width="100%" />
-                    <FilePreview />
+            <VerticalDiv style={{ position: "relative" }}>
+                <HorizontalDiv>
+                    <HorizontalDiv width="100%"></HorizontalDiv>
+                    <FilePreview width="65%" />
                 </HorizontalDiv>
-            </HorizontalDiv>
+                <HorizontalDiv
+                    width="60%"
+                    style={{
+                        position: "absolute",
+                        borderRadius: "0.5rem",
+                        border: "1px solid black",
+                        padding: "1rem",
+                        backgroundColor: "white",
+                    }}
+                    state={[
+                        {
+                            width: "100%",
+                            transform: "translateX(0)",
+                            transition: "all 0.3s ease-in-out",
+                        },
+                        {
+                            width: "60%",
+                            transform: "translateX(0)",
+                            transition: "all 0.3s ease-in-out",
+                        },
+                    ]}
+                    playAnimation={layoutState}
+                >
+                    <VerticalDiv width="400px" padding="0rem">
+                        <Header />
+                        <DebugSidebar />
+                        <VerticalDiv height="100%"></VerticalDiv>
+                    </VerticalDiv>
+                    <HorizontalDiv
+                        padding="0rem"
+                        gap="0rem"
+                        style={{ alignItems: "flex-start" }}
+                    >
+                        <FileViewer width="100%" />
+                    </HorizontalDiv>
+                </HorizontalDiv>
+            </VerticalDiv>
         </NewPage>
     );
 };

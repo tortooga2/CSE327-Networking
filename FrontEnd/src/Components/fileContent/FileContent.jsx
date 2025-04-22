@@ -20,77 +20,54 @@ const FileContent = ({ file }) => {
             style={{
                 backgroundColor: "rgb(236, 202, 255)",
                 borderRadius: "1rem",
+                display: "flex",
+                flexDirection: "column",
+                maxHeight: "100%",
+                padding: "1rem",
+                gap: "1rem",
             }}
         >
-            <div style={{ width: "100%", height: "100%" }}>
+            <div>
+                <p>{file.name}</p>
                 <div
                     style={{
-                        padding: "16px",
-                        width: "100%",
                         display: "flex",
-                        flexDirection: "column",
+                        flexDirection: "row",
+                        width: "100%",
                         justifyContent: "space-between",
-                        alignItems: "left",
-                        borderBottom: "1px solid #E0E0E0",
-                        gap: "8px",
+                        alignItems: "flex-start",
                     }}
                 >
                     <p
                         style={{
-                            fontSize: "16px",
-                            fontWeight: "500",
+                            fontSize: "14px",
+                            color: "#666",
                         }}
                     >
-                        {file.name}
+                        Created by {file.creator_username}
                     </p>
-                    <div
+
+                    <button
+                        onClick={(e) => copyLink(e, file.id)}
                         style={{
-                            display: "flex",
-                            flexDirection: "row",
-                            width: "100%",
-                            justifyContent: "space-between",
-                            alignItems: "flex-start",
+                            padding: "0.5rem",
+                            border: "1px solid #1E0B33",
+                            borderRadius: "0.5rem",
+                            backgroundColor: "transparent",
+                            color: "#1E0B33",
+                            cursor: "pointer",
                         }}
                     >
-                        <p
-                            style={{
-                                fontSize: "14px",
-                                color: "#666",
-                            }}
-                        >
-                            Created by {file.creator_username}
-                        </p>
-
-                        <button
-                            onClick={(e) => copyLink(e, file.id)}
-                            style={{
-                                padding: "0.5rem",
-                                border: "1px solid #1E0B33",
-                                borderRadius: "0.5rem",
-                                backgroundColor: "transparent",
-                                color: "#1E0B33",
-                                cursor: "pointer",
-                            }}
-                        >
-                            Copy Link
-                        </button>
-                    </div>
-                </div>
-                <div
-                    style={{
-                        padding: "1rem",
-                        display: "flex",
-                        flexDirection: "column",
-                        gap: "1rem",
-                    }}
-                >
-                    {!fileTypeImage(file.type) ? (
-                        <DocView src={file.metadata.url} />
-                    ) : (
-                        <ImageView src={file.metadata.url} name={file.name} />
-                    )}
+                        Copy Link
+                    </button>
                 </div>
             </div>
+
+            {!fileTypeImage(file.type) ? (
+                <DocView src={file.metadata.url} />
+            ) : (
+                <ImageView src={file.metadata.url} name={file.name} />
+            )}
         </div>
     );
 };

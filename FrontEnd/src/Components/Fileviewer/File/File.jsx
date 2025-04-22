@@ -71,7 +71,6 @@ const File = ({ fileData }) => {
                 transition: "background-color 0.2s",
                 cursor: "pointer",
                 alignItems: "center",
-                borderBottom: "1px solid black",
             }}
         >
             <div>{fileContent[0].id}</div>

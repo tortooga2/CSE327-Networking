@@ -1,7 +1,7 @@
 import { create } from "zustand";
 
 const useStore = create((set) => ({
-    layoutState: 1,
+    layoutState: 0,
     setLayoutState: (state) => set({ layoutState: state }),
 
     files: new Map(),
@@ -37,6 +37,11 @@ const useStore = create((set) => ({
     },
     previewedFile: null,
     setPreviewedFile: (fileID) => {
+        if (fileID === null) {
+            set({ layoutState: 0 });
+        } else {
+            set({ layoutState: 1 });
+        }
         set({ previewedFile: fileID });
     },
     loading: false,

@@ -6,7 +6,7 @@ import FileContent from "../fileContent/FileContent.jsx";
 
 import VerticalDiv from "../UILayout/VerticalDiv";
 
-const FilePreview = () => {
+const FilePreview = ({ width }) => {
     const fileId = useStore((state) => state.previewedFile);
     const closedFile = useStore((state) => {
         return state.previewedFile !== null;
@@ -80,6 +80,7 @@ const FilePreview = () => {
 
     return (
         <VerticalDiv
+            width={width}
             style={{}}
             before={{
                 marginLeft: "0rem",
@@ -150,8 +151,8 @@ const FilePreview = () => {
                 </button>
             </div>
 
-            <VerticalDiv ref={pdfContainerRef}>
-                {fileContent && closedFile
+            <VerticalDiv gap="1rem">
+                {fileContent
                     ? fileContent.map((file, index) => (
                           <FileContent key={index} file={file} />
                       ))

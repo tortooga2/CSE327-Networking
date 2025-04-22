@@ -1,6 +1,9 @@
 import { create } from "zustand";
 
 const useStore = create((set) => ({
+    layoutState: 1,
+    setLayoutState: (state) => set({ layoutState: state }),
+
     files: new Map(),
     setFiles: (files) => set({ files }),
 

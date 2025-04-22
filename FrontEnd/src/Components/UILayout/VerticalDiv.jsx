@@ -8,9 +8,8 @@ const VerticalDiv = ({
     gap = "1rem",
     style = {},
     children,
-    playAnimation = false,
-    before = {},
-    after = {},
+    playAnimation = 0,
+    state = [{}],
 }) => {
     const mainStyle = {
         flexShrink: width.includes("px") ? 0 : 1, // Don't shrink fixed-width divs
@@ -30,8 +29,9 @@ const VerticalDiv = ({
     };
     const [styleState, setStyleState] = useState({
         ...mainStyle,
-        ...before,
+        ...state[playAnimation],
     });
+
     const [isTransitioning, setIsTransitioning] = useState(playAnimation);
 
     useEffect(() => {
@@ -39,17 +39,10 @@ const VerticalDiv = ({
     }, [playAnimation]);
 
     useEffect(() => {
-        if (isTransitioning) {
-            setStyleState({
-                ...mainStyle,
-                ...after,
-            });
-        } else {
-            setStyleState({
-                ...mainStyle,
-                ...before,
-            });
-        }
+        setStyleState({
+            ...mainStyle,
+            ...state[isTransitioning],
+        });
     }, [isTransitioning]);
 
     return (

@@ -22,8 +22,8 @@ const FileViewer = ({ width }) => {
         <VerticalDiv
             gap="0rem"
             width={width}
-            height="fit-content"
             padding="0rem"
+            style={{ minHeight: "fit-content" }}
         >
             {fileEntries.map(([key, fileData]) => (
                 <File key={key} fileData={fileData} />

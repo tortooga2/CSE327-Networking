@@ -89,7 +89,7 @@ const auth = {
             maxAge: Number(process.env.TOKEN_EXP) * 1000,
             httpOnly: true,
             sameSite: "lax", // Must be "none" for cross-origin
-            secure: true, // Must be true when sameSite is "none"
+            secure: DEBUG ? false : true, // Must be true when sameSite is "none"
             path: "/", // Apply to all paths
         });
 

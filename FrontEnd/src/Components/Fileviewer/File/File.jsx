@@ -66,11 +66,12 @@ const File = ({ fileData }) => {
             style={{
                 display: "grid",
                 gridTemplateColumns: "50px 180px 120px 150px 1fr 200px",
-                padding: "16px 24px",
+                padding: "1rem 0.5rem",
                 backgroundColor: isSelected ? "#F0EBFF" : "white",
                 transition: "background-color 0.2s",
                 cursor: "pointer",
                 alignItems: "center",
+                borderBottom: "1px solid black",
             }}
         >
             <div>{fileContent[0].id}</div>

@@ -37,9 +37,12 @@ const MainApp = () => {
                     <DebugSidebar />
                     <VerticalDiv height="70%"></VerticalDiv>
                 </VerticalDiv>
-                <HorizontalDiv padding="0rem" gap="0rem">
+                <HorizontalDiv
+                    padding="0rem"
+                    gap="0rem"
+                    style={{ alignItems: "flex-start" }}
+                >
                     <FileViewer width="100%" />
-
                     <FilePreview />
                 </HorizontalDiv>
             </HorizontalDiv>

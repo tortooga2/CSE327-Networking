@@ -26,7 +26,8 @@ const docView = ({ src }) => {
                 style={{
                     width: "80%",
                     aspectRatio: "1/1.3",
-                    maxWidth: "1000px",
+                    maxWidth: "800px",
+
                     ...(loaded && closedFile ? afterLoad : beforeLoad),
                     borderRadius: "1rem",
                     margin: "0 auto",

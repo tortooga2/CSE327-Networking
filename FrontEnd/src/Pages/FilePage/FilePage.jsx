@@ -1,13 +1,18 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
+import { useStore } from "../../Components/Contexts/zus.fileManager.jsx";
+
 import FileContent from "../../Components/fileContent/FileContent.jsx";
+import VerticalDiv from "../../Components/UILayout/VerticalDiv.jsx";
 
 const FilePage = () => {
     const { fileId, ownerId } = useParams();
 
     const [fileData, setFileData] = useState(null);
     const [fileContent, setFileContent] = useState(null);
+
+    const setPreviewedFile = useStore((state) => state.setPreviewedFile);
 
     useEffect(() => {
         console.log(`File ID: ${fileId}`);
@@ -47,6 +52,8 @@ const FilePage = () => {
         };
 
         getFileData();
+
+        setPreviewedFile(fileId);
     }, [fileId, ownerId]);
 
     return (
@@ -56,21 +63,13 @@ const FilePage = () => {
             <p>File ID: {fileId}</p>
             <div style={{ marginBottom: "2rem" }}></div>
 
-            <div
-                className="content"
-                style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "center",
-                    gap: "100px",
-                }}
-            >
+            <VerticalDiv className="content">
                 {fileContent
                     ? fileContent.map((file, index) => {
                           return <FileContent key={index} file={file} />;
                       })
                     : null}
-            </div>
+            </VerticalDiv>
         </div>
     );
 };

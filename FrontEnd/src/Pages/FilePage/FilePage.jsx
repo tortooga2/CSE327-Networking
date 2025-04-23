@@ -5,6 +5,7 @@ import { useStore } from "../../Components/Contexts/zus.fileManager.jsx";
 
 import FileContent from "../../Components/fileContent/FileContent.jsx";
 import VerticalDiv from "../../Components/UILayout/VerticalDiv.jsx";
+import NewPage from "../../Components/UILayout/NewPage.jsx";
 
 const FilePage = () => {
     const { fileId, ownerId } = useParams();
@@ -57,20 +58,28 @@ const FilePage = () => {
     }, [fileId, ownerId]);
 
     return (
-        <div style={{ margin: "6rem 10rem" }}>
-            <h1>File Page</h1>
-            <p>Owner Id: {ownerId}</p>
-            <p>File ID: {fileId}</p>
-            <div style={{ marginBottom: "2rem" }}></div>
+        <NewPage center>
+            <VerticalDiv style={{ alignItems: "center" }}>
+                <div>
+                    <h1>File Page</h1>
+                    <p>Owner Id: {ownerId}</p>
+                    <p>File ID: {fileId}</p>
+                    <div style={{ marginBottom: "2rem" }}></div>
+                </div>
 
-            <VerticalDiv className="content">
-                {fileContent
-                    ? fileContent.map((file, index) => {
-                          return <FileContent key={index} file={file} />;
-                      })
-                    : null}
+                <VerticalDiv
+                    width={"50%"}
+                    padding="0rem"
+                    style={{ borderRadius: "1rem" }}
+                >
+                    {fileContent
+                        ? fileContent.map((file, index) => {
+                              return <FileContent key={index} file={file} />;
+                          })
+                        : null}
+                </VerticalDiv>
             </VerticalDiv>
-        </div>
+        </NewPage>
     );
 };
 

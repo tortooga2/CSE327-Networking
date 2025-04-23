@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
+import Lenis from "lenis";
 
 const VerticalDiv = ({
     width = "100%",
@@ -45,8 +46,32 @@ const VerticalDiv = ({
         });
     }, [isTransitioning]);
 
+    const scrollableRef = useRef(null);
+
+    useEffect(() => {
+        const lenis = new Lenis({
+            wrapper: scrollableRef.current, // Target the div
+            content: scrollableRef.current, // if your children are direct
+            // you can also point at a nested ref
+            orientation: "vertical",
+            gestureOrientation: "vertical",
+            smooth: true,
+        });
+
+        function raf(time) {
+            lenis.raf(time);
+            requestAnimationFrame(raf);
+        }
+        requestAnimationFrame(raf);
+
+        return () => {
+            lenis.destroy();
+        };
+    });
+
     return (
         <div
+            ref={scrollableRef}
             style={{
                 ...styleState,
             }}

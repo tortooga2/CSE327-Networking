@@ -32,8 +32,7 @@ const FilePreview = ({ width }) => {
         console.log(`File ID: ${fileId}`);
 
         console.log("Fetching file data @", `/api/file/user/${fileId}`);
-        if (!fileId || fileId === null) {
-            console.error("File ID is null");
+        if (!fileId) {
             return;
         }
         const getFileData = async () => {

@@ -20,17 +20,19 @@ const docView = ({ src }) => {
     };
 
     return (
-        <div>
+        <div
+            style={{
+                height: "100%",
+            }}
+        >
             <object
                 className={"content" + (loaded ? " loaded" : "")}
                 style={{
-                    width: "80%",
-                    aspectRatio: "1/1.3",
-                    maxWidth: "800px",
-
                     ...(loaded && closedFile ? afterLoad : beforeLoad),
-                    borderRadius: "1rem",
                     margin: "0 auto",
+                    maxWidth: "30vw",
+                    width: "30vw",
+                    aspectRatio: "1/1.2",
                 }}
                 onLoad={() => setLoaded(true)}
                 data={fileSrc}

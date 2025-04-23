@@ -4,6 +4,7 @@ import MainApp from "./Pages/MainApp/MainApp";
 import FilePage from "./Pages/FilePage/FilePage";
 
 import { UserProvider } from "./Components/Contexts/ctx.user.jsx";
+import { ReactLenis } from "lenis/react";
 
 const App = () => {
     return (

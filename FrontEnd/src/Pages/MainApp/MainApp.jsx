@@ -51,12 +51,12 @@ const MainApp = () => {
                         {
                             width: "100%",
                             transform: "translateX(0)",
-                            transition: "all 0.3s ease-in-out",
+                            transition: "all 0.3s ease-out",
                         },
                         {
                             width: "60%",
                             transform: "translateX(0)",
-                            transition: "all 0.3s ease-in-out",
+                            transition: "all 0.3s ease-out",
                         },
                     ]}
                     playAnimation={layoutState}

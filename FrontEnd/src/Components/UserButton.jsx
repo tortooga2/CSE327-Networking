@@ -4,16 +4,20 @@ import { IoLogOutOutline } from "react-icons/io5";
 import { FaUserCircle } from "react-icons/fa";
 
 import { useUser } from "../Components/Contexts/ctx.user";
+import { useStore } from "../Components/Contexts/zus.fileManager";
 
 const UserButton = ({ username }) => {
     const [isHovered, setIsHovered] = useState(false);
     const [logoutHovered, setLogoutHovered] = useState(false);
+    const { username_base, username_suffix } = useStore(
+        (state) => state.userProfile
+    );
     const { user } = useUser();
 
     return (
         <div
             style={{
-                border: "1px solid black",
+                // border: "1px solid black",
                 borderRadius: "0.5rem",
                 padding: "0.5rem",
                 position: "relative",
@@ -28,7 +32,10 @@ const UserButton = ({ username }) => {
                 onMouseLeave={() => setIsHovered(false)}
             >
                 <FaUserCircle size={20} />
-                {username}
+                <div>
+                    <span>{username_base}</span>
+                    <span>#{username_suffix}</span>
+                </div>
             </div>
             {/* Logout Button */}
             <div

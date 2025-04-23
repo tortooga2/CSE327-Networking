@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import propTypes from "prop-types";
 import "./File.css";
 
-import { Bundle, Video, Note, Document, Img } from "../../Tags";
+import { FileType } from "../../Tags";
 
 import { useStore } from "../../Contexts/zus.fileManager";
 
@@ -39,20 +39,7 @@ const File = ({ fileData }) => {
         alert("Link copied to clipboard");
     };
 
-    const getFileType = (mimeType, filename) => {
-        const ext = filename.split(".").pop().toLowerCase();
-        if (["jpg", "jpeg", "png", "gif", "webp"].includes(ext)) return <Img />;
-        if (["mp4", "webm", "ogg"].includes(ext)) return <Video />;
-        if (ext === "pdf") return <Document />;
-        if (["doc", "docx"].includes(ext)) return <Document />;
-        if (["xls", "xlsx"].includes(ext)) return <Document />;
-        if (["txt", "text", "md"].includes(ext)) return <Note />;
-        return <Bundle />;
-    };
-
     const [isHover, setIsHover] = useState(false);
-
-    const fileType = getFileType(fileContent[0].type, fileContent[0].name);
 
     return (
         <div
@@ -62,7 +49,7 @@ const File = ({ fileData }) => {
                 display: "flex",
                 justifyContent: "space-evenly",
                 padding: !isHover ? "1rem 0.5rem" : "1rem 1rem",
-                backgroundColor: isSelected ? "#F0EBFF" : "#ffffff",
+                backgroundColor: isSelected ? "#F0EBFF" : "#ffffff00",
                 transition: "background-color 0.2s, padding 0.2s ease-in-out",
                 cursor: "pointer",
                 alignItems: "center",
@@ -99,7 +86,7 @@ const File = ({ fileData }) => {
                     }
                 )}
             </div>
-            <div>{fileType}</div>
+            <div>{FileType(fileContent[0].name)}</div>
             <div
                 style={{
                     maxWidth: "10rem",

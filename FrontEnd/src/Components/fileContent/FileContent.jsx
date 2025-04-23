@@ -1,6 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import ImageView from "./imageView";
 import DocView from "./docView";
+import Button from "../Button/Button";
+import getFileType from "../scripts/getFileType";
+import { FileType } from "../Tags";
+
 const FileContent = ({ file }) => {
     const copyLink = (e, fileId) => {
         e.stopPropagation();
@@ -10,17 +14,12 @@ const FileContent = ({ file }) => {
         alert("Link copied to clipboard");
     };
 
-    const fileTypeImage = (type) => {
-        const imageTypes = ["jpeg", "png", "gif", "webp", "svg+xml"];
-        return imageTypes.includes(type);
-    };
-
     return (
         <div
             style={{
-                backgroundColor: "white",
+                // background: "linear-gradient(var(--special-color), #ffffff)",
                 borderRadius: "1rem",
-                border: "1px solid black",
+                border: "1px solid var(--special-color)",
                 display: "flex",
                 flexDirection: "column",
                 maxHeight: "100%",
@@ -28,43 +27,69 @@ const FileContent = ({ file }) => {
                 gap: "1rem",
             }}
         >
-            <div>
-                <p>{file.name}</p>
+            <div
+                className="preview-header"
+                style={{
+                    borderBottom: "1px solid var(--special-color)",
+                    paddingBottom: "1rem",
+                    display: "flex",
+                    alignItems: "flex-start",
+                    justifyContent: "space-between",
+                }}
+            >
                 <div
                     style={{
                         display: "flex",
-                        flexDirection: "row",
-                        width: "100%",
-                        justifyContent: "space-between",
-                        alignItems: "flex-start",
+                        gap: "1rem",
+                        flexDirection: "column",
                     }}
                 >
-                    <p
+                    <div
                         style={{
-                            fontSize: "14px",
-                            color: "#666",
+                            display: "flex",
+                            gap: "0.5rem",
+                            alignItems: "center",
                         }}
                     >
-                        Created by {file.creator_username}
-                    </p>
+                        {file ? FileType(file.name) : ""}
+                    </div>
+                    <div
+                        style={{
+                            display: "flex",
+                            gap: "0.5rem",
+                            alignItems: "center",
+                        }}
+                    >
+                        <p>Name:</p> {file ? file.name : ""}
+                    </div>
 
-                    <button
-                        onClick={(e) => copyLink(e, file.id)}
+                    <div
                         style={{
-                            padding: "0.5rem",
-                            border: "1px solid black",
-                            borderRadius: "0.5rem",
-                            backgroundColor: "transparent",
-                            color: "#1E0B33",
-                            cursor: "pointer",
+                            display: "flex",
+                            gap: "0.5rem",
+                            alignItems: "center",
                         }}
                     >
-                        Copy Link
-                    </button>
+                        <p>Create At:</p>
+                        {file
+                            ? (() => {
+                                  return new Date(
+                                      file.createdAt
+                                  ).toLocaleDateString("en-US", {
+                                      year: "numeric",
+                                      month: "short",
+                                      day: "numeric",
+                                  });
+                              })()
+                            : ""}
+                    </div>
+                    <p>Creator: {file ? file.creator_username : ""}</p>
                 </div>
+
+                <Button onClick={copyLink}>Copy Link</Button>
             </div>
 
-            {!fileTypeImage(file.type) ? (
+            {getFileType(file.name) === "Document" ? (
                 <DocView src={file.metadata.url} />
             ) : (
                 <ImageView src={file.metadata.url} name={file.name} />

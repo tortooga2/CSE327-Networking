@@ -54,9 +54,13 @@ const DebugSidebar = () => {
     return (
         <div
             style={{
-                border: "1px solid black",
+                // border: "1px solid",
+                // borderRadius: "1rem",
+                // borderImageSlice: 1,
+                // borderImageSource:
+                //     "linear-gradient(130deg, #FFEEDB 60%, #dd614a)",
                 padding: "1rem",
-                borderRadius: "0.5rem",
+
                 gap: "1rem",
                 flexDirection: "column",
                 justifyContent: "space-between",

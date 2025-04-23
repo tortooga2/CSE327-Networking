@@ -4,6 +4,8 @@ import { useNavigate } from "react-router-dom";
 
 export const UserContext = createContext(null);
 
+import { useStore } from "./zus.fileManager";
+
 export const UserProvider = ({ children }) => {
     const [signedIn, setSignedIn] = useState(false);
     const navigate = useNavigate();
@@ -26,12 +28,16 @@ export const UserProvider = ({ children }) => {
                     });
                     if (response.ok) {
                         setSignedIn(true);
+                        const data = await response.json();
+                        const { username_base, username_suffix } = data;
+                        console.log(data);
+                        useStore
+                            .getState()
+                            .setUserProfile({ username_base, username_suffix });
                     } else {
                         const data = await response.json();
                         console.log(data);
-                        if (data.okay === false) {
-                            setSignedIn(false);
-                        }
+                        setSignedIn(false);
                     }
                 } catch (error) {
                     setSignedIn(false);

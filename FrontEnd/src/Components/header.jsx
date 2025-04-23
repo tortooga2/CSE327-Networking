@@ -35,7 +35,7 @@ const Header = () => {
     return (
         <div
             style={{
-                border: "1px solid black",
+                // border: "1px solid",
                 borderRadius: "0.5rem",
                 padding: "1rem",
                 display: "flex",
@@ -46,11 +46,15 @@ const Header = () => {
         >
             <div
                 style={{
-                    textAlign: "right",
+                    textAlign: "left",
                     width: "100%",
-                    padding: "1rem",
+                    marginBottom: "2rem",
+                    padding: "0.5rem",
+                    borderRadius: "0.5rem",
                     fontWeight: "900",
-                    fontSize: "1.5rem",
+                    fontSize: "2rem",
+                    backgroundColor: "var(--secondary-color)",
+                    color: "var(--special-color)",
                 }}
             >
                 ConnectWork
@@ -67,18 +71,16 @@ const Header = () => {
                     paddingBottom: "1rem",
                 }}
             >
-                <Button style={buttonStyle} hover={buttonClickStyle}>
+                <Button>
                     {" "}
                     <FaCog />
                     Settings
                 </Button>
-                <Button style={buttonStyle} hover={buttonClickStyle}>
+                <Button>
                     <FaFile />
                     File
                 </Button>
-                <Button style={buttonStyle} hover={buttonClickStyle}>
-                    Help
-                </Button>
+                <Button>Help</Button>
             </div>
         </div>
     );

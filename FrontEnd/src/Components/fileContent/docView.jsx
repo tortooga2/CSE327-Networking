@@ -34,8 +34,10 @@ const docView = ({ src }) => {
                     margin: "0 auto",
                     maxWidth: "30vw",
                     width: "30vw",
-                    aspectRatio: "1/1.2",
+                    minHeight: "40vh",
+                    maxHeight: "100%",
                     opacity: "1",
+                    borderRadius: "0.5rem",
                 }}
                 onLoad={() => setLoaded(true)}
                 data={fileSrc}

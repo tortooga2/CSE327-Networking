@@ -5,17 +5,17 @@
 
 :root {
     --colorMode: "dark";
-    --primary-color: #242424;
-    --secondary-color: #d9d3ba;
-    --special-color: #555555;
+    --primary-color: #3d405b;
+    --secondary-color: #dd614a;
+    --special-color: #ffeedb;
 
     font-family: monospace;
     line-height: 1.5;
     font-weight: 200;
 
     color-scheme: light dark;
-    background-color: white;
-    color: #3d405b;
+    background-color: var(--secondary-color);
+    color: var(--primary-color);
 
     font-synthesis: none;
     text-rendering: optimizeLegibility;

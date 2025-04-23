@@ -1,6 +1,9 @@
 import { create } from "zustand";
 
 const useStore = create((set) => ({
+    userProfile: {},
+    setUserProfile: (state) => set({ userProfile: state }),
+
     layoutState: 0,
     setLayoutState: (state) => set({ layoutState: state }),
 

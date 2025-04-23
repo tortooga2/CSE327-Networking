@@ -40,12 +40,14 @@ const MainApp = () => {
                 </HorizontalDiv>
                 <HorizontalDiv
                     width="60%"
+                    padding="0rem"
                     style={{
                         position: "absolute",
                         borderRadius: "0.5rem",
-                        border: "1px solid black",
+                        // border: "1px solid black",
                         padding: "1rem",
-                        backgroundColor: "#ffffff",
+                        background:
+                            "linear-gradient(var(--special-color), #FFffff)",
                     }}
                     state={[
                         {

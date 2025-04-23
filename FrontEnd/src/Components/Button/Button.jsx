@@ -3,72 +3,76 @@ import propTypes from "prop-types";
 import { useState } from "react";
 
 const Button = ({
-  children,
-  onClick = () => {
-    console.log("Button clicked");
-  },
-  style = {
-    width: "fit-content",
-    color: "var(--secondary-color)",
-    paddingLeft: "0.5rem",
-    paddingRight: "0.5rem",
-    transition: "all 0.1s ease-in-out",
-  },
-  hover = {
-    backgroundColor: "var(--secondary-color)",
-    color: "var(--primary-color)",
-    transition: "all 0.1s ease-in-out",
-  },
-  click = {},
-  disabled = false,
+    children,
+    onClick = () => {
+        console.log("Button clicked");
+    },
+    style = {
+        // border: "1px solid var(--primary-color)",
+        backgroundColor: "transparent",
+        borderRadius: "0.5rem",
+        padding: "0.5rem",
+        position: "relative",
+        overflow: "hidden",
+        width: "80%",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        gap: "0.5rem",
+    },
+    hover = {
+        backgroundColor: "rgba(30, 30, 30, 0.1)",
+    },
+    click = {},
+    disabled = false,
 }) => {
-  style = {
-    ...style,
-    userSelect: "none",
-    cursor: "pointer",
-    width: "fit-content",
-  };
+    style = {
+        ...style,
+        userSelect: "none",
+        cursor: "pointer",
+        width: "fit-content",
+    };
 
-  const [styleState, setStyleState] = useState(style);
+    const [styleState, setStyleState] = useState(style);
 
-  const onMouseEnter = () => {
-    setStyleState({ ...style, ...hover });
-  };
+    const onMouseEnter = () => {
+        setStyleState({ ...style, ...hover });
+    };
 
-  const onMouseLeave = () => {
-    setStyleState(style);
-  };
+    const onMouseLeave = () => {
+        setStyleState(style);
+    };
 
-  const onMouseDown = () => {
-    setStyleState({ ...style, ...click });
-  };
+    const onMouseDown = () => {
+        setStyleState({ ...style, ...click });
+    };
 
-  const onMouseUp = () => {
-    setStyleState({ ...style, ...hover });
-  };
+    const onMouseUp = () => {
+        setStyleState({ ...style, ...hover });
+    };
 
-  return (
-    <p
-      onMouseEnter={onMouseEnter}
-      onMouseLeave={onMouseLeave}
-      onMouseDown={onMouseDown}
-      onMouseUp={onMouseUp}
-      onClick={onClick}
-      style={styleState}
-      disabled={disabled}
-    >
-      {children}
-    </p>
-  );
+    return (
+        <p
+            onMouseEnter={onMouseEnter}
+            onMouseLeave={onMouseLeave}
+            onMouseDown={onMouseDown}
+            onMouseUp={onMouseUp}
+            onClick={onClick}
+            style={styleState}
+            disabled={disabled}
+        >
+            {children}
+        </p>
+    );
 };
 
 Button.propTypes = {
-  children: propTypes.node.isRequired,
-  onClick: propTypes.func,
-  style: propTypes.object,
-  hover: propTypes.object,
-  click: propTypes.object,
-  disabled: propTypes.bool,
+    children: propTypes.node.isRequired,
+    onClick: propTypes.func,
+    style: propTypes.object,
+    hover: propTypes.object,
+    click: propTypes.object,
+    disabled: propTypes.bool,
 };
 
 export default Button;

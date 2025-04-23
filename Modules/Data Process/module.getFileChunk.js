@@ -1,10 +1,11 @@
 import { sequelize } from "../Database/module.db.js";
 import { QueryTypes } from "sequelize";
+import { debugMessage } from "../module.debugHelpers.js";
 
 //The main function for getting files in chunks
 const getFileChunk = async (req, res) => {
     try {
-        const searchQuery = await buildQuery(req);
+        const { searchQuery, bindParams } = await buildQuery(req);
 
         const files = await sequelize.query(searchQuery, {
             type: QueryTypes.SELECT,
@@ -40,8 +41,9 @@ const getFileChunk = async (req, res) => {
 
 //Function that constructs a raw SQL query based off given parameters
 const buildQuery = async (req) => {
-    const { sort = 'id', order = 'asc', search = '', type = '' } = req.query;
+    const { sort = 'id', order = 'asc' } = req.query;
     const { profile_id } = req.user;
+    const params = [];
 
     //Input Validation
     const limit = await parseQueryString(req.query.limit, 10); //10 and 1 are arbitrary default values
@@ -71,16 +73,16 @@ const buildQuery = async (req) => {
         `
     );
 
-    if (search !== '') {
+    if (req.query.search !== undefined) {
         query = query.concat(`
-            AND word_similarity('${search}', "name") >= 0.3
+            AND word_similarity('${req.query.search}', "name") >= 0.3
             `
         );
     };
 
-    if (type !== '') {
+    if (req.query.type !== undefined) {
         query = query.concat(`
-            AND "type" = '${type}'
+            AND "type" = '${req.query.type}'
             `
         );
     }
@@ -91,7 +93,7 @@ const buildQuery = async (req) => {
         `
     );
 
-    return query;
+    return { searchQuery: query, bindParams: params };
 };
 
 //Returns the provided default value if query is not an integer

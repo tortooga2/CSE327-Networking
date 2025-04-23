@@ -1,15 +1,18 @@
 import { sequelize } from "../Database/module.db.js";
 import { QueryTypes } from "sequelize";
-import { debugMessage } from "../module.debugHelpers.js";
 
 //The main function for getting files in chunks
 const getFileChunk = async (req, res) => {
     try {
         const { searchQuery, bindParams } = await buildQuery(req);
 
-        const files = await sequelize.query(searchQuery, {
-            type: QueryTypes.SELECT,
-        });
+        //Honestly this is the best way I could think of avoiding passing bind parameters when they're not needed
+        const sequelizeOptions = { type: QueryTypes.SELECT };
+        if (Object.keys(bindParams).length !== 0) {
+            Object.assign(sequelizeOptions, { bind: bindParams });
+        }
+
+        const files = await sequelize.query(searchQuery, sequelizeOptions);
 
         if (files.length === 0) {
             return res.status(404).json({
@@ -31,6 +34,7 @@ const getFileChunk = async (req, res) => {
             });
         }
         
+        console.log(err);
         return res.status(500).json({
             okay: false,
             error: "Unhandled exception",
@@ -43,7 +47,7 @@ const getFileChunk = async (req, res) => {
 const buildQuery = async (req) => {
     const { sort = 'id', order = 'asc' } = req.query;
     const { profile_id } = req.user;
-    const params = [];
+    const params = {};
 
     //Input Validation
     const limit = await parseQueryString(req.query.limit, 10); //10 and 1 are arbitrary default values
@@ -69,28 +73,23 @@ const buildQuery = async (req) => {
     let query = new String(`
         SELECT "id", "creator_username", "name", "type", "children", "createdAt"
         FROM "file_ledger"
-        WHERE "owner_id" = '${profile_id}'
-        `
+        WHERE "owner_id" = '${profile_id}'`
     );
 
+    // These two if statements are where the magic of
     if (req.query.search !== undefined) {
-        query = query.concat(`
-            AND word_similarity('${req.query.search}', "name") >= 0.3
-            `
-        );
+        Object.assign(params, { search: req.query.search });
+        query = query.concat('\nAND word_similarity($search, "name") >= 0.3');
     };
 
     if (req.query.type !== undefined) {
-        query = query.concat(`
-            AND "type" = '${req.query.type}'
-            `
-        );
+        Object.assign(params, {  file_type: req.query.type });
+        query = query.concat('\nAND "type" = $file_type');
     }
 
     query = query.concat(`
         ORDER BY "${sort}" ${order}
-        LIMIT ${limit} OFFSET ${(chunk - 1) * limit}
-        `
+        LIMIT ${limit} OFFSET ${(chunk - 1) * limit}`
     );
 
     return { searchQuery: query, bindParams: params };

@@ -7,7 +7,9 @@ const docView = ({ src }) => {
     const closedFile = useStore((state) => {
         return state.previewedFile !== null;
     });
-    const fileSrc = src + "#view=FitH";
+    const fileSrc = `https://docs.google.com/gview?url=${encodeURIComponent(
+        src
+    )}&embedded=true`;
 
     const beforeLoad = {
         opacity: 0,
@@ -33,15 +35,11 @@ const docView = ({ src }) => {
                     maxWidth: "30vw",
                     width: "30vw",
                     aspectRatio: "1/1.2",
+                    opacity: "1",
                 }}
                 onLoad={() => setLoaded(true)}
                 data={fileSrc}
-            >
-                <p>
-                    {"Your browser doesn't support PDF viewing."}
-                    <a href={fileSrc}>Download instead</a>
-                </p>{" "}
-            </object>
+            />
         </div>
     );
 };

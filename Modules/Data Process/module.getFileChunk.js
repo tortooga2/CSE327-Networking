@@ -76,7 +76,7 @@ const buildQuery = async (req) => {
         WHERE "owner_id" = '${profile_id}'`
     );
 
-    // These two if statements are where the magic of
+    // These two if statements are where the magic of bind parameters happen
     if (req.query.search !== undefined) {
         Object.assign(params, { search: req.query.search });
         query = query.concat('\nAND word_similarity($search, "name") >= 0.3');

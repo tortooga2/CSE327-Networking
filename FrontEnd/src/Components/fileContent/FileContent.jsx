@@ -18,8 +18,9 @@ const FileContent = ({ file }) => {
     return (
         <div
             style={{
-                backgroundColor: "rgb(236, 202, 255)",
+                backgroundColor: "white",
                 borderRadius: "1rem",
+                border: "1px solid black",
                 display: "flex",
                 flexDirection: "column",
                 maxHeight: "100%",
@@ -51,7 +52,7 @@ const FileContent = ({ file }) => {
                         onClick={(e) => copyLink(e, file.id)}
                         style={{
                             padding: "0.5rem",
-                            border: "1px solid #1E0B33",
+                            border: "1px solid black",
                             borderRadius: "0.5rem",
                             backgroundColor: "transparent",
                             color: "#1E0B33",

@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import propTypes from "prop-types";
 import "./File.css";
 
+import { Bundle, Video, Note, Document, Img } from "../../Tags";
+
 import { useStore } from "../../Contexts/zus.fileManager";
 
 const File = ({ fileData }) => {
@@ -14,6 +16,10 @@ const File = ({ fileData }) => {
         state.selectedFiles.has(fileContent[0].id)
     );
     const setIsSelected = useStore((state) => state.selectFile);
+
+    const isLayout = useStore((state) => {
+        return state.layoutState === 0;
+    });
 
     useEffect(() => {
         checkboxRef.current.checked = isSelected;
@@ -33,29 +39,18 @@ const File = ({ fileData }) => {
         alert("Link copied to clipboard");
     };
 
-    const getTypePillClass = (type) => {
-        return {
-            backgroundColor: "#1E0B33",
-            color: "#FFFFFF",
-            padding: "4px 12px",
-            borderRadius: "12px",
-            fontSize: "12px",
-            fontWeight: "500",
-            display: "inline-block",
-            transition: "opacity 0.2s",
-        };
-    };
-
     const getFileType = (mimeType, filename) => {
         const ext = filename.split(".").pop().toLowerCase();
-        if (["jpg", "jpeg", "png", "gif", "webp"].includes(ext)) return "image";
-        if (["mp4", "webm", "ogg"].includes(ext)) return "video";
-        if (ext === "pdf") return "pdf";
-        if (["doc", "docx"].includes(ext)) return "word";
-        if (["xls", "xlsx"].includes(ext)) return "excel";
-        if (["txt", "text", "md"].includes(ext)) return "note";
-        return ext;
+        if (["jpg", "jpeg", "png", "gif", "webp"].includes(ext)) return <Img />;
+        if (["mp4", "webm", "ogg"].includes(ext)) return <Video />;
+        if (ext === "pdf") return <Document />;
+        if (["doc", "docx"].includes(ext)) return <Document />;
+        if (["xls", "xlsx"].includes(ext)) return <Document />;
+        if (["txt", "text", "md"].includes(ext)) return <Note />;
+        return <Bundle />;
     };
+
+    const [isHover, setIsHover] = useState(false);
 
     const fileType = getFileType(fileContent[0].type, fileContent[0].name);
 
@@ -64,17 +59,37 @@ const File = ({ fileData }) => {
             className={isSelected ? "file-row selected" : "file-row"}
             onClick={() => checkboxRef.current.click()}
             style={{
-                display: "grid",
-                gridTemplateColumns: "50px 180px 120px 150px 1fr 200px",
-                padding: "1rem 0.5rem",
-                backgroundColor: isSelected ? "#F0EBFF" : "white",
-                transition: "background-color 0.2s",
+                display: "flex",
+                justifyContent: "space-evenly",
+                padding: !isHover ? "1rem 0.5rem" : "1rem 1rem",
+                backgroundColor: isSelected ? "#F0EBFF" : "#ffffff",
+                transition: "background-color 0.2s, padding 0.2s ease-in-out",
                 cursor: "pointer",
                 alignItems: "center",
             }}
+            onMouseEnter={() => {
+                setIsHover(true);
+            }}
+            onMouseLeave={() => {
+                setIsHover(false);
+            }}
         >
-            <div>{fileContent[0].id}</div>
-            <div>
+            {isLayout && (
+                <div
+                    style={{
+                        minWidth: "3rem",
+                    }}
+                >
+                    {fileContent[0].id}
+                </div>
+            )}
+            <div
+                style={{
+                    flexShrink: "0",
+                    width: "10rem",
+                    minWidth: "10rem",
+                }}
+            >
                 {new Date(fileContent[0].createdAt).toLocaleDateString(
                     "en-US",
                     {
@@ -84,30 +99,34 @@ const File = ({ fileData }) => {
                     }
                 )}
             </div>
-            <div>
-                <span style={getTypePillClass(fileType)}>
-                    {fileType === "bundle" ? "bundle" : fileType}
-                </span>
-            </div>
-            <div>{fileContent[0].creator_username}</div>
+            <div>{fileType}</div>
             <div
                 style={{
-                    fontWeight: "500",
-                    minWidth: "100px",
-
-                    textWrap: "nowrap",
-                    overflowX: "hidden",
-                    textOverflow: "ellipsis",
+                    maxWidth: "10rem",
                 }}
             >
-                {fileContent[0].name}
+                {fileContent[0].creator_username}
             </div>
+            {isLayout && (
+                <div
+                    style={{
+                        fontWeight: "500",
+                        textWrap: "nowrap",
+                        overflowX: "hidden",
+                        textOverflow: "ellipsis",
+                        minWidth: "30rem",
+                    }}
+                >
+                    {fileContent[0].name}
+                </div>
+            )}
             <div
                 style={{
                     display: "flex",
-                    gap: "1rem",
+                    gap: "0.1rem",
                     justifyContent: "center",
                     alignItems: "center",
+                    minWidth: "fit-content",
                 }}
             >
                 <input
@@ -115,7 +134,6 @@ const File = ({ fileData }) => {
                     ref={checkboxRef}
                     onChange={handleChange}
                     checked={isSelected}
-                    style={{ marginRight: "1rem" }}
                 />
                 <button
                     onClick={(e) => {
@@ -125,32 +143,36 @@ const File = ({ fileData }) => {
                 >
                     view
                 </button>
-                <button
-                    onClick={(e) => {
-                        e.stopPropagation();
+                {isLayout && (
+                    <button
+                        onClick={(e) => {
+                            e.stopPropagation();
 
-                        copyLink(e);
-                    }}
-                    className={"copy-link"}
-                >
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="#000000"
-                        className="bi bi-files"
-                        viewBox="0 0 16 16"
-                        id="Files--Streamline-Bootstrap"
-                        height={16}
-                        width={16}
+                            copyLink(e);
+                        }}
+                        className={"copy-link"}
                     >
-                        <desc>
-                            {"Files Streamline Icon: https://streamlinehq.com"}
-                        </desc>
-                        <path
-                            d="M13 0H6a2 2 0 0 0 -2 2 2 2 0 0 0 -2 2v10a2 2 0 0 0 2 2h7a2 2 0 0 0 2 -2 2 2 0 0 0 2 -2V2a2 2 0 0 0 -2 -2m0 13V4a2 2 0 0 0 -2 -2H5a1 1 0 0 1 1 -1h7a1 1 0 0 1 1 1v10a1 1 0 0 1 -1 1M3 4a1 1 0 0 1 1 -1h7a1 1 0 0 1 1 1v10a1 1 0 0 1 -1 1H4a1 1 0 0 1 -1 -1z"
-                            strokeWidth={1}
-                        />
-                    </svg>
-                </button>
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="#000000"
+                            className="bi bi-files"
+                            viewBox="0 0 16 16"
+                            id="Files--Streamline-Bootstrap"
+                            height={16}
+                            width={16}
+                        >
+                            <desc>
+                                {
+                                    "Files Streamline Icon: https://streamlinehq.com"
+                                }
+                            </desc>
+                            <path
+                                d="M13 0H6a2 2 0 0 0 -2 2 2 2 0 0 0 -2 2v10a2 2 0 0 0 2 2h7a2 2 0 0 0 2 -2 2 2 0 0 0 2 -2V2a2 2 0 0 0 -2 -2m0 13V4a2 2 0 0 0 -2 -2H5a1 1 0 0 1 1 -1h7a1 1 0 0 1 1 1v10a1 1 0 0 1 -1 1M3 4a1 1 0 0 1 1 -1h7a1 1 0 0 1 1 1v10a1 1 0 0 1 -1 1H4a1 1 0 0 1 -1 -1z"
+                                strokeWidth={1}
+                            />
+                        </svg>
+                    </button>
+                )}
             </div>
         </div>
     );

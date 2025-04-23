@@ -81,22 +81,22 @@ const FilePreview = ({ width }) => {
         <VerticalDiv
             width={width}
             style={{}}
-            before={{
-                marginLeft: "0rem",
-                width: "0%",
-                borderWidth: "0rem",
+            // before={{
+            //     marginLeft: "0rem",
+            //     width: "0%",
+            //     borderWidth: "0rem",
 
-                transition:
-                    "width 0.3s ease-in-out 0.1s, border-width 0.1s ease-in-out 0.1s, margin-left 0.1s ease-in-out 0.1s",
-            }}
-            after={{
-                marginLeft: "1rem",
-                width: "100%",
-                borderWidth: "0rem",
-                transition:
-                    "width 0.3s ease-in-out, border-width 0.2s ease-in-out 0.2s, margin-left 0.1s ease-in-out 0.2s",
-            }}
-            playAnimation={closedFile}
+            //     transition:
+            //         "width 0.3s ease-in-out 0.1s, border-width 0.1s ease-in-out 0.1s, margin-left 0.1s ease-in-out 0.1s",
+            // }}
+            // after={{
+            //     marginLeft: "1rem",
+            //     width: "100%",
+            //     borderWidth: "0rem",
+            //     transition:
+            //         "width 0.3s ease-in-out, border-width 0.2s ease-in-out 0.2s, margin-left 0.1s ease-in-out 0.2s",
+            // }}
+            // playAnimation={closedFile}
         >
             <div
                 className="preview-header"

@@ -33,7 +33,7 @@ const MainApp = () => {
 
     return (
         <NewPage>
-            <VerticalDiv style={{ position: "relative" }}>
+            <VerticalDiv padding="0.5rem" style={{ position: "relative" }}>
                 <HorizontalDiv>
                     <HorizontalDiv width="100%"></HorizontalDiv>
                     <FilePreview width="65%" />
@@ -45,23 +45,25 @@ const MainApp = () => {
                         borderRadius: "0.5rem",
                         border: "1px solid black",
                         padding: "1rem",
-                        backgroundColor: "white",
+                        backgroundColor: "#ffffff",
                     }}
                     state={[
                         {
                             width: "100%",
                             transform: "translateX(0)",
-                            transition: "all 0.3s ease-out",
+                            transition:
+                                "all 0.3s cubic-bezier(.47,1.64,.41,.8)",
                         },
                         {
                             width: "60%",
                             transform: "translateX(0)",
-                            transition: "all 0.3s ease-out",
+                            transition:
+                                "all 0.3s cubic-bezier(.47,1.64,.41,.8)",
                         },
                     ]}
                     playAnimation={layoutState}
                 >
-                    <VerticalDiv width="400px" padding="0rem">
+                    <VerticalDiv width="350px" padding="0rem">
                         <Header />
                         <DebugSidebar />
                         <VerticalDiv height="100%"></VerticalDiv>

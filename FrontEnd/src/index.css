@@ -1,18 +1,21 @@
 @import url("https://fonts.cdnfonts.com/css/garamond");
+@import url("https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..900;1,6..96,400..900&family=EB+Garamond:ital,wght@0,400..800;1,400..800&display=swap");
+
 @import "tailwindcss";
+
 :root {
     --colorMode: "dark";
     --primary-color: #242424;
     --secondary-color: #d9d3ba;
     --special-color: #555555;
 
-    font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+    font-family: monospace;
     line-height: 1.5;
-    font-weight: 400;
+    font-weight: 200;
 
     color-scheme: light dark;
-    background-color: white;
-    color: black;
+    background-color: #ddd3c6;
+    color: #3d405b;
 
     font-synthesis: none;
     text-rendering: optimizeLegibility;
@@ -47,14 +50,11 @@ h2 {
     width: fit-content;
 } */
 
-
 /*
 button:focus,
 button:focus-visible {
     outline: 4px auto -webkit-focus-ring-color;
 } */
-
-
 
 @media (prefers-color-scheme: light) {
     :root {

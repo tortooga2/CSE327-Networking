@@ -7,6 +7,7 @@ import FileContent from "../FileContent";
 import VerticalDiv from "../UILayout/VerticalDiv";
 
 
+
 const FilePreview = () => {
     const fileId = useStore((state) => state.previewedFile);
     const closedFile = useStore((state) => {

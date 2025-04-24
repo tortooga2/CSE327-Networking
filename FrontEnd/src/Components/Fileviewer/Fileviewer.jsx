@@ -3,7 +3,7 @@ import Fuse from "fuse.js";
 import "./FileViewer.css";
 import File from "./File";
 import { useStore } from "../Contexts/zus.fileManager";
-
+import NoteCreation from "../NoteCreation";
 import VerticalDiv from "../UILayout/VerticalDiv";
 
 const FileViewer = ({ width }) => {

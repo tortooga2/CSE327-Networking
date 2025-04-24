@@ -2,6 +2,7 @@ import { useEffect, useRef } from "react";
 
 import { FaUpload, FaLink, FaTimes, FaTrash } from "react-icons/fa";
 import { useStore } from "./Contexts/zus.fileManager";
+import NoteCreation from "./NoteCreation";
 
 // import NoteCreation from "./NoteCreation";
 import VerticalDiv from "../Components/UILayout/VerticalDiv";
@@ -11,7 +12,7 @@ const DebugSidebar = () => {
     const UnSelectAll = useStore((state) => state.unSelectAll);
     const connectFiles = useStore((state) => state.connectFiles);
     const uploadFile = useStore((state) => state.uploadFiles);
-
+    const refreshFiles = useStore((state) => state.refreshFiles);
     const deleteFiles = useStore((state) => state.deleteFiles);
 
     const formRef = useRef(null);
@@ -192,7 +193,7 @@ const DebugSidebar = () => {
             >
                 <FaTrash /> <p>Delete Files ({selectedFiles.size})</p>
             </div>
-            {/* <NoteCreation /> */}
+            <NoteCreation />
         </VerticalDiv>
     );
 };

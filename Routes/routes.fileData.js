@@ -13,6 +13,7 @@ import {
     loadDataForFocusPage,
     uploadHelper,
     verifyFiles,
+    getFileChunk,
 } from "../Modules/Data Process/import.dataProcess.js";
 
 const fileDataRouter = Router();
@@ -31,6 +32,9 @@ fileDataRouter.get("/focus/:fileId", loadDataForFocusPage);
 //New stuff
 fileDataRouter.post("/upload-helper", uploadHelper);
 fileDataRouter.post("/verify", verifyFiles);
+
+//Chunk thing
+fileDataRouter.get("/load", getFileChunk);
 
 // Test the creation of a user data
 fileDataRouter.post("/createtest", testCreateUserData);

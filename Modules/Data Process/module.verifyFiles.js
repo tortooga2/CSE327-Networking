@@ -35,6 +35,8 @@ const verifyFiles = async (req, res) => {
         throw new TypeError("Expected data to be an array");
     }
 
+    const transaction = await sequelize.transaction(); //Start transaction with database
+
     try {
         const keys = data.map((file) => file.metadata.key); //Extract keys from the data
 
@@ -54,7 +56,6 @@ const verifyFiles = async (req, res) => {
             });
         }
 
-        const transaction = await sequelize.transaction(); //Start transaction with database
         await Data.bulkCreate( //Bulk create validated files into our database
             sentFiles,
             { transaction: transaction},
@@ -75,6 +76,8 @@ const verifyFiles = async (req, res) => {
             });
         }
     } catch (err) {
+        await transaction.rollback();
+
         return res.status(500).json({
             okay: false,
             error: err,

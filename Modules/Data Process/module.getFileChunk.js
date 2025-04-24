@@ -46,51 +46,43 @@ const getFileChunk = async (req, res) => {
 //Function that constructs a raw SQL query based off given parameters
 const buildQuery = async (req) => {
     const { sort = 'id', order = 'desc' } = req.query;
-    const { profile_id } = req.user;
-    const params = {};
 
-    //Input Validation
     const limit = await parseQueryString(req.query.limit, 10); //10 and 1 are arbitrary default values
     const chunk = await parseQueryString(req.query.chunk, 1);
+    const params = { profile_id: req.user.profile_id, limit: limit, chunk: (chunk - 1) * limit };
 
-    const allowedColumns = ['id', 'type', 'name', 'createdAt'];
-    let isAllowed = false;
-
-    for (let index = 0; index < allowedColumns.length; index++) {
-        if (sort === allowedColumns[index]) {
-            isAllowed = true;
-        }
-    }
-
-    if (!isAllowed) {
-        throw new TypeError("Tried to sort by an invalid column");
-    }
-
-    if (order.toLowerCase() !== 'desc' && order.toLowerCase() !== 'asc') {
-        throw new TypeError("Sorting order must be DESC or ASC");
-    }    
-
+    //"Skeleton" of the query
     let query = new String(`
         SELECT "id", "creator_username", "name", "type", "children", "createdAt"
         FROM "file_ledger"
-        WHERE "owner_id" = '${profile_id}'`
+        WHERE "owner_id" = $profile_id`
     );
 
-    // These two if statements are where the magic of bind parameters happen
     if (req.query.search !== undefined) {
         Object.assign(params, { search: req.query.search });
-        query = query.concat('\nAND word_similarity($search, "name") >= 0.3');
+        query += '\nAND word_similarity($search, "name") >= 0.3';
     };
 
     if (req.query.type !== undefined) {
         Object.assign(params, {  file_type: req.query.type });
-        query = query.concat('\nAND "type" = $file_type');
+        query += '\nAND "type" = $file_type';
+    }
+    
+    //Cant use bind parameters for these
+    const validSortingColumns = new Set(['id', 'name', 'type', 'createdAt']);
+    if (validSortingColumns.has(sort)) {
+        query += `\nORDER BY "${sort}"`;
+    } else {
+        throw new TypeError("Tried to sort by an invalid column");
     }
 
-    query = query.concat(`
-        ORDER BY "${sort}" ${order}
-        LIMIT ${limit} OFFSET ${(chunk - 1) * limit}`
-    );
+    if (order === 'asc' || order === 'desc') {
+        query += ` ${order}`;
+    } else {
+        throw new TypeError("Sorting order must be 'desc' or 'asc'");
+    }
+
+    query += '\nLIMIT $limit OFFSET $chunk';
 
     return { searchQuery: query, bindParams: params };
 };

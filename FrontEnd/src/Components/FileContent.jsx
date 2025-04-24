@@ -15,7 +15,7 @@ const FileContent = ({ file }) => {
     const copyLink = (e, fileId) => {
         e.stopPropagation();
         navigator.clipboard.writeText(
-            `${window.location.origin}/file/owner_id/${fileId}`
+            `${window.location.origin}/file/local/${fileId}`
         );
         alert("Link copied to clipboard");
     };
@@ -26,56 +26,49 @@ const FileContent = ({ file }) => {
         switch (fileType) {
             case "image":
                 return (
-                    <img
-                        src={file.metadata.url}
-                        style={{
-                            width: "100%",
-                            height: "auto",
-                            borderRadius: "8px",
-                            display: "block",
-                        }}
-                        alt={file.name}
-                    />
+                    <div className="relative w-full aspect-video bg-black/5 rounded-lg overflow-hidden">
+                        <img
+                            src={file.metadata.url}
+                            className="absolute inset-0 w-full h-full object-contain"
+                            alt={file.name}
+                        />
+                    </div>
                 );
             case "video":
                 return (
-                    <video
-                        controls
-                        style={{
-                            width: "100%",
-                            borderRadius: "8px",
-                            backgroundColor: "black",
-                        }}
-                    >
-                        <source src={file.metadata.url} type="video/mp4" />
-                        Your browser does not support the video tag.
-                    </video>
+                    <div className="relative w-full aspect-video bg-black rounded-lg overflow-hidden">
+                        <video
+                            controls
+                            className="absolute inset-0 w-full h-full"
+                        >
+                            <source src={file.metadata.url} type="video/mp4" />
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
                 );
             case "pdf":
             case "word":
             case "excel":
                 return (
-                    <DocViewer
-                        documents={[
-                            {
-                                uri: file.metadata.url,
-                                fileType: fileType,
-                                fileName: file.name,
-                            },
-                        ]}
-                        pluginRenderers={DocViewerRenderers}
-                        style={{
-                            width: "100%",
-                            backgroundColor: "white",
-                            borderRadius: "8px",
-                        }}
-                        config={{
-                            header: {
-                                disableHeader: true,
-                                disableFileName: true,
-                            },
-                        }}
-                    />
+                    <div className="w-full h-[70vh] bg-white rounded-lg shadow-sm">
+                        <DocViewer
+                            documents={[
+                                {
+                                    uri: file.metadata.url,
+                                    fileType: fileType,
+                                    fileName: file.name,
+                                },
+                            ]}
+                            pluginRenderers={DocViewerRenderers}
+                            className="w-full h-full"
+                            config={{
+                                header: {
+                                    disableHeader: true,
+                                    disableFileName: true,
+                                },
+                            }}
+                        />
+                    </div>
                 );
             case "plain":
             case "txt":
@@ -83,117 +76,47 @@ const FileContent = ({ file }) => {
                 return (
                     <iframe
                         src={file.metadata.url}
-                        style={{
-                            width: "100%",
-                            height: "400px",
-                            border: "1px solid #E0E0E0",
-                            borderRadius: "8px",
-                            backgroundColor: "white",
-                        }}
+                        className="w-full h-[400px] border border-gray-200 rounded-lg bg-white"
                         title={file.name}
                     />
                 );
             default:
                 return (
-                    <div
-                        style={{
-                            padding: "2rem",
-                            textAlign: "center",
-                            backgroundColor: "white",
-                            borderRadius: "8px",
-                        }}
-                    >
-                        <p>Preview not available for .{fileType} files</p>
-                        <button
+                    <div className="flex flex-col items-center justify-center p-8 bg-white rounded-lg">
+                        <p className="text-gray-600 mb-4">Preview not available for .{fileType} files</p>
+                        <a
                             href={file.metadata.url}
                             target="_blank"
                             rel="noopener noreferrer"
-                            style={{
-                                color: "#1E0B33",
-                                textDecoration: "underline",
-                                marginTop: "1rem",
-                                display: "inline-block",
-                                borderRadius: "6px",
-                            }}
+                            className="px-4 py-2 bg-[#1E0B33] text-white rounded-lg hover:bg-opacity-90 transition-colors"
                         >
                             Download File
-                        </button>
+                        </a>
                     </div>
                 );
         }
     };
 
     return (
-        <div
-            style={{
-                backgroundColor: "rgb(236, 202, 255)",
-                borderRadius: "12px",
-                width: "100%",
-            }}
-        >
-            <div
-                style={{
-                    padding: "16px",
-                    width: "100%",
-                    display: "flex",
-                    flexDirection: "column",
-                    justifyContent: "space-between",
-                    alignItems: "left",
-                    borderBottom: "1px solid #E0E0E0",
-                    gap: "8px",
-                }}
-            >
-                <p
-                    style={{
-                        fontSize: "16px",
-                        fontWeight: "500",
-                    }}
-                >
-                    {file.name}
-                </p>
-                <div
-                    style={{
-                        display: "flex",
-                        flexDirection: "row",
-                        width: "100%",
-                        justifyContent: "space-between",
-                        alignItems: "flex-start",
-                    }}
-                >
-                    <p
-                        style={{
-                            fontSize: "14px",
-                            color: "#666",
-                        }}
-                    >
-                        Created by {file.creator_username}
-                    </p>
-
+        <div className="bg-[#F8F6FD] rounded-lg overflow-hidden">
+            <div className="p-4 space-y-4">
+                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                    <div className="min-w-0">
+                        <h3 className="text-lg font-semibold text-[#1E0B33] truncate">
+                            {file.name}
+                        </h3>
+                        <p className="text-sm text-gray-600">
+                            Created by {file.creator_username}
+                        </p>
+                    </div>
                     <button
                         onClick={(e) => copyLink(e, file.id)}
-                        style={{
-                            padding: "8px 16px",
-                            border: "1px solid #1E0B33",
-                            borderRadius: "1rem",
-                            backgroundColor: "transparent",
-                            color: "#1E0B33",
-                            cursor: "pointer",
-                        }}
+                        className="px-4 py-2 border border-[#1E0B33] text-[#1E0B33] rounded-full hover:bg-[#1E0B33] hover:text-white transition-colors"
                     >
                         Copy Link
                     </button>
                 </div>
-            </div>
-            <div
-                style={{
-                    padding: "16px",
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    margin: "auto",
-                }}
-            >
-                <div style={{ padding: "16px" }}>{renderContent()}</div>
+                {renderContent()}
             </div>
         </div>
     );

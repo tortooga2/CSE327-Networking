@@ -15,7 +15,7 @@ const FileViewer = ({ width }) => {
     const [notes, setNotes] = useState({}); // State to store notes for each file
 
     const files = useStore((state) => state.files);
-    const updateFile = useStore((state) => state.updateFile); // Assuming you have an updateFile action
+    const updateFile = useStore((state) => state.updateFiles); // Assuming you have an updateFile action
 
     useEffect(() => {
         const loadFiles = async () => {
@@ -94,10 +94,10 @@ const FileViewer = ({ width }) => {
     };
 
     const getSortIcon = (columnKey) => {
-        if (sortConfig.key === columnKey) {
-            return sortConfig.direction === "asc" ? " ↑" : " ↓";
+        if (sortConfig.key !== columnKey) {
+            return "↓";
         }
-        return "";
+        return sortConfig.direction === "asc" ? "↑" : "↓";
     };
 
     const filteredAndSortedFiles = () => {
@@ -118,8 +118,12 @@ const FileViewer = ({ width }) => {
     };
 
     return (
-
-        <VerticalDiv gap="0rem" width={width} padding="0rem" style={{ borderRadius: "1rem" }}>
+        <VerticalDiv
+            gap="0rem"
+            width={width}
+            padding="0rem"
+            style={{ borderRadius: "1rem" }}
+        >
             <div
                 className="table-header-row"
                 style={{
@@ -159,7 +163,13 @@ const FileViewer = ({ width }) => {
                 </div>
                 <div
                     onClick={() => handleSort("name")}
-                    style={{ cursor: "pointer", minWidth: "100px", textWrap: "nowrap", overflowX: "hidden", textOverflow: "ellipsis" }}
+                    style={{
+                        cursor: "pointer",
+                        minWidth: "100px",
+                        textWrap: "nowrap",
+                        overflowX: "hidden",
+                        textOverflow: "ellipsis",
+                    }}
                 >
                     Name {getSortIcon("name")}
                 </div>
@@ -171,13 +181,6 @@ const FileViewer = ({ width }) => {
                 ))}
             </VerticalDiv>
         </VerticalDiv>
-
-    );
-};
-
-export default FileViewer;
-
-
     );
 };
 

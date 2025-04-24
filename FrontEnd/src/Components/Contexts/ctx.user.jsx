@@ -5,38 +5,19 @@ import { useNavigate } from "react-router-dom";
 export const UserContext = createContext(null);
 
 export const UserProvider = ({ children }) => {
-    const [signedIn, setSignedIn] = useState(false);
+    const [signedIn, setSignedIn] = useState(true); // Default to signed in
     const navigate = useNavigate();
 
     const user = useMemo(
         () => ({
             isSignedIn: () => {
-                return signedIn;
+                return true; // Always return true to skip auth
             },
             setSignedIn,
 
             ValidateSession: async () => {
-                try {
-                    const response = await fetch(`api/auth/verify/`, {
-                        method: "GET",
-                        headers: {
-                            "Content-Type": "application/json",
-                        },
-                        credentials: "include",
-                    });
-                    if (response.ok) {
-                        setSignedIn(true);
-                    } else {
-                        const data = await response.json();
-                        console.log(data);
-                        if (data.okay === false) {
-                            setSignedIn(false);
-                        }
-                    }
-                } catch (error) {
-                    setSignedIn(false);
-                    console.error(error);
-                }
+                setSignedIn(true); // Always set to true
+                return true;
             },
             SignIn: async (email, password) => {
                 try {
@@ -96,17 +77,9 @@ export const UserProvider = ({ children }) => {
     );
 
     useEffect(() => {
-        user.ValidateSession();
-
-        const isPublicFileRoute = location.pathname.startsWith("/file/");
-        if (!isPublicFileRoute) {
-            if (!signedIn) {
-                navigate("/");
-            } else {
-                navigate("/app");
-            }
-        }
-    }, [signedIn, user, navigate]);
+        // Redirect to app immediately
+        navigate("/app");
+    }, [navigate]);
 
     return <UserContext.Provider value={user}>{children}</UserContext.Provider>;
 };

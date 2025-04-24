@@ -1,0 +1,36 @@
+.file-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem;
+    border-bottom: 1px solid #ccc;
+    position: relative;
+}
+
+button{
+    background-color: transparent;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    color: #1E0B33;
+    transition: background-color 0.2s ease;
+}
+
+button:hover {
+    
+    background-color: rgba(30, 30, 30, 0.1); /* Keep existing hover */
+}
+
+
+
+input[type="checkbox"] {
+    width: 1.2em;
+    height: 1.2em;
+    margin: 0;
+    padding: 0;
+    border-radius: 0.2em;
+    background-color: #f9f9f9;
+    border: 1px solid #eaeaea;
+}
+

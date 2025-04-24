@@ -1,84 +1,40 @@
-import { useState, useRef } from "react";
-import { useStore } from "./Contexts/zus.fileManager";
+import { Route, Routes } from "react-router-dom";
 import "./Upload.css";
+import propTypes from "prop-types";
+import { useState } from "react";
 
-const Upload = () => {
-  const [isVisible, setIsVisible] = useState(false);
-  const [uploadProgress, setUploadProgress] = useState(0);
-  const [uploading, setUploading] = useState(false);
-  const fileInputRef = useRef(null);
-  const uploadFiles = useStore((state) => state.uploadFiles);
+const fileMenu = document.getElementById('file-menu');
+const fileUploadContainer = document.getElementById('file-upload-container');
+const fileUpload = document.getElementById('file-upload');
+const notesContainer = document.getElemenetById('notes-container');
 
-  const handleFileChange = async (event) => {
-    const files = event.target.files;
-    if (!files.length) return;
-
-    setUploading(true);
-    setUploadProgress(0);
-
-    try {
-      // Create XMLHttpRequest to track upload progress
-      const xhr = new XMLHttpRequest();
-      
-      xhr.upload.onprogress = (event) => {
-        if (event.lengthComputable) {
-          const progress = (event.loaded / event.total) * 100;
-          setUploadProgress(Math.round(progress));
-        }
-      };
-
-      // Upload files using the store's upload function
-      await uploadFiles(files);
-      
-      setUploadProgress(100);
-      setTimeout(() => {
-        setUploading(false);
-        setUploadProgress(0);
-        if (fileInputRef.current) {
-          fileInputRef.current.value = '';
-        }
-      }, 1000);
-    } catch (error) {
-      console.error("Upload failed:", error);
-      setUploading(false);
-      setUploadProgress(0);
+fileMenu.addEventListener('click', () => {
+    if (fileUploadContainer.style.display === 'block') {
+        fileUploadContainer.style.display = 'none';
+    } else {
+        fileUploadContainer.style.display = 'block';
     }
-  };
+});
 
-  return (
-    <div className="upload-container">
-      <button 
-        className="upload-toggle"
-        onClick={() => setIsVisible(!isVisible)}
-      >
-        {isVisible ? 'Hide Upload' : 'Show Upload'}
-      </button>
+fileUpload.addEventListener('change', (event) => {
+    const file = event.target.files[0];
+    if (file) {
+        const fileItem = document.createElement('div');
+        fileItem.className = 'file-item';
+        fileItem.textContent = `File: ${file.name}, Type: ${file.type}, Size: ${file.size} bytes`;
+        notesContainer.appendChild(fileItem);
+        fileUploadContainer.style.display = 'none';
+        fileUpload.value = '';
+    }
+});
 
-      {isVisible && (
-        <div className="upload-form">
-          <input
-            ref={fileInputRef}
-            type="file"
-            onChange={handleFileChange}
-            multiple
-            disabled={uploading}
-          />
-
-          {uploading && (
-            <div className="progress-bar-container">
-              <div 
-                className="progress-bar"
-                style={{ width: `${uploadProgress}%` }}
-              />
-              <div className="progress-text">
-                {uploadProgress}%
-              </div>
-            </div>
-          )}
-        </div>
-      )}
-    </div>
-  );
-};
-
-export default Upload;
+function addNote() {
+    const noteText = document.getElementById('new-note').value;
+    if (noteText.trim() !== '') {
+        const noteDivider = document.createElement('div');
+        noteDivider.className = 'note';
+        noteDivider.textContent = noteText;
+        notesContainer.appendChild(noteDivider);
+        document.getElementById('new-note').value = '';
+    }
+}

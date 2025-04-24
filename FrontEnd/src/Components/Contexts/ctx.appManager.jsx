@@ -22,6 +22,9 @@ const useStore = create((set) => ({
         }));
     },
 
+    sortOrder: { field: "id", order: "desc" },
+    setSortOrder: (state) => set({ sortOrder: state }),
+
     selectedFiles: new Set(),
     selectFile: (fileID, selectionState) => {
         set((state) => {
@@ -138,7 +141,7 @@ const useStore = create((set) => ({
             }
 
             //Now check to see if the files were uploaded successfully and if so, save to db
-            await fetch("/api/file/verify", {
+            const newFileRes = await fetch("/api/file/verify", {
                 method: "POST",
                 credentials: "include",
                 headers: {
@@ -148,6 +151,9 @@ const useStore = create((set) => ({
                     data: data,
                 }),
             });
+
+            useStore.getState().updateFiles(data);
+
             //             if (response.ok) {
             //                 const data = await response.json();
             //                 console.log("Data from upload", data);

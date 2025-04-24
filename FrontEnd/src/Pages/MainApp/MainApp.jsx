@@ -8,7 +8,7 @@ import Dashboard from "../../Components/Dashboard.jsx";
 import Sidebar from "../../Components/Sidebar.jsx";
 
 import { useUser } from "../../Components/Contexts/ctx.user.jsx";
-import { useStore } from "../../Components/Contexts/zus.fileManager.jsx";
+import { useStore } from "../../Components/Contexts/ctx.appManager.jsx";
 
 import DebugSidebar from "../../Components/SideBar.jsx";
 

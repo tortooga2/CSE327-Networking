@@ -16,13 +16,16 @@ const checkObjExistence = async (profile_id, key) => {
         await s3Client.send(command);
         return true; //No errors thrown, so the object exists
     } catch (err) {
-        if (err.$metadata.httpStatusCode === 404 || err.$metadata.httpStatusCode === 403) {
+        if (
+            err.$metadata.httpStatusCode === 404 ||
+            err.$metadata.httpStatusCode === 403
+        ) {
             return false; //File doesn't exist if Amazon throws this error
         }
 
         console.log("Couldn't check objects existence: ", err);
         throw new Error("Couldn't check objects existence");
-    };
+    }
 };
 
 const verifyFiles = async (req, res) => {
@@ -45,8 +48,8 @@ const verifyFiles = async (req, res) => {
             }
         }
 
-        
-        if (sentFiles.length === 0) { //This fucking line wasted so much of my life
+        if (sentFiles.length === 0) {
+            //This fucking line wasted so much of my life
             return res.status(404).json({
                 okay: false,
                 error: "Files not found",
@@ -55,9 +58,10 @@ const verifyFiles = async (req, res) => {
         }
 
         const transaction = await sequelize.transaction(); //Start transaction with database
-        await Data.bulkCreate( //Bulk create validated files into our database
+        const freshlyMadeNewlyBakedFiles = await Data.bulkCreate(
+            //Bulk create validated files into our database
             sentFiles,
-            { transaction: transaction},
+            { transaction: transaction, returning: true }
         );
 
         await transaction.commit();
@@ -66,7 +70,8 @@ const verifyFiles = async (req, res) => {
         if (data.length === sentFiles.length) {
             return res.status(201).json({
                 okay: true,
-                message: "All files were successfully uploaded!"
+                message: "All files were successfully uploaded!",
+                data: freshlyMadeNewlyBakedFiles,
             });
         } else {
             return res.status(201).json({
@@ -80,7 +85,7 @@ const verifyFiles = async (req, res) => {
             error: err,
             message: "The server encountered an unexpected condition",
         });
-    };
+    }
 };
 
 export { verifyFiles };

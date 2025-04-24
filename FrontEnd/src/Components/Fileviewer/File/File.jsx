@@ -5,7 +5,7 @@ import "./File.css";
 
 import { FileType } from "../../Tags";
 
-import { useStore } from "../../Contexts/zus.fileManager";
+import { useStore } from "../../Contexts/ctx.appManager";
 
 const File = ({ fileData }) => {
     const fileContent = useState(fileData);

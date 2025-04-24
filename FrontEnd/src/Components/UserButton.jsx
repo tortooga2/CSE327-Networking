@@ -4,7 +4,7 @@ import { IoLogOutOutline } from "react-icons/io5";
 import { FaUserCircle } from "react-icons/fa";
 
 import { useUser } from "../Components/Contexts/ctx.user";
-import { useStore } from "../Components/Contexts/zus.fileManager";
+import { useStore } from "./Contexts/ctx.appManager";
 
 const UserButton = ({ username }) => {
     const [isHovered, setIsHovered] = useState(false);

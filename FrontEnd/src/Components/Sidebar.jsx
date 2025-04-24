@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 
 import { FaUpload, FaLink, FaTimes, FaTrash } from "react-icons/fa";
-import { useStore } from "./Contexts/zus.fileManager";
+import { useStore } from "./Contexts/ctx.appManager";
 
 // import NoteCreation from "./NoteCreation";
 import VerticalDiv from "./UILayout/VerticalDiv";

@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from "react";
-import { useStore } from "../Contexts/zus.fileManager";
+import { useStore } from "../Contexts/ctx.appManager.jsx";
 import PropTypes from "prop-types";
 
-import getFileType from "../scripts/getFileType.jsx";
+import getFileType from "../scripts/getFileType.js";
 import { FileType } from "../Tags";
 import Button from "../Button/Button.jsx";
 

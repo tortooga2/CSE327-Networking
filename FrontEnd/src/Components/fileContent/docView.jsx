@@ -1,6 +1,6 @@
 import PropTypes from "prop-types";
 import { useState } from "react";
-import { useStore } from "../Contexts/zus.fileManager";
+import { useStore } from "../Contexts/ctx.appManager";
 
 const docView = ({ src }) => {
     const [loaded, setLoaded] = useState(false);

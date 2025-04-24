@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
-import { useStore } from "../../Components/Contexts/zus.fileManager.jsx";
+import { useStore } from "../../Components/Contexts/ctx.appManager.jsx";
 
 import FileContent from "../../Components/fileContent/FileContent.jsx";
 import VerticalDiv from "../../Components/UILayout/VerticalDiv.jsx";

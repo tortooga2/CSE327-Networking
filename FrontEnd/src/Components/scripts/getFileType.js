@@ -1,5 +1,4 @@
 const getFileType = (filename) => {
-    console.log(filename);
     const ext = filename.split(".").pop().toLowerCase();
     if (["jpg", "jpeg", "png", "gif", "webp"].includes(ext)) return "Image";
     if (["mp4", "webm", "ogg"].includes(ext)) return "Video";

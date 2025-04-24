@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 
 export const UserContext = createContext(null);
 
-import { useStore } from "./zus.fileManager";
+import { useStore } from "./ctx.appManager";
 
 export const UserProvider = ({ children }) => {
     const [signedIn, setSignedIn] = useState(false);

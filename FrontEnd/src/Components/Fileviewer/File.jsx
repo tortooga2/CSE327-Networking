@@ -35,7 +35,7 @@ const File = ({ fileData }) => {
 
     const getTypePillClass = (type) => {
         return {
-            backgroundColor: "#1E0B33",
+            backgroundColor: "#1E0B54",
             color: "#FFFFFF",
             padding: "4px 12px",
             borderRadius: "12px",

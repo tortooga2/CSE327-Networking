@@ -26,7 +26,7 @@ const checkObjExistence = async (profile_id, key) => {
 };
 
 const verifyFiles = async (req, res) => {
-    const { profile_id } = req.user;
+    const { profile_id, username_base } = req.user;
     const { data } = req.body;
     const sentFiles = []; //All existing files will be copied to this array for bulk creation
 
@@ -38,16 +38,24 @@ const verifyFiles = async (req, res) => {
     const transaction = await sequelize.transaction(); //Start transaction with database
 
     try {
-        const keys = data.map((file) => file.metadata.key); //Extract keys from the data
-
         //Check if each file exists in bucket
         for (let i = 0; i < data.length; i++) {
-            if (await checkObjExistence(profile_id, keys[i])) {
-                sentFiles.push(data[i]); //Push the existing files into another array
+            const file = {
+                owner_id: profile_id,
+                creator_id: profile_id,
+                creator_username: username_base,
+                name: data[i].name,
+                type: (data[i].name).split('.').pop(),
+                metadata: {
+                    key: data[i].key
+                }
+            };
+
+            if (await checkObjExistence(profile_id, data[i].key)) {
+                sentFiles.push(file); //Push the existing files into another array
             }
         }
 
-        
         if (sentFiles.length === 0) { //This fucking line wasted so much of my life
             return res.status(404).json({
                 okay: false,
@@ -80,7 +88,7 @@ const verifyFiles = async (req, res) => {
 
         return res.status(500).json({
             okay: false,
-            error: err,
+            error: "Internal server error",
             message: "The server encountered an unexpected condition",
         });
     };

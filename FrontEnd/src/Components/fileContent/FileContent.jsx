@@ -6,7 +6,7 @@ import getFileType from "../scripts/getFileType";
 import { FileType } from "../Tags";
 
 const FileContent = ({ file }) => {
-    const copyLink = (e, fileId) => {
+    const copyLink = (fileId) => (e) => {
         e.stopPropagation();
         navigator.clipboard.writeText(
             `${window.location.origin}/file/owner_id/${fileId}`
@@ -25,6 +25,7 @@ const FileContent = ({ file }) => {
                 maxHeight: "100%",
                 padding: "1rem",
                 gap: "1rem",
+                backgroundColor: "var(--special-color)",
             }}
         >
             <div
@@ -86,7 +87,7 @@ const FileContent = ({ file }) => {
                     <p>Creator: {file ? file.creator_username : ""}</p>
                 </div>
 
-                <Button onClick={copyLink}>Copy Link</Button>
+                <Button onClick={copyLink(file.id)}>Copy Link</Button>
             </div>
 
             {getFileType(file.name) === "Document" ? (

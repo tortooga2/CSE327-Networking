@@ -57,7 +57,7 @@ const Button = ({
             onMouseLeave={onMouseLeave}
             onMouseDown={onMouseDown}
             onMouseUp={onMouseUp}
-            onClick={onClick}
+            onClick={(e) => onClick(e)}
             style={styleState}
             disabled={disabled}
         >

@@ -4,6 +4,7 @@ import propTypes from "prop-types";
 import "./File.css";
 
 import { FileType } from "../../Tags";
+import Button from "../../Button/Button";
 
 import { useStore } from "../../Contexts/ctx.appManager";
 
@@ -20,6 +21,11 @@ const File = ({ fileData }) => {
     const isLayout = useStore((state) => {
         return state.layoutState === 0;
     });
+
+    const ViewFile = (fileId) => (e) => {
+        e.stopPropagation();
+        useStore.getState().setPreviewedFile(fileId);
+    };
 
     useEffect(() => {
         checkboxRef.current.checked = isSelected;
@@ -122,14 +128,7 @@ const File = ({ fileData }) => {
                     onChange={handleChange}
                     checked={isSelected}
                 />
-                <button
-                    onClick={(e) => {
-                        e.stopPropagation();
-                        useStore.getState().setPreviewedFile(fileContent[0].id);
-                    }}
-                >
-                    view
-                </button>
+                <Button onClick={ViewFile(fileContent[0].id)}>view</Button>
                 {isLayout && (
                     <button
                         onClick={(e) => {

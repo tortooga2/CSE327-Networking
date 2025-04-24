@@ -6,8 +6,8 @@
 :root {
     --colorMode: "dark";
     --primary-color: #3d405b;
-    --secondary-color: #dd614a;
-    --special-color: #ffeedb;
+    --secondary-color: #ffa69e;
+    --special-color: #faf3dd;
 
     font-family: monospace;
     line-height: 1.5;

@@ -90,7 +90,7 @@ const FileContent = ({ file }) => {
                 <Button onClick={copyLink(file.id)}>Copy Link</Button>
             </div>
 
-            {getFileType(file.name) === "Document" ? (
+            {getFileType(file.name) !== "Image" ? (
                 <DocView src={file.metadata.url} />
             ) : (
                 <ImageView src={file.metadata.url} name={file.name} />

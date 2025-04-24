@@ -7,6 +7,7 @@ import HorizontalDiv from "./UILayout/HorizontalDiv";
 import { FaCog } from "react-icons/fa";
 
 import { FaFile } from "react-icons/fa";
+import { useStore } from "./Contexts/ctx.appManager";
 
 const Header = () => {
     const [searchTerm, setSearchTerm] = useState("");
@@ -71,7 +72,12 @@ const Header = () => {
                     paddingBottom: "1rem",
                 }}
             >
-                <Button>
+                <Button
+                    onClick={(e) => {
+                        e.stopPropagation();
+                        useStore.getState().setLayoutState(2);
+                    }}
+                >
                     {" "}
                     <FaCog />
                     Settings

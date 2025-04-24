@@ -35,8 +35,14 @@ const MainApp = () => {
         <NewPage>
             <VerticalDiv padding="0.5rem" style={{ position: "relative" }}>
                 <HorizontalDiv>
+                    <VerticalDiv
+                        width="37%"
+                        style={{ backgroundColor: "white" }}
+                    >
+                        <h1>This is a placeholder</h1>
+                    </VerticalDiv>
                     <HorizontalDiv width="100%"></HorizontalDiv>
-                    <FilePreview width="65%" />
+                    <FilePreview width="90%" />
                 </HorizontalDiv>
                 <HorizontalDiv
                     width="60%"
@@ -48,19 +54,26 @@ const MainApp = () => {
                         padding: "1rem",
                         background:
                             "linear-gradient(var(--special-color), #FFffff)",
+                        transition: "all 0.3s cubic-bezier(.47,1.64,.41,.8)",
                     }}
                     state={[
                         {
                             width: "100%",
-                            transform: "translateX(0)",
-                            transition:
-                                "all 0.3s cubic-bezier(.47,1.64,.41,.8)",
+                            left: "0",
+                            // transition:
+                            //     "all 0.3s cubic-bezier(.47,1.64,.41,.8)",
                         },
                         {
                             width: "60%",
-                            transform: "translateX(0)",
-                            transition:
-                                "all 0.3s cubic-bezier(.47,1.64,.41,.8)",
+                            left: "0",
+                            // transition:
+                            //     "all 0.3s cubic-bezier(.47,1.64,.41,.8)",
+                        },
+                        {
+                            width: "80%",
+                            left: "20%",
+                            // transition:
+                            //     "all 0.3s cubic-bezier(.47,1.64,.41,.8)",
                         },
                     ]}
                     playAnimation={layoutState}

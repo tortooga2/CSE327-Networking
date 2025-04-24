@@ -1,14 +1,14 @@
 :root {
     --bundle-color-1: #fcefef;
-    --bundle-color-2: #3d405b;
+    --bundle-color-2: #386641;
     --doc-color-1: #fcefef;
-    --doc-color-2: #e07a5f;
+    --doc-color-2: #6a994e;
     --note-color-1: #fcefef;
-    --note-color-2: #81b29a;
+    --note-color-2: #afce66;
     --vid-color-1: #fcefef;
-    --vid-color-2: #f2cc8f;
+    --vid-color-2: #b6d274;
     --img-color-1: #fcefef;
-    --img-color-2: #468c98;
+    --img-color-2: #bdd681;
 }
 
 .tag {

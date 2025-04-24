@@ -9,8 +9,16 @@ const useStore = create((set) => ({
 
     files: new Map(),
     setFiles: (files) => set({ files }),
+    updateFiles: (data) => {
+        set((state) => {
+            const filesMap = new Map(state.files);
+            data.forEach((file) => filesMap.set(file.id, file));
+            return { files: filesMap };
+        });
+    },
 
     newFiles: new Array(),
+
     appendNewFiles: (state) => {
         set((prevState) => ({
             newFiles: [...prevState.newFiles, state],
@@ -80,13 +88,7 @@ const useStore = create((set) => ({
             console.error(error);
         }
     },
-    updateFiles: (data) => {
-        set((state) => {
-            const filesMap = new Map(state.files);
-            data.forEach((file) => filesMap.set(file.id, file));
-            return { files: filesMap };
-        });
-    },
+
     connectFiles: async () => {
         try {
             const response = await fetch("/api/file/connect", {
@@ -110,6 +112,7 @@ const useStore = create((set) => ({
             console.error(error);
         }
     },
+
     uploadFiles: async (files) => {
         //Separate name from each file
         const fileNames = [];
@@ -152,7 +155,8 @@ const useStore = create((set) => ({
                 }),
             });
 
-            useStore.getState().updateFiles(data);
+            console.log(newFileRes);
+            useStore.getState().updateFiles(newFileRes.data);
 
             //             if (response.ok) {
             //                 const data = await response.json();

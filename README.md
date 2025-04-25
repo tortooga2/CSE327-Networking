@@ -227,3 +227,20 @@ await fetch({baseUrl}/api/auth/login), {
 
 
 #### In Future Request, the Session Token should be included as a cookie using the credential header. 
+
+### File Management:
+
+#### Upload Helper:
+Endpoint: ``` {baseurl}/api/file/upload-helper```
+Method: POST
+Required Fields: Body
+
+Generates pre-signed URLs for uploading to our S3 bucket and returns them as an array. It also returns JSON in an array that contains each files' key within the bucket for later retrieval.
+
+Request:
+```
+//Body 
+{
+
+}
+```

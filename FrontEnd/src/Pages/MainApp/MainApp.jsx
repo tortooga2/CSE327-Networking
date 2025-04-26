@@ -42,7 +42,7 @@ const MainApp = () => {
                         <h1>This is a placeholder</h1>
                     </VerticalDiv>
                     <HorizontalDiv width="100%"></HorizontalDiv>
-                    <FilePreview width="90%" />
+                    <FilePreview width="93%" />
                 </HorizontalDiv>
                 <HorizontalDiv
                     width="60%"

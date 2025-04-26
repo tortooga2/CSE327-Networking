@@ -14,13 +14,6 @@ const getFileChunk = async (req, res) => {
 
         const files = await sequelize.query(searchQuery, sequelizeOptions);
 
-        if (files.length === 0) {
-            return res.status(404).json({
-                okay: true,
-                message: "No files found",
-            });
-        }
-
         return res.status(200).json({
             okay: true,
             files: files,

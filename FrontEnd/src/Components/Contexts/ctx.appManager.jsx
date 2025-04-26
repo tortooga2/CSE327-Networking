@@ -156,7 +156,12 @@ const useStore = create((set) => ({
             });
 
             console.log(newFileRes);
-            useStore.getState().updateFiles(newFileRes.data);
+            if (!newFileRes.ok) {
+                console.error("File verification failed");
+            }
+            const newFileData = await newFileRes.json();
+
+            useStore.getState().updateFiles(newFileData.data);
 
             //             if (response.ok) {
             //                 const data = await response.json();

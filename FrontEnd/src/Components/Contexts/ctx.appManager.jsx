@@ -121,19 +121,21 @@ const useStore = create((set) => ({
         }
 
         try {
-            const response = await fetch("/api/file/upload-helper", {
-                method: "POST",
-                credentials: "include",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    fileCount: files.length,
-                    fileNames: fileNames,
-                }),
-            });
+            const response = await fetch(
+                `/api/file/upload-helper?count=${files.length}`,
+                {
+                    method: "GET",
+                    credentials: "include",
+                }
+            );
 
-            const { urls, data } = await response.json();
+            if (!response.ok) {
+                throw new Error(
+                    "An error occurred when attempting to fetch from upload-helper"
+                );
+            }
+
+            const { urls, keys } = await response.json();
 
             //Push each file to s3
             for (let index = 0; index < files.length; index++) {
@@ -144,31 +146,25 @@ const useStore = create((set) => ({
             }
 
             //Now check to see if the files were uploaded successfully and if so, save to db
-            const newFileRes = await fetch("/api/file/verify", {
+            const fileVerResponse = await fetch("/api/file/verify", {
                 method: "POST",
                 credentials: "include",
                 headers: {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify({
-                    data: data,
+                    keys: keys,
+                    fileNames: fileNames,
                 }),
             });
 
-            console.log(newFileRes);
-            if (!newFileRes.ok) {
-                console.error("File verification failed");
+            if (!fileVerResponse.ok) {
+                throw new Error("An error occurred when verifying your files");
             }
-            const newFileData = await newFileRes.json();
 
-            useStore.getState().updateFiles(newFileData.data);
+            const { data } = await fileVerResponse.json();
 
-            //             if (response.ok) {
-            //                 const data = await response.json();
-            //                 console.log("Data from upload", data);
-            //                 useStore.getState().updateFiles([data.data]);
-            //                 useStore.getState().unSelectAll();
-            //             }
+            useStore.getState().updateFiles(data);
         } catch (err) {
             console.log(err);
         }

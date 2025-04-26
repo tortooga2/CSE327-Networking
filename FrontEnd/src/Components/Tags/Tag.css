@@ -1,21 +1,21 @@
 :root {
     --bundle-color-1: #fcefef;
-    --bundle-color-2: #386641;
+    --bundle-color-2: #b4637a;
     --doc-color-1: #fcefef;
-    --doc-color-2: #6a994e;
+    --doc-color-2: #ea9d34;
     --note-color-1: #fcefef;
-    --note-color-2: #afce66;
+    --note-color-2: #d7827e;
     --vid-color-1: #fcefef;
-    --vid-color-2: #b6d274;
+    --vid-color-2: #286983;
     --img-color-1: #fcefef;
-    --img-color-2: #bdd681;
+    --img-color-2: #56949f;
 }
 
 .tag {
     width: 8rem;
     padding: 0.2rem 0rem;
     height: fit-content;
-    border-radius: 0.5rem;
+    border-radius: 0.25rem;
     text-align: center;
 }
 

@@ -55,7 +55,7 @@ const File = ({ fileData }) => {
                 display: "flex",
                 justifyContent: "space-evenly",
                 padding: !isHover ? "1rem 0.5rem" : "1rem 1rem",
-                backgroundColor: isSelected ? "#F0EBFF" : "#ffffff00",
+                backgroundColor: isSelected ? "#f2e9e1" : "#ffffff00",
                 transition: "background-color 0.2s, padding 0.2s ease-in-out",
                 cursor: "pointer",
                 alignItems: "center",

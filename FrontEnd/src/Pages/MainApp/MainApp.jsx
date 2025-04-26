@@ -36,7 +36,7 @@ const MainApp = () => {
             <VerticalDiv padding="0.5rem" style={{ position: "relative" }}>
                 <HorizontalDiv>
                     <VerticalDiv
-                        width="37%"
+                        width="42.5%"
                         style={{ backgroundColor: "white" }}
                     >
                         <h1>This is a placeholder</h1>

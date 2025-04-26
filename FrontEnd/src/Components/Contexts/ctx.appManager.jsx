@@ -129,11 +129,10 @@ const useStore = create((set) => ({
                 },
                 body: JSON.stringify({
                     fileCount: files.length,
-                    fileNames: fileNames,
                 }),
             });
 
-            const { urls, data } = await response.json();
+            const { urls, keys } = await response.json();
 
             //Push each file to s3
             for (let index = 0; index < files.length; index++) {
@@ -151,19 +150,13 @@ const useStore = create((set) => ({
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify({
-                    data: data,
+                    keys: keys,
+                    fileNames: fileNames
                 }),
             });
 
             console.log(newFileRes);
             useStore.getState().updateFiles(newFileRes.data);
-
-            //             if (response.ok) {
-            //                 const data = await response.json();
-            //                 console.log("Data from upload", data);
-            //                 useStore.getState().updateFiles([data.data]);
-            //                 useStore.getState().unSelectAll();
-            //             }
         } catch (err) {
             console.log(err);
         }

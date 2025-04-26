@@ -29,27 +29,29 @@ const checkObjExistence = async (profile_id, key) => {
 };
 
 const verifyFiles = async (req, res) => {
-    const { profile_id } = req.user;
-    const { data } = req.body;
+    const { profile_id, username_base } = req.user
+    const { keys, fileNames } = req.body;
+    const transaction = await sequelize.transaction(); //Start transaction with database
     const sentFiles = []; //All existing files will be copied to this array for bulk creation
 
-    //Validate inputs
-    if (!Array.isArray(data)) {
-        throw new TypeError("Expected data to be an array");
-    }
-
     try {
-        const keys = data.map((file) => file.metadata.key); //Extract keys from the data
-
         //Check if each file exists in bucket
-        for (let i = 0; i < data.length; i++) {
-            if (await checkObjExistence(profile_id, keys[i])) {
-                sentFiles.push(data[i]); //Push the existing files into another array
+        for (let index = 0; index < keys.length; index++) {
+            if (await checkObjExistence(profile_id, keys[index])) {
+                sentFiles.push({
+                    owner_id: profile_id,
+                    creator_id: profile_id,
+                    creator_username: username_base,
+                    name: fileNames[index],
+                    type: (fileNames[index]).split('.').pop(),
+                    metadata: {
+                        key: keys[index]
+                    }
+                });
             }
         }
 
         if (sentFiles.length === 0) {
-            //This fucking line wasted so much of my life
             return res.status(404).json({
                 okay: false,
                 error: "Files not found",
@@ -57,7 +59,6 @@ const verifyFiles = async (req, res) => {
             });
         }
 
-        const transaction = await sequelize.transaction(); //Start transaction with database
         const freshlyMadeNewlyBakedFiles = await Data.bulkCreate(
             //Bulk create validated files into our database
             sentFiles,
@@ -66,23 +67,26 @@ const verifyFiles = async (req, res) => {
 
         await transaction.commit();
 
-        //Check to see if all files were validated
-        if (data.length === sentFiles.length) {
+        if (keys.length === sentFiles.length) {
             return res.status(201).json({
                 okay: true,
                 message: "All files were successfully uploaded!",
                 data: freshlyMadeNewlyBakedFiles,
             });
-        } else {
-            return res.status(201).json({
-                okay: true,
-                message: "Some files did not upload successfully",
-            });
         }
+        
+        return res.status(201).json({
+            okay: true,
+            message: "Some files did not upload successfully",
+            data: freshlyMadeNewlyBakedFiles,
+        });
     } catch (err) {
+        await transaction.rollback();
+
+        console.log(err)
         return res.status(500).json({
             okay: false,
-            error: err,
+            error: "Internal server error",
             message: "The server encountered an unexpected condition",
         });
     }

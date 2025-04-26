@@ -3,22 +3,18 @@ import crypto from "crypto";
 
 const uploadHelper = async (req, res) => {
     const { profile_id } = req.user;
-    const { fileCount } = req.body;
-    const urls = []; //Will store our urls that we return to the client
-    const keys = []; //Will store instances of our model
+    const urls = [];
+    const keys = [];
 
-    //Input validation
-    // if(!Number.isInteger(fileCount)) {
-    //     throw new TypeError("Expected fileCount to be an integer");
-    // }
-    
-    // if (fileCount < 1) {
-    //     throw new TypeError("fileCount must be 1 or greater");
-    // }
+    const fileCount = parseInt(req.query.count, 10);
 
-    // if (!Array.isArray(fileNames)) {
-    //     throw new TypeError("Expected fileNames and fileTypes to be sent as arrays");
-    // }
+    if (isNaN(fileCount) || fileCount < 1) {
+        return res.status(400).json({
+            okay: false,
+            error: "Bad request",
+            message: "Count must be an integer greater than or equal to 1"
+        });
+    }
 
     try {
         for (let i = 0; i < fileCount; i++) {

@@ -121,15 +121,9 @@ const useStore = create((set) => ({
         }
 
         try {
-            const response = await fetch("/api/file/upload-helper", {
-                method: "POST",
+            const response = await fetch(`/api/file/upload-helper?count=${files.length}`, {
+                method: "GET",
                 credentials: "include",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    fileCount: files.length,
-                }),
             });
 
             const { urls, keys } = await response.json();

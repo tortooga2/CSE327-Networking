@@ -3,8 +3,8 @@ import { s3Client, bucketName } from "../S3 Stuff/module.s3client.js";
 import { HeadObjectCommand } from "@aws-sdk/client-s3";
 
 const checkObjExistence = async (profile_id, key) => {
-    if (typeof profile_id !== "string" || typeof key !== "string") {
-        throw new TypeError("profile_id and key must be strings!");
+    if (typeof key !== "string") {
+        throw new TypeError("All values within keys must be strings");
     }
 
     const command = new HeadObjectCommand({
@@ -34,10 +34,26 @@ const verifyFiles = async (req, res) => {
     const transaction = await sequelize.transaction(); //Start transaction with database
     const sentFiles = []; //All existing files will be copied to this array for bulk creation
 
+    if (!Array.isArray(keys) || !Array.isArray(fileNames)) {
+        return res.status(400).json({
+            okay: false,
+            error: "Bad request",
+            message: "keys and fileNames must be arrays!",
+        });
+    }
+
     try {
         //Check if each file exists in bucket
         for (let index = 0; index < keys.length; index++) {
             if (await checkObjExistence(profile_id, keys[index])) {
+                if (typeof (fileNames[index]) !== "string") {
+                    return res.status(400).json({
+                        okay: false,
+                        error: "Bad request",
+                        message: "All values within fileNames must be strings!",
+                    });
+                }
+
                 sentFiles.push({
                     owner_id: profile_id,
                     creator_id: profile_id,
@@ -82,6 +98,14 @@ const verifyFiles = async (req, res) => {
         });
     } catch (err) {
         await transaction.rollback();
+
+        if (err instanceof TypeError) {
+            return res.status(400).json({
+                okay: false,
+                error: "Bad request",
+                message: err.message,
+            });
+        }
 
         console.log(err)
         return res.status(500).json({

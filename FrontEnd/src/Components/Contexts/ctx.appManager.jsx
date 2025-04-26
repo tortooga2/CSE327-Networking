@@ -121,19 +121,16 @@ const useStore = create((set) => ({
         }
 
         try {
-            const response = await fetch("/api/file/upload-helper", {
-                method: "POST",
+            const response = await fetch(`/api/file/upload-helper?count=${files.length}`, {
+                method: "GET",
                 credentials: "include",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    fileCount: files.length,
-                    fileNames: fileNames,
-                }),
             });
 
-            const { urls, data } = await response.json();
+            if (!response.ok) {
+                throw new Error("An error occurred when attempting to fetch from upload-helper");
+            }
+
+            const { urls, keys } = await response.json();
 
             //Push each file to s3
             for (let index = 0; index < files.length; index++) {
@@ -144,26 +141,25 @@ const useStore = create((set) => ({
             }
 
             //Now check to see if the files were uploaded successfully and if so, save to db
-            const newFileRes = await fetch("/api/file/verify", {
+            const fileVerResponse = await fetch("/api/file/verify", {
                 method: "POST",
                 credentials: "include",
                 headers: {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify({
-                    data: data,
+                    keys: keys,
+                    fileNames: fileNames
                 }),
             });
 
-            console.log(newFileRes);
-            useStore.getState().updateFiles(newFileRes.data);
+            if (!fileVerResponse.ok) {
+                throw new Error("An error occurred when verifying your files");
+            }
 
-            //             if (response.ok) {
-            //                 const data = await response.json();
-            //                 console.log("Data from upload", data);
-            //                 useStore.getState().updateFiles([data.data]);
-            //                 useStore.getState().unSelectAll();
-            //             }
+            const { data } = await fileVerResponse.json();
+
+            useStore.getState().updateFiles(data);
         } catch (err) {
             console.log(err);
         }

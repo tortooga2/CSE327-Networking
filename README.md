@@ -283,7 +283,7 @@ await fetch(`{baseUrl}/api/file/upload-helper?count=${fileCount}`,
 		credentials: "include",
 	}
 )
-
+```
 
 #### File Verification:
 

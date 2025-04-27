@@ -230,17 +230,128 @@ await fetch({baseUrl}/api/auth/login), {
 
 ### File Management:
 
-#### Upload Helper:
-Endpoint: ``` {baseurl}/api/file/upload-helper```
-Method: POST
-Required Fields: Body
 
-Generates pre-signed URLs for uploading to our S3 bucket and returns them as an array. It also returns JSON in an array that contains each files' key within the bucket for later retrieval.
+
+#### Upload Helper:
+
+Endpoint: ``` {baseurl}/api/file/upload-helper```
+
+Method: GET
+
+Required Fields:  count
+
+Generates pre-signed URLs for uploading to our S3 bucket and returns them as an array. It also returns an array of keys to retrieve the files from the bucket later.  
 
 Request:
-```
-//Body 
-{
 
+```
+//count is a query string
+/api/file/upload-helper?count={{integer >= 1}}
+```
+Successful Response: 
+Status Code: 200
+```
+{
+	okay: true,
+	urls: [],
+	keys: [],
 }
+```
+Failed Response:
+Status Code: 400
+```
+{
+	okay: false,
+	error: "Bad request",
+	message: "Count must be an integer greater than or equal to 1"
+}
+```
+Status Code: 500
+```
+{
+	okay: false,
+	error: "Internal server error",
+	message: "The server encountered an unexpected condition"
+}
+```
+
+Example Usage:
+```
+await fetch(`{baseUrl}/api/file/upload-helper?count=${fileCount}`,
+	{
+		method: "GET",
+		credentials: "include",
+	}
+)
+
+
+#### File Verification:
+
+Endpoint: ```{baseurl}/api/file/verify```
+
+Method: POST
+
+Required Fields:  Body
+
+An endpoint to verify if a particular file was successfully uploaded to our S3 bucket. If it was, the file's metadata (such as the name, key, and owner id) is stored within our Postgres database. Returns the data of the uploaded files back to the client.
+
+Request:
+
+```
+//Body
+{
+	keys: {{array of file keys}},
+	fileNames: {{array of file names}}
+}
+```
+Successful Response: 
+Status Code: 201
+```
+{
+	okay: true,
+	message: "All files were successfully uploaded!"
+	data: []
+}
+```
+
+```
+{
+	okay: true,
+	message: "Some files did not upload successfully"
+	data: []
+}
+```
+Failed Response:
+Status Code: 400
+```
+{
+	okay: false,
+	error: "Bad request",
+	message: "keys and fileNames must be arrays!"
+}
+```
+Status Code: 500
+```
+{
+	okay: false,
+	error: "Internal server error",
+	message: "The server encountered an unexpected condition"
+}
+```
+
+Example Usage:
+```
+await fetch("/api/file/verify",
+	{
+		method: "POST",
+		credentials: "include",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+            keys: keys,
+            fileNames: fileNames,
+        }),
+	}
+)
 ```

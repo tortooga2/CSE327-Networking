@@ -1,5 +1,8 @@
 import "./LandingPage.css";
-import React, { useState } from "react";
+import React, { useState, useEffect} from "react";
+import { useNavigate } from "react-router-dom";
+import Lottie from "lottie-react";
+import heroAnimation from "../../Components/Animations/heroAnimation.json";
 import { FaArrowCircleUp } from "react-icons/fa";
 import Button from "../../Components/Button/Button";
 import LoginWindow from "../../Components/LoginDialog/LoginWindow";
@@ -50,6 +53,23 @@ function LandingPage() {
         }
     };
 
+    useEffect(() => {
+        const handleScroll = () => {
+            const scrollY = window.scrollY;
+            const heroRight = document.querySelector(".hero-right");
+        
+            if (heroRight) {
+                heroRight.style.transform = `translateY(${scrollY * 0.1}px)`;
+            }
+        };
+
+        window.addEventListener("scroll", handleScroll);
+
+        return () => {
+            window.removeEventListener("scroll", handleScroll);
+        };
+    }, [])
+
     return (
         <div className="landing-page-container">
             <header className="landing-header">
@@ -69,10 +89,14 @@ function LandingPage() {
                             events that has links, business cards, photos, and detailed description
                             of your links such as date, location, and type.
                         </p>
-                        {/* <button className="start-button" onClick={() => console.log('Start Here Clicked')}>Start Here</button> */}
+                        <button className="start-button" onClick={() => console.log('Start Here Clicked')}>Start Here</button>
                     </div>
                     <div className="hero-right">
-                       
+                        <Lottie
+                            animationData = {heroAnimation}
+                            loop = {true}
+                            style = {{ width: '100%', maxWidth: '400px', margin: '0 auto' }}
+                        />
                     </div>
                 </section>
             </main>

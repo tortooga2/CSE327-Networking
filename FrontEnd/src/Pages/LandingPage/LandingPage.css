@@ -10,6 +10,11 @@
     --primary-button-text-color: #fff;
     --link-color: #333;
     --font-family: sans-serif; /* Default clean sans-serif */
+
+    --subtle-bg-gradient: linear-gradient(to bottom, #f8f8f8, #e9e9e9);
+    --subtle-bg-gradient-hover: linear-gradient(to bottom, #e9e9e9, #f2f2f2);
+
+    --subtle-line-gradient: linear-gradient(to right, transparent, #ccc, transparent 0%, #ddd 50%, transparent 100%);
 }
 
 body {
@@ -95,6 +100,25 @@ body {
     border: 1px solid var(--secondary-color);
     padding-left: 1rem;
     padding-right: 1rem;
+}
+
+.hero-section {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 2rem;
+    gap: 2rem;
+}
+
+.hero-right {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+}
+
+.hero-left {
+    flex: 1;
 }
 
 .miamor {

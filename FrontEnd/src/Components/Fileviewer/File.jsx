@@ -1,15 +1,19 @@
-import { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import propTypes from "prop-types";
-import "./File.css";
 
 import { useStore } from "../Contexts/zus.fileManager";
+import { FaStickyNote } from "react-icons/fa";
+import NoteCreation from "../NoteCreation";
+import FileButtonLess from "./File.buttonless";
+import "./File.css";
 
 const File = ({ fileData }) => {
     const fileContent = useState(fileData);
-
     const checkboxRef = useRef(null);
-
+    const [isNotePopupOpen, setIsNotePopupOpen] = useState(false);
+    const [noteTargetFileId, setNoteTargetFileId] = useState(null);
+    
     const isSelected = useStore((state) =>
         state.selectedFiles.has(fileContent[0].id)
     );
@@ -59,6 +63,18 @@ const File = ({ fileData }) => {
 
     const fileType = getFileType(fileContent[0].type, fileContent[0].name);
 
+    const openNotePopup = (e, fileId) => {
+        e.stopPropagation();
+        setIsNotePopupOpen(true);
+        setNoteTargetFileId(fileId);
+    };
+
+    const closeNotePopup = () => {
+        setIsNotePopupOpen(false);
+        setNoteTargetFileId(null);
+    };
+
+    
     return (
         <div
             className={isSelected ? "file-row selected" : "file-row"}
@@ -109,6 +125,20 @@ const File = ({ fileData }) => {
                     justifyContent: "center",
                     alignItems: "center",
                 }}
+            > {fileType === 'bundle' && (
+                <FaStickyNote 
+                    style = {{ cursor:'pointer', fontSize: '1.2rem' }}
+                    onClick = {(e) => openNotePopup(e, fileContent[0].id)}
+                />
+                )}
+            </div>
+            <div
+                style={{
+                    display: "flex",
+                    gap: "0.5rem",
+                    justifyContent: "center",
+                    alignItems: "center",
+                }}
             >
                 <input
                     type="checkbox"
@@ -154,10 +184,17 @@ const File = ({ fileData }) => {
             </div>
         </div>
     );
-};
+        {isNotePopupOpen && (
+            <div className = "note-popup-container">
+                <NoteCreation fileId = "someId" onClose = {() => console.log("closed")} />
+            </div>
+        )}
+
 
 File.propTypes = {
     fileData: propTypes.object,
+};
+
 };
 
 export default File;

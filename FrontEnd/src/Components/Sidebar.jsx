@@ -6,6 +6,8 @@ import { useStore } from "./Contexts/ctx.appManager";
 // import NoteCreation from "./NoteCreation";
 import VerticalDiv from "./UILayout/VerticalDiv";
 
+import NoteCreation from "./NoteCreation";
+
 const DebugSidebar = () => {
     const selectedFiles = useStore((state) => state.selectedFiles);
     const UnSelectAll = useStore((state) => state.unSelectAll);
@@ -165,7 +167,7 @@ const DebugSidebar = () => {
             >
                 <FaTrash /> <p>Delete Files ({selectedFiles.size})</p>
             </div>
-            {/* <NoteCreation /> */}
+            <NoteCreation />
         </div>
     );
 };

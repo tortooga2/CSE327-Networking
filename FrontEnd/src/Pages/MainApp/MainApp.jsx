@@ -33,7 +33,7 @@ const MainApp = () => {
 
     return (
         <NewPage>
-            <VerticalDiv padding="0.5rem" style={{ position: "relative" }}>
+            <VerticalDiv padding="0.5rem" style={{ position: "relative", backgroundColor: "var(--secondary-color)" }}>
                 <HorizontalDiv>
                     <VerticalDiv
                         width="42.5%"

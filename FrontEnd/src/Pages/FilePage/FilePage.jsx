@@ -1,13 +1,19 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
-import FileContent from "../../Components/FileContent";
+import { useStore } from "../../Components/Contexts/ctx.appManager.jsx";
+
+import FileContent from "../../Components/fileContent/FileContent.jsx";
+import VerticalDiv from "../../Components/UILayout/VerticalDiv.jsx";
+import NewPage from "../../Components/UILayout/NewPage.jsx";
 
 const FilePage = () => {
     const { fileId, ownerId } = useParams();
 
     const [fileData, setFileData] = useState(null);
     const [fileContent, setFileContent] = useState(null);
+
+    const setPreviewedFile = useStore((state) => state.setPreviewedFile);
 
     useEffect(() => {
         console.log(`File ID: ${fileId}`);
@@ -47,31 +53,33 @@ const FilePage = () => {
         };
 
         getFileData();
+
+        setPreviewedFile(fileId);
     }, [fileId, ownerId]);
 
     return (
-        <div style={{ margin: "6rem 10rem" }}>
-            <h1>File Page</h1>
-            <p>Owner Id: {ownerId}</p>
-            <p>File ID: {fileId}</p>
-            <div style={{ marginBottom: "2rem" }}></div>
+        <NewPage center>
+            <VerticalDiv style={{ alignItems: "center" }}>
+                <div>
+                    <h1>File Page</h1>
+                    <p>Owner Id: {ownerId}</p>
+                    <p>File ID: {fileId}</p>
+                    <div style={{ marginBottom: "2rem" }}></div>
+                </div>
 
-            <div
-                className="content"
-                style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "center",
-                    gap: "100px",
-                }}
-            >
-                {fileContent
-                    ? fileContent.map((file, index) => {
-                          return <FileContent key={index} file={file} />;
-                      })
-                    : null}
-            </div>
-        </div>
+                <VerticalDiv
+                    width={"50%"}
+                    padding="0rem"
+                    style={{ borderRadius: "1rem" }}
+                >
+                    {fileContent
+                        ? fileContent.map((file, index) => {
+                              return <FileContent key={index} file={file} />;
+                          })
+                        : null}
+                </VerticalDiv>
+            </VerticalDiv>
+        </NewPage>
     );
 };
 

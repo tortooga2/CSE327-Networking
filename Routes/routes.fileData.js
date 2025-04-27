@@ -30,7 +30,7 @@ fileDataRouter.post("/upload", createFileInDb);
 fileDataRouter.get("/focus/:fileId", loadDataForFocusPage);
 
 //New stuff
-fileDataRouter.post("/upload-helper", uploadHelper);
+fileDataRouter.get("/upload-helper", uploadHelper);
 fileDataRouter.post("/verify", verifyFiles);
 
 //Chunk thing

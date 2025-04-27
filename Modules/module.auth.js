@@ -88,8 +88,8 @@ const auth = {
         res.cookie("sessionToken", sessionToken, {
             maxAge: Number(process.env.TOKEN_EXP) * 1000,
             httpOnly: true,
-            sameSite: "none", // Must be "none" for cross-origin
-            secure: true, // Must be true when sameSite is "none"
+            sameSite: "lax", // Must be "none" for cross-origin
+            secure: DEBUG ? false : true, // Must be true when sameSite is "none"
             path: "/", // Apply to all paths
         });
 
@@ -330,9 +330,13 @@ const auth = {
             });
         }
         return auth.Verify(req, res, () => {
-            return res
-                .status(200)
-                .json({ okay: true, message: "Session token is valid" });
+            console.log("running from TestVerify", req.user);
+            const user = req.user;
+            return res.status(200).json({
+                okay: true,
+                username_base: user.username_base,
+                username_suffix: user.username_suffix,
+            });
         });
     },
 
@@ -377,8 +381,6 @@ const auth = {
             });
         }
 
-        console.log(user);
-
         //reset the expire time of the session token
         await auth.sessionDB.expire(
             sessionToken,
@@ -386,7 +388,7 @@ const auth = {
         );
 
         //Add the profile_id to the request object to be used in the route.
-        console.log(user);
+
         req.user = user;
 
         next();

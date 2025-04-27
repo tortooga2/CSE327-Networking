@@ -7,22 +7,19 @@
     position: relative;
 }
 
-button{
+button {
     background-color: transparent;
     border: none;
     padding: 6px 12px;
     border-radius: 4px;
     cursor: pointer;
-    color: #1E0B33;
+    color: #1e0b33;
     transition: background-color 0.2s ease;
 }
 
 button:hover {
-    
     background-color: rgba(30, 30, 30, 0.1); /* Keep existing hover */
 }
-
-
 
 input[type="checkbox"] {
     width: 1.2em;
@@ -33,4 +30,3 @@ input[type="checkbox"] {
     background-color: #f9f9f9;
     border: 1px solid #eaeaea;
 }
-

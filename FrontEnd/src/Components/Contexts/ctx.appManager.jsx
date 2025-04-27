@@ -1,26 +1,39 @@
 import { create } from "zustand";
 
 const useStore = create((set) => ({
+    userProfile: {},
+    setUserProfile: (state) => set({ userProfile: state }),
+
+    layoutState: 0,
+    setLayoutState: (state) => set({ layoutState: state }),
+
     files: new Map(),
-    selectedFiles: new Set(),
-    previewedFile: null,
-    setPreviewedFile: (fileID) => {
-        set({ previewedFile: fileID });
-    },
-    loading: false,
-    getFiles: (paramaters) => {
-        return Array.from(useStore.getState().files.values()).sort((a, b) => {
-            return new Date(b.createdAt) - new Date(a.createdAt);
+    setFiles: (files) => set({ files }),
+    updateFiles: (data) => {
+        set((state) => {
+            const filesMap = new Map(state.files);
+            data.forEach((file) => filesMap.set(file.id, file));
+            return { files: filesMap };
         });
     },
-    getFileById: (fileID) => {
-        const file = useStore.getState().files.get(fileID);
-        if (file) {
-            return file;
-        }
-        return null;
+
+    newFiles: new Array(),
+
+    appendNewFiles: (state) => {
+        set((prevState) => ({
+            newFiles: [...prevState.newFiles, state],
+        }));
     },
-    setFiles: (files) => set({ files }),
+    popNewFiles: () => {
+        set((prevState) => ({
+            newFiles: prevState.newFiles.slice(0, -1),
+        }));
+    },
+
+    sortOrder: { field: "id", order: "desc" },
+    setSortOrder: (state) => set({ sortOrder: state }),
+
+    selectedFiles: new Set(),
     selectFile: (fileID, selectionState) => {
         set((state) => {
             const newSelectedFiles = new Set(state.selectedFiles);
@@ -34,10 +47,19 @@ const useStore = create((set) => ({
         });
     },
     unSelectAll: () => {
-        set((state) => {
-            return { selectedFiles: new Set() };
-        });
+        set({ selectedFiles: new Set() });
     },
+    previewedFile: null,
+    setPreviewedFile: (fileID) => {
+        if (fileID === null) {
+            set({ layoutState: 0 });
+        } else {
+            set({ layoutState: 1 });
+        }
+        set({ previewedFile: fileID });
+    },
+    loading: false,
+
     loadFiles: async () => {
         set({ loading: true });
         try {
@@ -66,13 +88,7 @@ const useStore = create((set) => ({
             console.error(error);
         }
     },
-    updateFiles: (data) => {
-        set((state) => {
-            const filesMap = new Map(state.files);
-            data.forEach((file) => filesMap.set(file.id, file));
-            return { files: filesMap };
-        });
-    },
+
     connectFiles: async () => {
         try {
             const response = await fetch("/api/file/connect", {
@@ -96,6 +112,7 @@ const useStore = create((set) => ({
             console.error(error);
         }
     },
+
     uploadFiles: async (files) => {
         //Separate name from each file
         const fileNames = [];
@@ -104,19 +121,21 @@ const useStore = create((set) => ({
         }
 
         try {
-            const response = await fetch("/api/file/upload-helper", {
-                method: "POST",
-                credentials: "include",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    fileCount: files.length,
-                    fileNames: fileNames,
-                }),
-            });
-          
-            const { urls, data } = await response.json();
+            const response = await fetch(
+                `/api/file/upload-helper?count=${files.length}`,
+                {
+                    method: "GET",
+                    credentials: "include",
+                }
+            );
+
+            if (!response.ok) {
+                throw new Error(
+                    "An error occurred when attempting to fetch from upload-helper"
+                );
+            }
+
+            const { urls, keys } = await response.json();
 
             //Push each file to s3
             for (let index = 0; index < files.length; index++) {
@@ -127,22 +146,25 @@ const useStore = create((set) => ({
             }
 
             //Now check to see if the files were uploaded successfully and if so, save to db
-            await fetch("/api/file/verify", {
+            const fileVerResponse = await fetch("/api/file/verify", {
                 method: "POST",
                 credentials: "include",
                 headers: {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify({
-                    data: data,
-                }),                
+                    keys: keys,
+                    fileNames: fileNames,
+                }),
             });
-//             if (response.ok) {
-//                 const data = await response.json();
-//                 console.log("Data from upload", data);
-//                 useStore.getState().updateFiles([data.data]);
-//                 useStore.getState().unSelectAll();
-//             }
+
+            if (!fileVerResponse.ok) {
+                throw new Error("An error occurred when verifying your files");
+            }
+
+            const { data } = await fileVerResponse.json();
+
+            useStore.getState().updateFiles(data);
         } catch (err) {
             console.log(err);
         }

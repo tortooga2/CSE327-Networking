@@ -13,6 +13,7 @@ const DebugSidebar = () => {
     const connectFiles = useStore((state) => state.connectFiles);
     const uploadFile = useStore((state) => state.uploadFiles);
     const refreshFiles = useStore((state) => state.refreshFiles);
+    const refreshFiles = useStore((state) => state.refreshFiles);
     const deleteFiles = useStore((state) => state.deleteFiles);
 
     const formRef = useRef(null);
@@ -193,6 +194,7 @@ const DebugSidebar = () => {
             >
                 <FaTrash /> <p>Delete Files ({selectedFiles.size})</p>
             </div>
+            <NoteCreation />
             <NoteCreation />
         </VerticalDiv>
     );

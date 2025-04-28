@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import ImageView from "./imageView";
 import DocView from "./docView";
+import RecordingView from "./recordingView";
+import NotesView from "./NotesView";
 import Button from "../Button/Button";
 import getFileType from "../scripts/getFileType";
 import { FileType } from "../Tags";
@@ -89,12 +91,22 @@ const FileContent = ({ file }) => {
 
                 <Button onClick={copyLink(file.id)}>Copy Link</Button>
             </div>
-
-            {getFileType(file.name) !== "Image" ? (
-                <DocView src={file.metadata.url} />
-            ) : (
-                <ImageView src={file.metadata.url} name={file.name} />
-            )}
+            <div style={{ maxHeight: "60vh", overflow: "hidden" }}>
+                {(() => {
+                    switch (getFileType(file.name)) {
+                        case "Video":
+                            return <RecordingView src={file.metadata.url} />;
+                        case "Document":
+                            return <DocView src={file.metadata.url} />;
+                        case "Image":
+                            return <ImageView src={file.metadata.url} />;
+                        case "Bundle":
+                            return <h1>Bundle Here...</h1>;
+                        case "Note":
+                            return <NotesView src={file.metadata.url} />;
+                    }
+                })()}
+            </div>
         </div>
     );
 };

@@ -5,52 +5,59 @@
     --doc-color-2: #ea9d34;
     --note-color-1: #fcefef;
     --note-color-2: #d7827e;
-    --vid-color-1: #fcefef;
-    --vid-color-2: #286983;
+    --rec-color-1: #fcefef;
+    --rec-color-2: #286983;
     --img-color-1: #fcefef;
     --img-color-2: #56949f;
 }
 
-.tag {
+/* .tag {
     width: 8rem;
     padding: 0.2rem 0rem;
     height: fit-content;
     border-radius: 0.25rem;
     text-align: center;
+} */
+
+.tag {
+    display: flex;
+    align-items: center;
+    justify-content: left;
 }
 
-.bundle {
-    border-color: var(--bundle-color-1);
-    color: var(--bundle-color-1);
+.tag:has(:not(.small)) {
+    width: 20rem;
+}
+
+.tag:has(.small) {
+    width: 2rem;
+}
+
+.marker {
+    width: 1.5rem;
+    height: 1.5rem;
+    border-radius: 1rem;
+}
+.text {
+    margin-left: 1rem;
+}
+
+.bundle > .marker {
     background-color: var(--bundle-color-2);
 }
 
-.doc {
-    border-color: var(--doc-color-1);
-    color: var(--doc-color-1);
+.doc > .marker {
     background-color: var(--doc-color-2);
 }
 
-.vid {
-    border-color: var(--vid-color-1);
-    color: var(--vid-color-1);
-    background-color: var(--vid-color-2);
-}
-
-.img {
-    border-color: var(--img-color-1);
-    color: var(--img-color-1);
-    background-color: var(--img-color-2);
-}
-
-.note {
-    border-color: var(--note-color-1);
-    color: var(--note-color-1);
+.note > .marker {
     background-color: var(--note-color-2);
 }
 
-.spdh {
-    border-color: var(--spsh-color-1);
-    color: var(--spsh-color-1);
-    background-color: var(--spsh-color-2);
+.img > .marker {
+    background-color: var(--img-color-2);
+}
+
+.rec > .marker {
+    background-color: var(--rec-color-2);
 }

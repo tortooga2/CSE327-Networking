@@ -5,11 +5,13 @@
 
 :root {
     --colorMode: "dark";
-    --primary-color: #575279;
-    --secondary-color: #E87461;
-   /* --secondary-color: #bc4749; */
-    --special-color:  #fcefef;
-    --grad-color: #faf4ed;
+    --primary-color: rgb(87, 82, 121);
+    --secondary-color: #e87461;
+    /* --secondary-color: #bc4749; */
+    /* --special-color:  #fcefef; */
+    --special-color: #ffffff;
+    /* --grad-color: #faf4ed; */
+    --grad-color: #ffffff;
 
     font-family: monospace;
     line-height: 1.5;

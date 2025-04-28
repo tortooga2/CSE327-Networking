@@ -67,20 +67,19 @@ const File = ({ fileData }) => {
                 setIsHover(false);
             }}
         >
-            {isLayout && (
-                <div
-                    style={{
-                        minWidth: "3rem",
-                    }}
-                >
-                    {fileContent[0].id}
-                </div>
-            )}
+            <div
+                style={{
+                    minWidth: "3rem",
+                }}
+            >
+                {fileContent[0].id}
+            </div>
+
             <div
                 style={{
                     flexShrink: "0",
-                    width: "10rem",
-                    minWidth: "10rem",
+                    width: "fit-content",
+                    // minWidth: "10rem",
                 }}
             >
                 {new Date(fileContent[0].createdAt).toLocaleDateString(
@@ -92,27 +91,31 @@ const File = ({ fileData }) => {
                     }
                 )}
             </div>
-            <div>{FileType(fileContent[0].name)}</div>
-            <div
-                style={{
-                    maxWidth: "10rem",
-                }}
-            >
-                {fileContent[0].creator_username}
-            </div>
-            {isLayout && (
+            <div>{FileType(fileContent[0].name, isLayout)}</div>
+            {isLayout ? (
                 <div
                     style={{
-                        fontWeight: "500",
-                        textWrap: "nowrap",
-                        overflowX: "hidden",
-                        textOverflow: "ellipsis",
-                        minWidth: "30rem",
+                        maxWidth: "10rem",
                     }}
                 >
-                    {fileContent[0].name}
+                    {fileContent[0].creator_username}
                 </div>
-            )}
+            ) : null}
+
+            <div
+                style={{
+                    fontWeight: "500",
+                    textWrap: "nowrap",
+                    overflowX: "hidden",
+                    textOverflow: "ellipsis",
+                    width: "30rem",
+                    minWidth: "15rem",
+                    margin: "1rem",
+                }}
+            >
+                {fileContent[0].name}
+            </div>
+
             <div
                 style={{
                     display: "flex",

@@ -1,114 +1,40 @@
-.modal-overlay {
+.file-preview-modal {
+  display: none;
+}
+
+@media screen and (max-width: 768px) {
+  .file-preview-modal {
+    display: flex;
     position: fixed;
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: rgba(0, 0, 0, 0.85);
-    backdrop-filter: blur(4px);
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    background-color: rgba(0, 0, 0, 0.7);
     z-index: 1000;
-    animation: fadeIn 0.2s ease-out;
-}
-
-.modal-content {
-    background-color: #2F3136;
-    border-radius: 8px;
-    width: 90%;
-    max-width: 1200px;
-    max-height: 90vh;
-    display: flex;
-    flex-direction: column;
-    animation: zoomIn 0.2s ease-out;
-}
-
-.modal-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 16px 20px;
-    border-bottom: 1px solid #40444B;
-}
-
-.file-info {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-}
-
-.file-info h2 {
-    color: #FFFFFF;
-    margin: 0;
-    font-size: 1.2rem;
-}
-
-.file-type {
-    background-color: #36393F;
-    padding: 4px 8px;
-    border-radius: 4px;
-    color: #B9BBBE;
-    font-size: 0.9rem;
-}
-
-.close-button {
-    background: none;
-    border: none;
-    color: #B9BBBE;
-    font-size: 24px;
-    cursor: pointer;
-    padding: 4px 8px;
-    border-radius: 4px;
-    transition: background-color 0.2s;
-}
-
-.close-button:hover {
-    background-color: #40444B;
-    color: #FFFFFF;
-}
-
-.preview-container {
-    flex: 1;
-    overflow-y: auto;
-    padding: 20px;
-    background-color: #36393F;
-    border-radius: 0 0 8px 8px;
-    display: flex;
-    align-items: center;
     justify-content: center;
-}
+    align-items: center;
+    padding: 1rem;
+  }
 
-@keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
-}
-
-@keyframes zoomIn {
+  .modal-content {
+    background: white;
+    border-radius: 0.5rem;
+    width: 90%;
+    max-height: 90vh;
+    overflow-y: auto;
+    position: relative;
+    animation: modalSlideUp 0.3s ease-out;
+  }
+  
+  @keyframes modalSlideUp {
     from {
-        opacity: 0;
-        transform: scale(0.95);
+      transform: translateY(100%);
+      opacity: 0;
     }
     to {
-        opacity: 1;
-        transform: scale(1);
+      transform: translateY(0);
+      opacity: 1;
     }
-}
-
-/* Scrollbar styling */
-.preview-container::-webkit-scrollbar {
-    width: 8px;
-}
-
-.preview-container::-webkit-scrollbar-track {
-    background: #2F3136;
-}
-
-.preview-container::-webkit-scrollbar-thumb {
-    background: #202225;
-    border-radius: 4px;
-}
-
-.preview-container::-webkit-scrollbar-thumb:hover {
-    background: #40444B;
+  }
 }

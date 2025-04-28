@@ -1,217 +1,310 @@
+/* LandingPage.css */
+
 @import url("https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400..800;1,400..800&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap");
 
-
-
 :root {
-    --text-color: #333;
-    --background-color: #fff;
-    --primary-button-color: #333; /* Dark background for buttons */
-    --primary-button-text-color: #fff;
-    --link-color: #333;
-    --font-family: sans-serif; /* Default clean sans-serif */
+  --text-color: #333;
+  --background-color: #bae1f5;
+  --primary-button-color: #333; /* Dark background for buttons */
+  --primary-button-text-color: #fff;
+  --link-color: #333;
+  --font-family: sans-serif; /* Default clean sans-serif */
 
-    --subtle-bg-gradient: linear-gradient(to bottom, #f8f8f8, #e9e9e9);
-    --subtle-bg-gradient-hover: linear-gradient(to bottom, #e9e9e9, #f2f2f2);
+  --subtle-bg-gradient: linear-gradient(to bottom, #cfd9df 0%, #e2ebf0 50%, #ffffff 100%);
+  --subtle-bg-gradient-hover: linear-gradient(to bottom, #e9e9e9, #f2f2f2);
 
-    --subtle-line-gradient: linear-gradient(to right, transparent, #ccc, transparent 0%, #ddd 50%, transparent 100%);
+  --subtle-line-gradient: linear-gradient(to right, transparent, #ccc, transparent 0%, #ddd 50%, transparent 100%);
 }
 
 body {
-    font-family: var(--font-family);
-    margin: 0;
-    padding: 0;
-    background-color: var(--background-color);
-    color: var(--text-color);
+  font-family: var(--font-family);
+  margin: 0;
+  padding: 0;
+  background-color: var(--background-color);
+  color: var(--text-color);
 }
 
 .landing-page-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    min-height: 100vh;
-    padding: 20px;
-    box-sizing: border-box;
+  min-height: 100vh;
+  overflow: hidden;
+  position: relative;
+  display: flex; /* Add flex to the container */
+  flex-direction: column; /* Stack header, main, footer vertically */
+  align-items: center; /* Center content horizontally within the viewport */
+}
+
+.split-screen {
+  display: flex;
+  width: 100%;
+  max-width: 1200px; /* Optional: Limit the width of the split screen */
+  min-height: calc(100vh - 60px); /* Adjust for header height */
+  flex-direction: row;
+}
+
+.left-background {
+  flex: 0.4; 
+  background-color: #eddada; 
+  min-height: 90vh;
+}
+
+.right-content {
+  flex: 0.6; /* Adjust the ratio as needed */
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Center the sections horizontally within the right content */
+  padding: 20px; /* Add some padding around the content in the right side */
+  box-sizing: border-box; /* Ensure padding doesn't increase the width */
 }
 
 .landing-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    width: 90%;
-    max-width: 1200px;
-    padding: 30px 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 90%;
+  max-width: 1200px;
+  padding: 30px 0;
+  box-sizing: border-box; /* Ensure padding doesn't increase the width */
 }
 
 .header-title {
-    font-size: 2rem;
-    font-weight: bold;
-    margin: 0;
+  font-size: 2.3rem;
+  color: var(--primary-color);
 }
 
 .header-nav {
-    display: flex;
-    align-items: center;
-    gap: 20px;
+  display: flex;
+  font-size: rem;
+  align-items: center;
+  gap: 20px;
 }
 
-.header-nav a {
-    text-decoration: none;
-    color: var(--link-color);
-    font-size: 1rem;
-    padding: 8px 0;
-}
-
-.header-nav a:hover {
-    text-decoration: underline;
+.header-nav a,
+.header-nav button {
+  margin-left: 15px;
+  text-decoration: none;
+  color: var(--link-color);
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-size: 1.2rem;
+  padding: 8px 0;
 }
 
 .signup-button {
-    background-color: var(--primary-button-color);
-    color: var(--primary-button-text-color);
-    border: none;
-    padding: 10px 20px;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 1rem;
-    transition: background-color 0.3s ease;
+  background-color: var(--primary-button-color);
+  color: var(--primary-button-text-color);
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background-color 0.3s ease;
 }
 
 .signup-button:hover {
-    background-color: #555;
-}
-
-.special {
-    width: fit-content;
-    text-align: top;
-    margin: 0;
-    color: var(--primary-color);
-    background-color: var(--secondary-color);
-    padding-left: 0.5rem;
-    padding-right: 0.5rem;
-}
-
-.title {
-    text-align: top;
-    margin-bottom: 2rem;
-}
-
-.title > h1 {
-    border: 1px solid var(--secondary-color);
-    padding-left: 1rem;
-    padding-right: 1rem;
-}
-
-.hero-section {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 2rem;
-    gap: 2rem;
-}
-
-.hero-right {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex: 1;
-}
-
-.hero-left {
-    flex: 1;
-}
-
-.miamor {
-    font-family: "Playfair Display", serif;
-    font-weight: 400;
-    font-style: italic;
+  background-color: #555;
 }
 
 .landing-main {
-    width: 90%;
-    max-width: 1200px;
-    padding: 60px 0;
+  display: flex;
+  width: 100%;
+  max-width: 1200px;
+  min-height: 80vh;
 }
 
-.hero-section {
-    display: flex;
-    gap: 40px;
-    align-items: center;
+
+.main-section {
+  background-color: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  padding: 30px;
+  margin-bottom: 30px; /* Add some spacing between the sections */
+  width: 90%; /* Adjust the width of the white boxes as needed */
+  max-width: 800px; /* Optional: Set a maximum width for the white boxes */
+  box-sizing: border-box; /* Ensure padding doesn't increase the width */
 }
 
-.hero-left {
+.main-section.network-info-section {
+  display: flex;
+  flex-direction: column; /* Stack text and Lottie vertically on smaller screens */
+  align-items: center; /* Center content horizontally */
+}
+
+.network-info-section .network-left {
     flex: 1;
-    text-align: left;
+    display: flex;
+    justify-content: center;
+}
+
+.main-section.capture-info-section {
+  display: flex;
+  align-items: center;
+  justify-content: space-between; /* Space out text and Lottie on larger screens */
+}
+
+.capture-info-section .hero-left {
+  flex: 1;
+  padding-right: 20px;
+  text-align: left;
+}
+
+.capture-info-section .hero-right {
+  flex: 1;
+  display: flex;
+  justify-content: center;
 }
 
 .hero-heading {
-    font-size: 2.5rem;
-    margin-bottom: 20px;
+  font-size: 2.5rem;
+  margin-bottom: 20px;
+  color: var(--primary-color);
+  font-family: var(--font-family);
 }
 
 .hero-description {
-    font-size: 1.1rem;
-    line-height: 1.7;
-    color: #666;
-    margin-bottom: 30px;
+  font-size: 1.2rem;
+  line-height: 1.7;
+  color: #666;
+  margin-bottom: 30px;
+  font-family: 'Playfair Display', serif;
 }
 
 .start-button {
-    background-color: var(--primary-button-color);
-    color: var(--primary-button-text-color);
-    border: none;
-    padding: 15px 30px;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 1.2rem;
-    transition: background-color 0.3s ease;
+  background-color: var(--primary-button-color);
+  color: var(--primary-button-text-color);
+  border: none;
+  padding: 15px 30px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1.2rem;
+  transition: background-color 0.3s ease;
 }
 
 .start-button:hover {
-    background-color: #555;
+  background-color: #555;
 }
 
-.hero-right {
-    flex: 1;
-    /* Add styles for image or other content here */
+.section-heading {
+  font-size: 1.7rem;
+  margin-bottom: 15px;
+  margin-vertical: 20px; /* Add vertical spacing for better readability */
+  color: var(--primary-color);
+  font-family: var(--font-family);
+  text-align: center; /* Center the heading within the white box */
 }
+
+.lottie-wrapper {
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: center; /* Center the Lottie animation */
+}
+
+.section-description {
+  max-width: 600px;
+  margin: 0 auto;
+  font-size: 1.2rem;
+  line-height: 1.7;
+  color: #666;
+  font-family: 'Playfair Display', serif;
+  text-align: center; /* Center the description text */
+}
+
+.welcome-section {
+  padding: 40px 0;
+  text-align: center;
+  width: 90%; /* Match the width of the main sections */
+  max-width: 800px; /* Match the max-width of the main sections */
+  margin: 2rem auto; /* Center the welcome section */
+  background-color: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  box-sizing: border-box;
+}
+
+.welcome-section .title h1 {
+  font-size: 2.5em;
+}
+
+.welcome-section .title .special {
+  font-size: 1.2rem;
+  color: var(--primary-color);
+}
+
+.welcome-section > div {
+  text-align: center;
+}
+
+.right-side .lottie-react {
+  width: 100%;
+  height: 100%;
+}
+
+
 
 .auth-section {
-    /* Styles for login/signup forms (initially hidden) */
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent overlay */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000; /* Ensure it's on top */
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent overlay */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000; /* Ensure it's on top */
 }
 
 .landing-footer {
-    text-align: center;
-    padding: 20px 0;
-    color: #777;
-    font-size: 0.9rem;
-    width: 100%;
-    box-sizing: border-box;
+  text-align: center;
+  padding: 20px 0;
+  color: #777;
+  font-size: 0.9rem;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .scroll-to-top-button {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    background-color: transparent;
-    border: none;
-    outline: none;
-    cursor: pointer;
-    z-index: 100;
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background-color: transparent;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  z-index: 100;
 }
 
 .scroll-to-top-button svg {
-    font-size: 2em;
-    color: var(--text-color);
-    cursor: pointer;
+  font-size: 2em;
+  color: var(--text-color);
+  cursor: pointer;
+}
+
+.animated-lines-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  background-image: repeating-linear-gradient(
+    45deg,
+    transparent,
+    transparent 4px,
+    rgba(200, 200, 200, 0.1) 4px,
+    rgba(200, 200, 200, 0.1) 8px
+  );
+  animation: moveLines 20s linear infinite;
+}
+
+@keyframes moveDiagonalLines {
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: 100% 100%;
+  }
 }

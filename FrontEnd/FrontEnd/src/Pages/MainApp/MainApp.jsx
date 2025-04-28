@@ -1,83 +1,121 @@
 import { useState, useRef, useEffect } from "react";
+import { FaUpload, FaLink, FaPlus, FaCog } from "react-icons/fa";
 import "./MainApp.css";
+
 import FileViewer from "../../Components/Fileviewer/Fileviewer.jsx";
+
 import Dashboard from "../../Components/Dashboard.jsx";
 import Sidebar from "../../Components/Sidebar.jsx";
+
 import { useUser } from "../../Components/Contexts/ctx.user.jsx";
-import DebugSidebar from "../../Components/debugSidebar.jsx";
-import { useStore } from "../../Components/Contexts/zus.fileManager";
+import { useStore } from "../../Components/Contexts/ctx.appManager.jsx";
+
+import DebugSidebar from "../../Components/debugSideBar.jsx";
+
 import FilePreview from "../../Components/FilePreview/FilePreview.jsx";
 import NewPage from "../../Components/UILayout/NewPage.jsx";
-import { Header } from "../../Components/header";
+import HorizontalDiv from "../../Components/UILayout/HorizontalDiv.jsx";
+import VerticalDiv from "../../Components/UILayout/VerticalDiv.jsx";
+import Header from "../../Components/Header.jsx";
+
+const MobileDock = () => {
+  return (
+    <div className="mobile-dock">
+      <button className="mobile-dock-button">
+        <FaUpload className="mobile-dock-icon" />
+        <span>Upload</span>
+      </button>
+      <button className="mobile-dock-button">
+        <FaLink className="mobile-dock-icon" />
+        <span>Connect</span>
+      </button>
+      <button className="mobile-dock-button">
+        <FaPlus className="mobile-dock-icon" />
+        <span>Create</span>
+      </button>
+      <button className="mobile-dock-button">
+        <FaCog className="mobile-dock-icon" />
+        <span>Settings</span>
+      </button>
+    </div>
+  );
+};
 
 const MainApp = () => {
     const { user } = useUser();
-    const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+
+    const closedFile = useStore((state) => {
+        return state.previewedFile !== null;
+    });
+
+    const layoutState = useStore((state) => state.layoutState);
 
     useEffect(() => {
         user.ValidateSession();
     }, [user]);
 
-    const toggleSidebar = () => {
-        setIsSidebarOpen(!isSidebarOpen);
-    };
-
     return (
         <NewPage>
-            <div className="flex flex-col h-screen overflow-hidden bg-white">
-                {/* Header - Full Width */}
-                <div className="w-full flex-shrink-0 border-b border-gray-200 bg-white">
-                    <div className="max-w-[1920px] mx-auto">
-                        <Header />
-                    </div>
-                </div>
-
-                {/* Main Content Area */}
-                <div className="flex-1 flex overflow-hidden">
-                    {/* Mobile Sidebar Toggle Button */}
-                    <button 
-                        className="lg:hidden fixed top-4 left-4 z-50 p-2 bg-white rounded-md shadow-md"
-                        onClick={toggleSidebar}
+            <VerticalDiv padding="0.5rem" style={{ position: "relative", backgroundColor: "var(--secondary-color)" }}>
+                <HorizontalDiv>
+                    <VerticalDiv
+                        width="42.5%"
+                        style={{ backgroundColor: "white" }}
+                        className="desktop-sidebar"
                     >
-                        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={isSidebarOpen ? "M6 18L18 6M6 6l12 12" : "M4 6h16M4 12h16M4 18h16"} />
-                        </svg>
-                    </button>
+                        <h1>This is a placeholder</h1>
+                    </VerticalDiv>
+                    <HorizontalDiv width="100%" className="mobile-fileviewer">
+                        <FileViewer width="100%" />
+                    </HorizontalDiv>
+                    <FilePreview width="93%" />
+                </HorizontalDiv>
+                
+                {/* Desktop sidebar */}
+                <HorizontalDiv
+                    width="60%"
+                    padding="0rem"
+                    className="desktop-sidebar"
+                    style={{
+                        position: "absolute",
+                        borderRadius: "0.5rem",
+                        padding: "1rem",
+                        background: "linear-gradient(var(--special-color), var(--grad-color))",
+                        transition: "all 0.3s cubic-bezier(.47,1.64,.41,.8)",
+                    }}
+                    state={[
+                        {
+                            width: "100%",
+                            left: "0",
+                        },
+                        {
+                            width: "60%",
+                            left: "0",
+                        },
+                        {
+                            width: "80%",
+                            left: "20%",
+                        },
+                    ]}
+                    playAnimation={layoutState}
+                >
+                    <VerticalDiv width="350px" padding="0rem">
+                        <Header />
+                        <DebugSidebar />
+                        <VerticalDiv height="100%"></VerticalDiv>
+                    </VerticalDiv>
+                    <HorizontalDiv
+                        padding="0rem"
+                        gap="0rem"
+                        style={{ alignItems: "flex-start" }}
+                    >
+                        <FileViewer width="100%" />
+                    </HorizontalDiv>
+                </HorizontalDiv>
 
-                    {/* Sidebar */}
-                    <div className={`${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0 fixed lg:relative w-64 h-full transition-transform duration-300 ease-in-out z-40 bg-white border-r border-gray-200`}>
-                        <div className="h-full overflow-y-auto">
-                            <DebugSidebar />
-                        </div>
-                    </div>
-
-                    {/* Content Area */}
-                    <div className="flex-1 flex flex-col lg:flex-row overflow-hidden">
-                        {/* File Viewer */}
-                        <div className="flex-1 min-w-0 overflow-auto">
-                            <FileViewer />
-                        </div>
-                        
-                        {/* File Preview */}
-                        <div className="border-t lg:border-t-0 lg:border-l border-gray-200 lg:w-1/3 overflow-auto">
-                            <FilePreview />
-                        </div>
-                    </div>
-
-                    {/* Overlay for mobile sidebar */}
-                    {isSidebarOpen && (
-                        <div 
-                            className="lg:hidden fixed inset-0 z-30"
-                            style={{
-                                background: "rgba(255,255,255,0.4)",
-                                backdropFilter: "blur(8px)",
-                                WebkitBackdropFilter: "blur(8px)",
-                            }}
-                            onClick={() => setIsSidebarOpen(false)}
-                        />
-                    )}
-                </div>
-            </div>
+                {/* Mobile dock */}
+                <MobileDock />
+            </VerticalDiv>
         </NewPage>
     );
 };

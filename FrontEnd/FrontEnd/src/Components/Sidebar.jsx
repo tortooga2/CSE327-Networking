@@ -1,175 +1,175 @@
-"use client";
+import { useEffect, useRef } from "react";
 
-import React, { useState } from "react";
-import "../Components/Sidebar.css"; // Import your CSS file for styling
-import {
-    Link2,
-    Upload,
-    Plus,
-    Star,
-    ChevronDown,
-    FileText,
-    Image,
-    Video,
-    Music,
-    Code,
-} from "lucide-react";
+import { FaUpload, FaLink, FaTimes, FaTrash } from "react-icons/fa";
+import { useStore } from "./Contexts/ctx.appManager";
 
-function App() {
-    return (
-        <div className = "App">
-            <div className = "flex h-screen">
-                <Sidebar />
-                {/* Here is where my main content will do */}
-            <div className = "flex-1 bg-gray-100 p-4">
-                {/* Something goes here */}
-            </div>
-            </div>
-        </div>
-    )
-}
+// import NoteCreation from "./NoteCreation";
+import VerticalDiv from "./UILayout/VerticalDiv";
 
-const Sidebar = () => {
-    const [isFavoritesOpen, setIsFavoritesOpen] = useState(true);
-    const [favorites, setFavorites] = useState([]);
+import NoteCreation from "./NoteCreation";
 
-    // Sample favorite items with tags
-    const favoriteItems = [
-        {
-            id: "1",
-            name: "Documentation",
-            icon: <FileText className="w-5 h-5" />,
-            tags: ["work", "documentation"],
-        },
-        {
-            id: "2",
-            name: "Business ID",
-            icon: <Image className="w-5 h-5" />,
-            tags: ["personal", "photos"],
-        },
-        {
-            id: "3",
-            name: "Expo Vlog",
-            icon: <Video className="w-5 h-5" />,
-            tags: ["education", "video"],
-        },
-        {
-            id: "4",
-            name: "Voice Memo",
-            icon: <Music className="w-5 h-5" />,
-            tags: ["personal", "music"],
-        },
-    ];
+const DebugSidebar = () => {
+    const selectedFiles = useStore((state) => state.selectedFiles);
+    const UnSelectAll = useStore((state) => state.unSelectAll);
+    const connectFiles = useStore((state) => state.connectFiles);
+    const uploadFile = useStore((state) => state.uploadFiles);
 
-    // Group items by their first tag
-    const groupedItems = favoriteItems.reduce((acc, item) => {
-        const category = item.tags[0] || "uncategorized";
-        if (!acc[category]) {
-            acc[category] = [];
+    const deleteFiles = useStore((state) => state.deleteFiles);
+
+    const formRef = useRef(null);
+
+    useEffect(() => {
+        if (!formRef.current) {
+            return;
         }
-        acc[category].push(item);
-        return acc;
-    }, {});
+        formRef.current.addEventListener("submit", async (e) => {
+            e.preventDefault();
 
-    // Khushi added code for toggelFavorite
+            const fileInput = e.target.querySelector('input[type="file"]');
+            const files = fileInput.files;
+            if (!files || files.length === 0) {
+                console.error("No files selected");
+                return;
+            }
 
-    const toggleFavorite = (itemId) => {
-        if (favorites.includes(itemId)) {
-            setFavorites(favorites.filter((id) => id !== itemId));
-        } else {
-            setFavorites([...favorites, itemId]);
-        }
-    };
+            try {
+                await uploadFile(files);
+                //             let filesArray = [];
+                //             try {
+                //                 for (let i = 0; i < files.length; i++) {
+                //                     const file = files[i];
+                //                     console.log("Uploading file:", file.name);
+                //                     const fileResponse = await uploadFile(file);
+                //                     filesArray.push(fileResponse);
+                //                 }
 
-    const isItemFavorite = (itemId) => favorites.includes(itemId);
+                fileInput.value = "";
+
+                alert("Files uploaded successfully!");
+            } catch (error) {
+                console.error("Error during upload:", error);
+                alert("Error uploading files. Please try again.");
+            }
+        });
+    }, [uploadFile]);
 
     return (
-        <div className="w-auto h-100% bg-white px-4 py-2 rounded border-2 border-purple-500">
-            <h1 className="text-black font-bold ">Dashboard</h1>
+        <div
+            style={{
+                // border: "1px solid",
+                // borderRadius: "1rem",
+                // borderImageSlice: 1,
+                // borderImageSource:
+                //     "linear-gradient(130deg, #FFEEDB 60%, #dd614a)",
+                padding: "1rem",
 
-            <hr />
+                gap: "1rem",
+                flexDirection: "column",
+                justifyContent: "space-between",
+                display: "flex",
+            }}
+        >
+            <div
+                onClick={UnSelectAll}
+                style={{
+                    padding: "0.75rem 1rem",
+                    backgroundColor: "#1E0B33",
+                    color: "white",
+                    border: "none",
+                    borderRadius: "6px",
+                    cursor: "pointer",
+                    transition: "background-color 0.2s",
+                    fontSize: "0.9rem",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "0.5rem",
+                }}
+            >
+                <FaTimes /> Unselect All ({selectedFiles.size})
+            </div>
 
-            {/* Primary Action Buttons */}
-            <ul className="text-black font-bold mt-3">
-                <li className="mb-4 rounded hover:shadow hover:bg-pink-200 py-2 border-2 border-purple-500">
-                    <a href="#" className="px-3 flex items-center">
-                        <Link2 className="inline-block w-6 h-6 mr-2" />
-                        Connect
-                    </a>
-                </li>
-                <li className="mb-4 rounded hover:shadow hover:bg-pink-200 py-2 border-2 border-purple-500">
-                    <a href="#" className="px-3 flex items-center">
-                        <Upload className="inline-block w-6 h-6 mr-2" />
-                        Upload
-                    </a>
-                </li>
-                <li className="mb-4 rounded hover:shadow hover:bg-pink-200 py-2 border-2 border-purple-500">
-                    <a href="#" className="px-3 flex items-center">
-                        <Plus className="inline-block w-6 h-6 mr-2" />
-                        Create
-                    </a>
-                </li>
-            </ul>
+            <div
+                onClick={connectFiles}
+                style={{
+                    padding: "0.75rem 1rem",
+                    backgroundColor: "#C8B0FF",
+                    color: "#1E0B33",
+                    border: "none",
+                    borderRadius: "6px",
+                    cursor: "pointer",
+                    transition: "background-color 0.2s",
+                    fontSize: "0.9rem",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "0.5rem",
+                }}
+            >
+                <FaLink />
+                Connect Files
+            </div>
 
-            <hr className="my-4" />
-
-            {/* Favorites Section */}
-            <div className="mt-4">
+            <form
+                id="fileForm"
+                ref={formRef}
+                style={{
+                    padding: "1.5rem",
+                    backgroundColor: "#ffffff",
+                    borderRadius: "0.5rem",
+                    border: "1px solid black",
+                }}
+            >
+                <input
+                    type="file"
+                    style={{
+                        padding: "0.75rem",
+                        border: "1px solid black",
+                        borderRadius: "6px",
+                        width: "100%",
+                        fontSize: "0.9rem",
+                        backgroundColor: "#F7FAFC",
+                        marginBottom: "1rem",
+                    }}
+                    multiple
+                />
                 <button
-                    onClick={() => setIsFavoritesOpen(!isFavoritesOpen)}
-                    className="w-full flex items-center justify-between px-3 py-2 text-black font-bold rounded hover:bg-pink-200 border-2 border-purple-500"
+                    type="submit"
+                    style={{
+                        padding: "0.75rem 1rem",
+                        backgroundColor: "#8BFFB0",
+                        color: "#1E0B33",
+                        border: "none",
+                        borderRadius: "6px",
+                        cursor: "pointer",
+                        transition: "background-color 0.2s",
+                        width: "100%",
+                        fontSize: "0.9rem",
+                    }}
                 >
-                    <div className="flex items-center">
-                        <Star className="inline-block w-6 h-6 mr-2" />
-                        Favorites
-                    </div>
-                    <ChevronDown
-                        className={`w-5 h-5 transition-transform ${
-                            isFavoritesOpen ? "rotate-180" : ""
-                        }`}
-                    />
+                    Upload
                 </button>
+            </form>
 
-                {isFavoritesOpen && (
-                    <div className="mt-2 pl-2">
-                        {Object.entries(groupedItems).map(
-                            ([category, items]) => (
-                                <div key={category} className="mb-3">
-                                    <h3 className="text-sm font-semibold uppercase text-gray-600 ml-2 mt-2">
-                                        {category}
-                                    </h3>
-                                    <ul className="mt-1">
-                                        {items.map((item) => (
-                                            <li
-                                                key={item.id}
-                                                className="mb-2 rounded hover:shadow hover:bg-pink-200 py-1 border border-purple-500"
-                                            >
-                                                <a
-                                                    href="#"
-                                                    className="px-3 flex items-center text-black"
-                                                >
-                                                    {React.cloneElement(
-                                                        item.icon,
-                                                        {
-                                                            className:
-                                                                "inline-block w-5 h-5 mr-2",
-                                                        }
-                                                    )}
-                                                    <span className="truncate">
-                                                        {item.name}
-                                                    </span>
-                                                </a>
-                                            </li>
-                                        ))}
-                                    </ul>
-                                </div>
-                            )
-                        )}
-                    </div>
-                )}
+            <div
+                onClick={deleteFiles}
+                style={{
+                    padding: "0.75rem 1rem",
+                    backgroundColor: "#FF8A8A",
+                    color: "white",
+                    border: "none",
+                    borderRadius: "6px",
+                    cursor: "pointer",
+                    transition: "background-color 0.2s",
+                    fontSize: "0.9rem",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "0.5rem",
+                }}
+            >
+                <FaTrash /> <p>Delete Files ({selectedFiles.size})</p>
             </div>
+            <NoteCreation />
         </div>
     );
 };
 
-export default Sidebar;
+export default DebugSidebar;

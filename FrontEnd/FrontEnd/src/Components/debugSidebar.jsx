@@ -1,6 +1,10 @@
 import { useEffect, useRef } from "react";
+
 import { FaUpload, FaLink, FaTimes, FaTrash } from "react-icons/fa";
-import { useStore } from "./Contexts/zus.fileManager";
+import { useStore } from "./Contexts/ctx.appManager";
+import NoteCreation from "./NoteCreation";
+
+// import NoteCreation from "./NoteCreation";
 import VerticalDiv from "../Components/UILayout/VerticalDiv";
 
 const DebugSidebar = () => {
@@ -8,21 +12,39 @@ const DebugSidebar = () => {
     const UnSelectAll = useStore((state) => state.unSelectAll);
     const connectFiles = useStore((state) => state.connectFiles);
     const uploadFile = useStore((state) => state.uploadFiles);
+    const refreshFiles = useStore((state) => state.refreshFiles);
+    const refreshFiles = useStore((state) => state.refreshFiles);
     const deleteFiles = useStore((state) => state.deleteFiles);
+
     const formRef = useRef(null);
 
     useEffect(() => {
-        if (!formRef.current) return;
+        if (!formRef.current) {
+            return;
+        }
         formRef.current.addEventListener("submit", async (e) => {
             e.preventDefault();
+
             const fileInput = e.target.querySelector('input[type="file"]');
-            if (!fileInput.files?.length) {
+            const files = fileInput.files;
+            if (!files || files.length === 0) {
                 console.error("No files selected");
                 return;
             }
+
             try {
-                await uploadFile(fileInput.files);
+                await uploadFile(files);
+                //             let filesArray = [];
+                //             try {
+                //                 for (let i = 0; i < files.length; i++) {
+                //                     const file = files[i];
+                //                     console.log("Uploading file:", file.name);
+                //                     const fileResponse = await uploadFile(file);
+                //                     filesArray.push(fileResponse);
+                //                 }
+
                 fileInput.value = "";
+
                 alert("Files uploaded successfully!");
             } catch (error) {
                 console.error("Error during upload:", error);
@@ -32,62 +54,149 @@ const DebugSidebar = () => {
     }, [uploadFile]);
 
     return (
-        <div className="h-full flex flex-col p-4 space-y-4">
-            <h2 className="text-xl font-semibold text-[#1E0B33] px-2">
+        <VerticalDiv width="300px">
+            <h2
+                style={{
+                    fontSize: "1.5rem",
+                    fontWeight: "600",
+                    color: "#1E0B33",
+                    marginBottom: "1rem",
+                }}
+            >
                 Debug Console
             </h2>
 
-            <div className="space-y-3">
-                <button
+            <div
+                style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: "1rem",
+                }}
+            >
+                <div
                     onClick={UnSelectAll}
-                    className="w-full flex items-center gap-2 px-4 py-3 bg-[#1E0B33] text-white rounded-lg hover:bg-opacity-90 transition-colors"
+                    style={{
+                        padding: "0.75rem 1rem",
+                        backgroundColor: "#1E0B33",
+                        color: "white",
+                        border: "none",
+                        borderRadius: "6px",
+                        cursor: "pointer",
+                        transition: "background-color 0.2s",
+                        fontSize: "0.9rem",
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "0.5rem",
+                    }}
                 >
-                    <FaTimes className="flex-shrink-0" />
-                    <span className="truncate">Unselect All ({selectedFiles.size})</span>
-                </button>
+                    <FaTimes /> Unselect All ({selectedFiles.size})
+                </div>
 
-                <button
+                <div
                     onClick={connectFiles}
-                    className="w-full flex items-center gap-2 px-4 py-3 bg-[#C8B0FF] text-[#1E0B33] rounded-lg hover:bg-opacity-90 transition-colors"
+                    style={{
+                        padding: "0.75rem 1rem",
+                        backgroundColor: "#C8B0FF",
+                        color: "#1E0B33",
+                        border: "none",
+                        borderRadius: "6px",
+                        cursor: "pointer",
+                        transition: "background-color 0.2s",
+                        fontSize: "0.9rem",
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "0.5rem",
+                    }}
                 >
-                    <FaLink className="flex-shrink-0" />
-                    <span className="truncate">Connect Files</span>
-                </button>
+                    <FaLink />
+                    Connect Files
+                </div>
             </div>
 
-            <hr className="border-gray-200" />
+            <hr style={{ borderColor: "#E2E8F0" }} />
 
             <form
+                id="fileForm"
                 ref={formRef}
-                className="p-4 bg-white rounded-lg border border-gray-200 space-y-3"
+                style={{
+                    padding: "1.5rem",
+                    backgroundColor: "#ffffff",
+                    borderRadius: "8px",
+                    border: "1px solid #E2E8F0",
+                }}
             >
-                <label className="block text-sm text-gray-600">
-                    <div className="flex items-center gap-2 mb-2">
-                        <FaUpload className="flex-shrink-0" />
-                        <span>Upload File</span>
+                <label
+                    htmlFor="fileInput"
+                    style={{
+                        display: "block",
+                        marginBottom: "0.5rem",
+                        color: "#4A5568",
+                        fontSize: "0.9rem",
+                        alignItems: "center",
+                    }}
+                >
+                    <div
+                        style={{
+                            display: "flex",
+                            alignItems: "center",
+                            gap: "0.5rem",
+                        }}
+                    >
+                        <FaUpload /> <p>Upload File</p>
                     </div>
-                    <input
-                        type="file"
-                        multiple
-                        className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:border-purple-400 transition-colors"
-                    />
                 </label>
+                <input
+                    type="file"
+                    style={{
+                        padding: "0.75rem",
+                        border: "1px solid #CBD5E0",
+                        borderRadius: "6px",
+                        width: "100%",
+                        fontSize: "0.9rem",
+                        backgroundColor: "#F7FAFC",
+                        marginBottom: "1rem",
+                    }}
+                    multiple
+                />
                 <button
                     type="submit"
-                    className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-[#8BFFB0] text-[#1E0B33] rounded-lg hover:bg-opacity-90 transition-colors"
+                    style={{
+                        padding: "0.75rem 1rem",
+                        backgroundColor: "#8BFFB0",
+                        color: "#1E0B33",
+                        border: "none",
+                        borderRadius: "6px",
+                        cursor: "pointer",
+                        transition: "background-color 0.2s",
+                        width: "100%",
+                        fontSize: "0.9rem",
+                    }}
                 >
                     Upload
                 </button>
             </form>
 
-            <button
+            <div
                 onClick={deleteFiles}
-                className="w-full flex items-center gap-2 px-4 py-3 bg-[#FF8A8A] text-white rounded-lg hover:bg-opacity-90 transition-colors"
+                style={{
+                    padding: "0.75rem 1rem",
+                    backgroundColor: "#FF8A8A",
+                    color: "white",
+                    border: "none",
+                    borderRadius: "6px",
+                    cursor: "pointer",
+                    transition: "background-color 0.2s",
+                    fontSize: "0.9rem",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "0.5rem",
+                }}
             >
-                <FaTrash className="flex-shrink-0" />
-                <span className="truncate">Delete Files ({selectedFiles.size})</span>
-            </button>
-        </div>
+                <FaTrash /> <p>Delete Files ({selectedFiles.size})</p>
+            </div>
+            <NoteCreation />
+            <NoteCreation />
+        </VerticalDiv>
     );
 };
 

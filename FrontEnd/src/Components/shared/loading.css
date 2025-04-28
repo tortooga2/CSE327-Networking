@@ -1,0 +1,83 @@
+/* Loading States */
+:root {
+    --spinner-size-sm: 24px;
+    --spinner-size-md: 40px;
+    --spinner-size-lg: 50px;
+    --spinner-border-sm: 2px;
+    --spinner-border-md: 4px;
+    --spinner-border-lg: 5px;
+}
+
+.loading-spinner-overlay {
+    position: absolute;
+    inset: 0;
+    background-color: rgba(255, 255, 255, 0.9);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 50;
+}
+
+.loading-spinner {
+    width: var(--spinner-size-md);
+    height: var(--spinner-size-md);
+    border: var(--spinner-border-md) solid var(--background-light);
+    border-top: var(--spinner-border-md) solid var(--primary-main);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+.loading-spinner.sm {
+    width: var(--spinner-size-sm);
+    height: var(--spinner-size-sm);
+    border-width: var(--spinner-border-sm);
+}
+
+.loading-spinner.lg {
+    width: var(--spinner-size-lg);
+    height: var(--spinner-size-lg);
+    border-width: var(--spinner-border-lg);
+}
+
+.loading-text {
+    margin-top: 1rem;
+    color: var(--text-primary);
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+.loading-inline {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.loading-button {
+    position: relative;
+}
+
+.loading-button .loading-spinner {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.loading-button.loading {
+    color: transparent !important;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Dark mode support */
+.dark .loading-spinner-overlay {
+    background-color: rgba(0, 0, 0, 0.75);
+}
+
+.dark .loading-text {
+    color: var(--background-light);
+}

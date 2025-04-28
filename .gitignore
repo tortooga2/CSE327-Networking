@@ -46,3 +46,4 @@ lerna-debug.log*
 
 # Operating System Files
 Thumbs.db
+.qodo

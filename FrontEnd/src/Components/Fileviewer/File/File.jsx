@@ -146,7 +146,7 @@ const File = ({ fileData }) => {
                     >
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
-                            fill="#000000"
+                            fill="var(--text-color)"
                             className="bi bi-files"
                             viewBox="0 0 16 16"
                             id="Files--Streamline-Bootstrap"

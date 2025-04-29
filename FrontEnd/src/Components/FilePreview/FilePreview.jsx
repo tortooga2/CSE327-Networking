@@ -86,7 +86,7 @@ const FilePreview = ({ width }) => {
             <div
                 className="preview-header"
                 style={{
-                    borderBottom: "1px solid var(--special-color)",
+                    borderBottom: "1px solid var(--border-color)",
                     paddingBottom: "1rem",
                     display: "flex",
                     alignItems: "flex-start",
@@ -103,7 +103,7 @@ const FilePreview = ({ width }) => {
                     <div
                         style={{
                             fontSize: "2rem",
-                            color: "var(--special-color)",
+                            color: "var(--text-color)",
                             fontWeight: "400",
                         }}
                     >
@@ -168,7 +168,7 @@ const FilePreview = ({ width }) => {
             </div>
 
             <VerticalDiv gap="1rem">
-                {fileContent
+                {fileContent && closedFile
                     ? fileContent.map((file, index) => (
                           <FileContent key={index} file={file} />
                       ))

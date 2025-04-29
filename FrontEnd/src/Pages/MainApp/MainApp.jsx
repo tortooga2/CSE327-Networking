@@ -31,7 +31,7 @@ const MainApp = () => {
     return (
         <NewPage>
             <VerticalDiv
-                padding="0.5rem"
+                padding="1rem"
                 style={{
                     position: "relative",
                     backgroundColor: "var(--secondary-color)",
@@ -49,14 +49,15 @@ const MainApp = () => {
                 </HorizontalDiv>
                 <HorizontalDiv
                     width="60%"
-                    padding="0rem"
+                    padding="1rem"
                     style={{
                         position: "absolute",
-                        borderRadius: "0.5rem",
-                        // border: "1px solid black",
+                        borderRadius: "var(--border-radius)",
+
+                        border: "1px solid var(--border-color)",
                         padding: "1rem",
                         background:
-                            "linear-gradient(var(--special-color), var(--grad-color))",
+                            "linear-gradient(var(--primary-color), var(--grad-color))",
                         transition: "all 0.3s cubic-bezier(.47,1.64,.41,.8)",
                     }}
                     state={[

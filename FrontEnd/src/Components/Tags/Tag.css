@@ -21,26 +21,23 @@
 
 .tag {
     display: flex;
-    align-items: center;
-    justify-content: left;
+    width: 8rem;
+    gap: 1rem;
 }
 
-.tag:has(:not(.small)) {
-    width: 20rem;
-}
-
-.tag:has(.small) {
+.tag.small {
     width: 2rem;
+    gap: 0rem;
 }
 
-.marker {
+.tag .marker {
     width: 1.5rem;
     height: 1.5rem;
     border-radius: 1rem;
 }
-.text {
+/* .text {
     margin-left: 1rem;
-}
+} */
 
 .bundle > .marker {
     background-color: var(--bundle-color-2);

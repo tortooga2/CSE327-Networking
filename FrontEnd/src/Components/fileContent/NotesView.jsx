@@ -37,7 +37,7 @@ const NotesView = ({ src }) => {
             }
         };
         getText().then((newText) => setText(newText));
-    }, []);
+    }, [src]);
 
     return (
         <div
@@ -50,7 +50,7 @@ const NotesView = ({ src }) => {
                     source={text}
                     style={{
                         backgroundColor: "#00000000",
-                        color: "var(--primary-color)",
+                        color: "var(--text-color)",
                     }}
                 />
             </VerticalDiv>

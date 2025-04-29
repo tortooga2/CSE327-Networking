@@ -91,7 +91,11 @@ const File = ({ fileData }) => {
                     }
                 )}
             </div>
-            <div>{FileType(fileContent[0].name, isLayout)}</div>
+            <div
+                style={{ width: isLayout ? "5rem" : "2rem", textAlign: "left" }}
+            >
+                {FileType(fileContent[0].name, isLayout)}
+            </div>
             {isLayout ? (
                 <div
                     style={{
@@ -104,13 +108,12 @@ const File = ({ fileData }) => {
 
             <div
                 style={{
-                    fontWeight: "500",
                     textWrap: "nowrap",
                     overflowX: "hidden",
                     textOverflow: "ellipsis",
                     width: "30rem",
                     minWidth: "15rem",
-                    margin: "1rem",
+                    // margin: "1rem",
                 }}
             >
                 {fileContent[0].name}

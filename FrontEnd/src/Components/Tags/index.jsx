@@ -3,7 +3,7 @@ import getFileType from "../scripts/getFileType";
 
 export const Bundle = ({ layout = true }) => {
     return (
-        <div className={`tag bundle ${layout ? "small" : ""}`}>
+        <div className={`tag bundle ${!layout ? "small" : ""}`}>
             <div className="marker" />
             {layout ? <div className="text">Bundle</div> : null}
         </div>
@@ -12,7 +12,7 @@ export const Bundle = ({ layout = true }) => {
 
 export const Document = ({ layout = true }) => {
     return (
-        <div className="tag doc">
+        <div className={`tag doc ${!layout ? "small" : ""}`}>
             <div className="marker" />
             {layout ? <div className="text">Document</div> : null}
         </div>
@@ -21,7 +21,7 @@ export const Document = ({ layout = true }) => {
 
 export const Recording = ({ layout = true }) => {
     return (
-        <div className="tag rec">
+        <div className={`tag rec ${!layout ? "small" : ""}`}>
             <div className="marker" />
             {layout ? <div className="text">Recording</div> : null}
         </div>
@@ -30,7 +30,7 @@ export const Recording = ({ layout = true }) => {
 
 export const Note = ({ layout = true }) => {
     return (
-        <div className="tag note">
+        <div className={`tag note ${!layout ? "small" : ""}`}>
             <div className="marker" />
             {layout ? <div className="text">Note</div> : null}
         </div>
@@ -39,7 +39,7 @@ export const Note = ({ layout = true }) => {
 
 export const Img = ({ layout = true }) => {
     return (
-        <div className="tag img">
+        <div className={`tag img ${!layout ? "small" : ""}`}>
             <div className="marker" />
             {layout ? <div className="text">Image</div> : null}
         </div>

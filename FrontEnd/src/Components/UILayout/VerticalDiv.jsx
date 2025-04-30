@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
+import Lenis from "lenis";
 
 const VerticalDiv = ({
     width = "100%",
@@ -8,9 +9,8 @@ const VerticalDiv = ({
     gap = "1rem",
     style = {},
     children,
-    playAnimation = false,
-    before = {},
-    after = {},
+    playAnimation = 0,
+    state = [{}],
 }) => {
     const mainStyle = {
         flexShrink: width.includes("px") ? 0 : 1, // Don't shrink fixed-width divs
@@ -30,8 +30,9 @@ const VerticalDiv = ({
     };
     const [styleState, setStyleState] = useState({
         ...mainStyle,
-        ...before,
+        ...state[playAnimation],
     });
+
     const [isTransitioning, setIsTransitioning] = useState(playAnimation);
 
     useEffect(() => {
@@ -39,21 +40,38 @@ const VerticalDiv = ({
     }, [playAnimation]);
 
     useEffect(() => {
-        if (isTransitioning) {
-            setStyleState({
-                ...mainStyle,
-                ...after,
-            });
-        } else {
-            setStyleState({
-                ...mainStyle,
-                ...before,
-            });
-        }
+        setStyleState({
+            ...mainStyle,
+            ...state[isTransitioning],
+        });
     }, [isTransitioning]);
+
+    const scrollableRef = useRef(null);
+
+    useEffect(() => {
+        const lenis = new Lenis({
+            wrapper: scrollableRef.current, // Target the div
+            content: scrollableRef.current, // if your children are direct
+            // you can also point at a nested ref
+            orientation: "vertical",
+            gestureOrientation: "vertical",
+            smooth: true,
+        });
+
+        function raf(time) {
+            lenis.raf(time);
+            requestAnimationFrame(raf);
+        }
+        requestAnimationFrame(raf);
+
+        return () => {
+            lenis.destroy();
+        };
+    });
 
     return (
         <div
+            ref={scrollableRef}
             style={{
                 ...styleState,
             }}

@@ -7,7 +7,7 @@ import FileViewer from "../../Components/Fileviewer/Fileviewer.jsx";
 import { useUser } from "../../Components/Contexts/ctx.user.jsx";
 import { useStore } from "../../Components/Contexts/ctx.appManager.jsx";
 
-import Sidebar from "../../Components/SideBar.jsx";
+import Sidebar from "../../Components/Sidebar.jsx";
 
 import FilePreview from "../../Components/FilePreview/FilePreview.jsx";
 import NewPage from "../../Components/UILayout/NewPage.jsx";

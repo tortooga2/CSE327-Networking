@@ -26,7 +26,7 @@ const MainApp = () => {
 
     useEffect(() => {
         user.ValidateSession();
-    }, [user]);
+    }, []);
 
     return (
         <NewPage>

@@ -23,8 +23,6 @@ const File = ({ fileData }) => {
         return state.layoutState === 0;
     });
 
-
-
     const ViewFile = (fileId) => (e) => {
         e.stopPropagation();
         useStore.getState().setPreviewedFile(fileId);
@@ -64,7 +62,6 @@ const File = ({ fileData }) => {
                 alignItems: "center",
                 gap: "min(10rem, 3rem)",
                 minWidth: "30vw",
-                overflowX: "hidden",
             }}
             onMouseEnter={() => {
                 setIsHover(true);
@@ -73,14 +70,12 @@ const File = ({ fileData }) => {
                 setIsHover(false);
             }}
         >
-
             <input
                 type="checkbox"
                 ref={checkboxRef}
                 onChange={handleChange}
                 checked={isSelected}
             />
-
 
             <div
                 style={{
@@ -91,9 +86,10 @@ const File = ({ fileData }) => {
             </div>
             <div
                 style={{
-                    minWidth: isLayout ? "5rem" : "2rem", textAlign: "left", overflow: "hidden",
+                    minWidth: isLayout ? "5rem" : "2rem",
+                    textAlign: "left",
+                    overflow: "hidden",
                     textOverflow: "ellipsis",
-
                 }}
             >
                 {FileType(fileContent[0].name, isLayout)}
@@ -108,7 +104,6 @@ const File = ({ fileData }) => {
                 </div>
             ) : null}
             {isLayout ? (
-
                 <div
                     style={{
                         textWrap: "nowrap",
@@ -129,7 +124,6 @@ const File = ({ fileData }) => {
                 }}
             >
                 {`${window.location.origin}/file/${fileContent[0].id}`}
-
             </div>
 
             <div
@@ -143,7 +137,6 @@ const File = ({ fileData }) => {
             >
                 {isLayout && (
                     <Button onClick={ViewFile(fileContent[0].id)}>view</Button>
-
                 )}
                 <Button
                     onClick={(e) => {
@@ -156,7 +149,7 @@ const File = ({ fileData }) => {
                     <FaCopy />
                 </Button>
             </div>
-        </div >
+        </div>
     );
 };
 

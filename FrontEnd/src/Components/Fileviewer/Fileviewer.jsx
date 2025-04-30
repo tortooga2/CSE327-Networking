@@ -28,19 +28,11 @@ const FileViewer = ({ width }) => {
         return fileArray;
     }, [files, sortOrder]);
 
-
-
-
     return (
         <VerticalDiv gap="0rem" width={width} padding="0rem">
-            {fileEntries.map(
-                (
-                    fileData,
-                    index //map app files to a file component.
-                ) => (
-                    <File key={fileData.id} fileData={fileData} />
-                )
-            )}
+            {fileEntries.map((fileData) => (
+                <File key={fileData.id} fileData={fileData} />
+            ))}
         </VerticalDiv>
     );
 };

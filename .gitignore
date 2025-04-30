@@ -2,6 +2,9 @@
 node_modules/
 jspm_packages/
 
+package-lock.json
+
+
 # Build output
 Frontend/dist
 dist/

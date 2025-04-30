@@ -235,6 +235,7 @@ const NoteCreation = ({ fileId }) => {
                     spellChecker: false,
                     height: "50px",
                     width: "50%",
+
                 }}
                 live={false} // Disable live preview
                 // commands={visibleCommandsConfig.map(config => {
@@ -250,7 +251,9 @@ const NoteCreation = ({ fileId }) => {
                 //   }
                 //   return null;
                 // })}
-                style={{ height: "450px" }}
+                style={{
+                    overflowY: "auto",
+                }}
             />
             <div style={{ marginTop: "1rem" }}>
                 {" "}

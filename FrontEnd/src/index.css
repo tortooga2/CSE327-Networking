@@ -33,6 +33,10 @@
     padding: 0;
 }
 
+.markdown > * {
+  all: revert;
+}
+
 /* button {
     border: 1px solid #eaeaea;
     width: fit-content;

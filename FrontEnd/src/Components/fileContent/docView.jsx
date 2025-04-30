@@ -27,7 +27,7 @@ const docView = ({ src }) => {
             style={{
                 ...(loaded && closedFile ? afterLoad : beforeLoad),
                 margin: "0 auto",
-                minHeight: "60vh",
+                minHeight: "40vh",
                 height: "100%",
                 width: "100%",
                 opacity: "1",

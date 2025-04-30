@@ -6,6 +6,8 @@ const ImageView = ({ src, name }) => {
             src={src}
             style={{
                 width: "100%",
+                maxHeight: "40vh",
+                objectFit: "scale-down",
 
 
                 borderRadius: "var(--border-radius)",

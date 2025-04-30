@@ -63,6 +63,7 @@ const FilePage = () => {
                     width={"50%"}
                     padding="0rem"
                     style={{ borderRadius: "1rem" }}
+                    height="100%"
                 >
                     {fileContent
                         ? fileContent.map((file, index) => {

@@ -45,7 +45,7 @@ const NotesView = ({ src }) => {
                 height: "100%",
             }}
         >
-            <VerticalDiv height={"100%"}>
+            <VerticalDiv height={"100%"} style={{ maxHeight: "60vh" }}>
                 <MDEditor.Markdown
                     source={text}
                     style={{

@@ -84,14 +84,14 @@ const FileContent = ({ file }) => {
                         <p>Create At:</p>
                         {file
                             ? (() => {
-                                return new Date(
-                                    file.createdAt
-                                ).toLocaleDateString("en-US", {
-                                    year: "numeric",
-                                    month: "short",
-                                    day: "numeric",
-                                });
-                            })()
+                                  return new Date(
+                                      file.createdAt
+                                  ).toLocaleDateString("en-US", {
+                                      year: "numeric",
+                                      month: "short",
+                                      day: "numeric",
+                                  });
+                              })()
                             : ""}
                     </div>
                     <p>Creator: {file ? file.creator_username : ""}</p>
@@ -101,7 +101,6 @@ const FileContent = ({ file }) => {
             </div>
             <div
                 style={{
-
                     overflow: "hidden",
                     border: "1px solid var(--border-color)",
                     borderRadius: "0.5rem",

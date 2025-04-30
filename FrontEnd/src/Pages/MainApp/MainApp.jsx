@@ -13,7 +13,7 @@ import FilePreview from "../../Components/FilePreview/FilePreview.jsx";
 import NewPage from "../../Components/UILayout/NewPage.jsx";
 import HorizontalDiv from "../../Components/UILayout/HorizontalDiv.jsx";
 import VerticalDiv from "../../Components/UILayout/VerticalDiv.jsx";
-import Header from "../../Components/Header.jsx";
+import Header from "../../Components/header.jsx";
 
 const MainApp = () => {
     const { user } = useUser();

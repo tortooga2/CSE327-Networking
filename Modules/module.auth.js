@@ -334,8 +334,8 @@ const auth = {
             const user = req.user;
             return res.status(200).json({
                 okay: true,
-                username_base: user.username_base,
-                username_suffix: user.username_suffix,
+                email: user.email,
+
             });
         });
     },

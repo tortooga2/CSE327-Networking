@@ -11,7 +11,7 @@ const FileContent = ({ file }) => {
     const copyLink = (fileId) => (e) => {
         e.stopPropagation();
         navigator.clipboard.writeText(
-            `${window.location.origin}/file/owner_id/${fileId}`
+            `${window.location.origin}/file/${fileId}`
         );
         alert("Link copied to clipboard");
     };
@@ -28,7 +28,7 @@ const FileContent = ({ file }) => {
                 borderRadius: "var(--border-radius)",
                 display: "flex",
                 flexDirection: "column",
-                maxHeight: "100%",
+
                 padding: "1rem",
                 // gap: "1rem",
                 backgroundColor: "var(--primary-color)",
@@ -84,14 +84,14 @@ const FileContent = ({ file }) => {
                         <p>Create At:</p>
                         {file
                             ? (() => {
-                                  return new Date(
-                                      file.createdAt
-                                  ).toLocaleDateString("en-US", {
-                                      year: "numeric",
-                                      month: "short",
-                                      day: "numeric",
-                                  });
-                              })()
+                                return new Date(
+                                    file.createdAt
+                                ).toLocaleDateString("en-US", {
+                                    year: "numeric",
+                                    month: "short",
+                                    day: "numeric",
+                                });
+                            })()
                             : ""}
                     </div>
                     <p>Creator: {file ? file.creator_username : ""}</p>
@@ -101,7 +101,7 @@ const FileContent = ({ file }) => {
             </div>
             <div
                 style={{
-                    maxHeight: "60vh",
+
                     overflow: "hidden",
                     border: "1px solid var(--border-color)",
                     borderRadius: "0.5rem",

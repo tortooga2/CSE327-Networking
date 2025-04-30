@@ -17,7 +17,7 @@ export const ConnectFiles = async (req, res) => {
     //1. Create a new object of type bundle
     //2. Add the files to the bundles children
     //3. Add the bundle to the files parents
-    const { profile_id, username_base } = req.user;
+    const { profile_id, email } = req.user;
     const { file_ids } = req.body;
 
     if (!Array.isArray(file_ids)) {
@@ -45,7 +45,7 @@ export const ConnectFiles = async (req, res) => {
                 },
                 owner_id: profile_id,
                 creator_id: profile_id,
-                creator_username: username_base,
+                creator_username: email,
             },
             { transaction: transaction }
         );

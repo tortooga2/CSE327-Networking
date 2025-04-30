@@ -16,7 +16,7 @@ const Header = () => {
         setSearchTerm(e.target.value);
     };
 
-    const { username_base, username_suffix } = useStore(
+    const { email } = useStore(
         (state) => state.userProfile
     );
 
@@ -70,7 +70,7 @@ const Header = () => {
                 ConnectWork
             </div>
             <div>
-                <UserButton username={username_base + '#' + username_suffix} SignOut={user.SignOut} />
+                <UserButton username={email} />
             </div>
             <div
                 style={{

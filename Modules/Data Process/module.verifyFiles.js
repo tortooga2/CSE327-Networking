@@ -29,7 +29,7 @@ const checkObjExistence = async (profile_id, key) => {
 };
 
 const verifyFiles = async (req, res) => {
-    const { profile_id, username_base } = req.user
+    const { profile_id, email } = req.user
     const { keys, fileNames } = req.body;
     const transaction = await sequelize.transaction(); //Start transaction with database
     const sentFiles = []; //All existing files will be copied to this array for bulk creation
@@ -57,7 +57,7 @@ const verifyFiles = async (req, res) => {
                 sentFiles.push({
                     owner_id: profile_id,
                     creator_id: profile_id,
-                    creator_username: username_base,
+                    creator_username: email,
                     name: fileNames[index],
                     type: (fileNames[index]).split('.').pop(),
                     metadata: {
@@ -90,7 +90,7 @@ const verifyFiles = async (req, res) => {
                 data: freshlyMadeNewlyBakedFiles,
             });
         }
-        
+
         return res.status(201).json({
             okay: true,
             message: "Some files did not upload successfully",

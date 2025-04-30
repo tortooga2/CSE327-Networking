@@ -19,7 +19,7 @@ export const UserProvider = ({ children }) => {
 
             ValidateSession: async () => {
                 try {
-                    const response = await fetch(`api/auth/verify/`, {
+                    const response = await fetch(`api/auth/verify`, {
                         method: "GET",
                         headers: {
                             "Content-Type": "application/json",
@@ -29,11 +29,11 @@ export const UserProvider = ({ children }) => {
                     if (response.ok) {
                         setSignedIn(true);
                         const data = await response.json();
-                        const { username_base, username_suffix } = data;
-                        console.log(data);
+                        const { email } = data;
+                        console.log("HEHEHEHE", data);
                         useStore
                             .getState()
-                            .setUserProfile({ username_base, username_suffix });
+                            .setUserProfile({ email });
                     } else {
                         const data = await response.json();
                         console.log(data);
@@ -104,7 +104,7 @@ export const UserProvider = ({ children }) => {
     useEffect(() => {
         user.ValidateSession();
 
-        const isPublicFileRoute = location.pathname.startsWith("/file/");
+        const isPublicFileRoute = location.pathname.startsWith("/file");
         if (!isPublicFileRoute) {
             if (!signedIn) {
                 navigate("/");

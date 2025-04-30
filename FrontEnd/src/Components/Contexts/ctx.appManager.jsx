@@ -186,6 +186,10 @@ const useStore = create((set) => ({
             console.log(err);
         }
     },
+
+    isWindowReducedWidth: window.innerWidth < 1500,
+
+
 }));
 
 export { useStore };

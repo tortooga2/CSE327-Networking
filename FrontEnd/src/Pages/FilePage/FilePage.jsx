@@ -8,7 +8,7 @@ import VerticalDiv from "../../Components/UILayout/VerticalDiv.jsx";
 import NewPage from "../../Components/UILayout/NewPage.jsx";
 
 const FilePage = () => {
-    const { fileId, ownerId } = useParams();
+    const { fileId } = useParams();
 
     const [fileData, setFileData] = useState(null);
     const [fileContent, setFileContent] = useState(null);
@@ -16,10 +16,7 @@ const FilePage = () => {
     const setPreviewedFile = useStore((state) => state.setPreviewedFile);
 
     useEffect(() => {
-        console.log(`File ID: ${fileId}`);
-        console.log(`Owner ID: ${ownerId}`);
 
-        console.log("Fetching file data @", `/api/file/user/${fileId}`);
 
         const getFileData = async () => {
             try {
@@ -55,17 +52,12 @@ const FilePage = () => {
         getFileData();
 
         setPreviewedFile(fileId);
-    }, [fileId, ownerId]);
+    }, [fileId]);
 
     return (
         <NewPage center>
             <VerticalDiv style={{ alignItems: "center" }}>
-                <div>
-                    <h1>File Page</h1>
-                    <p>Owner Id: {ownerId}</p>
-                    <p>File ID: {fileId}</p>
-                    <div style={{ marginBottom: "2rem" }}></div>
-                </div>
+
 
                 <VerticalDiv
                     width={"50%"}
@@ -74,8 +66,8 @@ const FilePage = () => {
                 >
                     {fileContent
                         ? fileContent.map((file, index) => {
-                              return <FileContent key={index} file={file} />;
-                          })
+                            return <FileContent key={index} file={file} />;
+                        })
                         : null}
                 </VerticalDiv>
             </VerticalDiv>

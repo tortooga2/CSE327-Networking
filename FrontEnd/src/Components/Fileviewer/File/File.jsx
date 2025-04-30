@@ -23,6 +23,8 @@ const File = ({ fileData }) => {
         return state.layoutState === 0;
     });
 
+
+
     const ViewFile = (fileId) => (e) => {
         e.stopPropagation();
         useStore.getState().setPreviewedFile(fileId);
@@ -41,7 +43,7 @@ const File = ({ fileData }) => {
     const copyLink = (e) => {
         e.stopPropagation();
         navigator.clipboard.writeText(
-            `${window.location.origin}/file/owner_id/${fileContent[0].id}`
+            `${window.location.origin}/file/${fileContent[0].id}`
         );
         alert("Link copied to clipboard");
     };
@@ -51,7 +53,7 @@ const File = ({ fileData }) => {
     return (
         <div
             className={isSelected ? "file-row selected" : "file-row"}
-            onClick={() => checkboxRef.current.click()}
+            onClick={ViewFile(fileContent[0].id)}
             style={{
                 display: "flex",
                 justifyContent: "space-evenly",
@@ -60,6 +62,9 @@ const File = ({ fileData }) => {
                 transition: "background-color 0.2s, padding 0.2s ease-in-out",
                 cursor: "pointer",
                 alignItems: "center",
+                gap: "min(10rem, 3rem)",
+                minWidth: "30vw",
+                overflowX: "hidden",
             }}
             onMouseEnter={() => {
                 setIsHover(true);
@@ -68,32 +73,28 @@ const File = ({ fileData }) => {
                 setIsHover(false);
             }}
         >
-            <div
-                style={{
-                    minWidth: "3rem",
-                }}
-            >
-                {fileContent[0].id}
-            </div>
+
+            <input
+                type="checkbox"
+                ref={checkboxRef}
+                onChange={handleChange}
+                checked={isSelected}
+            />
+
 
             <div
                 style={{
                     flexShrink: "0",
-                    width: "fit-content",
-                    // minWidth: "10rem",
                 }}
             >
-                {new Date(fileContent[0].createdAt).toLocaleDateString(
-                    "en-US",
-                    {
-                        year: "numeric",
-                        month: "short",
-                        day: "numeric",
-                    }
-                )}
+                {fileContent[0].createdAt}
             </div>
             <div
-                style={{ width: isLayout ? "5rem" : "2rem", textAlign: "left" }}
+                style={{
+                    minWidth: isLayout ? "5rem" : "2rem", textAlign: "left", overflow: "hidden",
+                    textOverflow: "ellipsis",
+
+                }}
             >
                 {FileType(fileContent[0].name, isLayout)}
             </div>
@@ -106,18 +107,29 @@ const File = ({ fileData }) => {
                     {fileContent[0].creator_username}
                 </div>
             ) : null}
+            {isLayout ? (
 
+                <div
+                    style={{
+                        textWrap: "nowrap",
+                        minWidth: "15rem",
+                        maxWidth: "15rem",
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                    }}
+                >
+                    {fileContent[0].name}
+                </div>
+            ) : null}
             <div
                 style={{
-                    textWrap: "nowrap",
-                    overflowX: "hidden",
+                    minWidth: "3rem",
+                    overflow: "hidden",
                     textOverflow: "ellipsis",
-                    width: "30rem",
-                    minWidth: "15rem",
-                    // margin: "1rem",
                 }}
             >
-                {fileContent[0].name}
+                {`${window.location.origin}/file/${fileContent[0].id}`}
+
             </div>
 
             <div
@@ -129,27 +141,22 @@ const File = ({ fileData }) => {
                     minWidth: "fit-content",
                 }}
             >
-                <input
-                    type="checkbox"
-                    ref={checkboxRef}
-                    onChange={handleChange}
-                    checked={isSelected}
-                />
-                <Button onClick={ViewFile(fileContent[0].id)}>view</Button>
                 {isLayout && (
-                    <Button
-                        onClick={(e) => {
-                            e.stopPropagation();
+                    <Button onClick={ViewFile(fileContent[0].id)}>view</Button>
 
-                            copyLink(e);
-                        }}
-                        className={"copy-link"}
-                    >
-                        <FaCopy />
-                    </Button>
                 )}
+                <Button
+                    onClick={(e) => {
+                        e.stopPropagation();
+
+                        copyLink(e);
+                    }}
+                    className={"copy-link"}
+                >
+                    <FaCopy />
+                </Button>
             </div>
-        </div>
+        </div >
     );
 };
 

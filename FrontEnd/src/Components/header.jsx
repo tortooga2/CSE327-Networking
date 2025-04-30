@@ -8,12 +8,21 @@ import { FaCog } from "react-icons/fa";
 
 import { FaFile } from "react-icons/fa";
 import { useStore } from "./Contexts/ctx.appManager";
+import { useUser } from "./Contexts/ctx.user";
 
 const Header = () => {
     const [searchTerm, setSearchTerm] = useState("");
     const handleSearch = (e) => {
         setSearchTerm(e.target.value);
     };
+
+    const { username_base, username_suffix } = useStore(
+        (state) => state.userProfile
+    );
+
+    const user = useUser();
+
+
 
     const buttonStyle = {
         border: "1px solid black",
@@ -61,7 +70,7 @@ const Header = () => {
                 ConnectWork
             </div>
             <div>
-                <UserButton username="John Doe" />
+                <UserButton username={username_base + '#' + username_suffix} SignOut={user.SignOut} />
             </div>
             <div
                 style={{

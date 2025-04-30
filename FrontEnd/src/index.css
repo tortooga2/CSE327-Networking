@@ -5,11 +5,15 @@
 
 :root {
     --colorMode: "dark";
-    --primary-color: #575279;
-    --secondary-color: #E87461;
-   /* --secondary-color: #bc4749; */
-    --special-color:  #fcefef;
-    --grad-color: #faf4ed;
+    /* --text-color: rgb(87, 82, 121); */
+    --text-color: rgb(219, 219, 219);
+    /* --secondary-color: #e87461; */
+    --primary-color: #1f242f;
+    --secondary-color: #2a2e3e;
+    --border-color: #000000;
+    --grad-color: #1f242f;
+
+    --border-radius: 0.5rem;
 
     font-family: monospace;
     line-height: 1.5;
@@ -18,7 +22,7 @@
 
     color-scheme: light dark;
     background-color: var(--secondary-color);
-    color: var(--primary-color);
+    color: var(--text-color);
 
     font-synthesis: none;
     text-rendering: optimizeLegibility;

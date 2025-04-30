@@ -8,7 +8,7 @@ const ImageView = ({ src, name }) => {
                 width: "100%",
                 height: "auto",
                 maxWidth: "1000px",
-                borderRadius: "8px",
+                borderRadius: "var(--border-radius)",
                 display: "block",
             }}
             alt={name}

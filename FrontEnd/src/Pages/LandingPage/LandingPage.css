@@ -1,23 +1,21 @@
 @import url("https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400..800;1,400..800&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap");
 
-
-
-:root {
+/* :root {
     --text-color: #333;
     --background-color: #fff;
-    --primary-button-color: #333; /* Dark background for buttons */
+    --primary-button-color: #333; 
     --primary-button-text-color: #fff;
     --link-color: #333;
 
-}
+} */
 
 body {
     font-family: var(--font-family);
     margin: 0;
     padding: 0;
-    background-color: var(--background-color);
-    color: var(--text-color);
+    /* background-color: var(--background-color); */
+    /* color: var(--text-color); */
 }
 
 .landing-page-container {

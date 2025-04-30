@@ -113,6 +113,7 @@ import Markdown from "@uiw/react-md-editor";
 import SimpleMDE from "react-simplemde-editor";
 import "simplemde/dist/simplemde.min.css";
 import { FaHeading, FaListUl, FaListOl } from "react-icons/fa";
+import Button from "./Button/Button";
 
 const NoteCreation = ({ fileId }) => {
     const uploadFilesAction = useStore((state) => state.uploadFiles);
@@ -254,20 +255,20 @@ const NoteCreation = ({ fileId }) => {
             <div style={{ marginTop: "1rem" }}>
                 {" "}
                 {/* Container for the button */}
-                <button
+                <Button
                     onClick={handleSaveNote}
                     style={{
-                        padding: "10px 15px",
-                        borderRadius: "5px",
-                        backgroundColor: "#007bff",
-                        color: "white",
-                        border: "none",
-                        cursor: "pointer",
-                        alignSelf: "flex-end", // Align button to the right (optional)
+                        padding: "0.5rem 1rem",
+                        borderRadius: "0.5rem",
+                        // backgroundColor: "#007bff",
+                        // color: "white",
+                        // border: "none",
+                        // cursor: "pointer",
+                        // alignSelf: "flex-end", // Align button to the right (optional)
                     }}
                 >
                     Save Note
-                </button>
+                </Button>
             </div>
             {/* <div style={{ marginTop: '1rem' }}>
         <h2>/Preview</h2>

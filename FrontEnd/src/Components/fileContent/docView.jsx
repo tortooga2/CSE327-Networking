@@ -22,27 +22,19 @@ const docView = ({ src }) => {
     };
 
     return (
-        <div
+        <object
+            className={"content" + (loaded ? " loaded" : "")}
             style={{
-                height: "100%",
+                ...(loaded && closedFile ? afterLoad : beforeLoad),
+                margin: "0 auto",
+                height: "50vh",
+                width: "100%",
+                opacity: "1",
+                borderRadius: "0.5rem",
             }}
-        >
-            <object
-                className={"content" + (loaded ? " loaded" : "")}
-                style={{
-                    ...(loaded && closedFile ? afterLoad : beforeLoad),
-                    margin: "0 auto",
-                    maxWidth: "30vw",
-                    width: "30vw",
-                    minHeight: "40vh",
-                    maxHeight: "100%",
-                    opacity: "1",
-                    borderRadius: "0.5rem",
-                }}
-                onLoad={() => setLoaded(true)}
-                data={fileSrc}
-            />
-        </div>
+            onLoad={() => setLoaded(true)}
+            data={fileSrc}
+        />
     );
 };
 

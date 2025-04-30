@@ -8,7 +8,7 @@ import VerticalDiv from "./UILayout/VerticalDiv";
 
 import NoteCreation from "./NoteCreation";
 
-const DebugSidebar = () => {
+const Sidebar = () => {
     const selectedFiles = useStore((state) => state.selectedFiles);
     const UnSelectAll = useStore((state) => state.unSelectAll);
     const connectFiles = useStore((state) => state.connectFiles);
@@ -172,4 +172,4 @@ const DebugSidebar = () => {
     );
 };
 
-export default DebugSidebar;
+export default Sidebar;

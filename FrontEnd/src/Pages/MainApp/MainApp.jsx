@@ -4,13 +4,10 @@ import "./MainApp.css";
 
 import FileViewer from "../../Components/Fileviewer/Fileviewer.jsx";
 
-import Dashboard from "../../Components/Dashboard.jsx";
-import Sidebar from "../../Components/Sidebar.jsx";
-
 import { useUser } from "../../Components/Contexts/ctx.user.jsx";
 import { useStore } from "../../Components/Contexts/ctx.appManager.jsx";
 
-import DebugSidebar from "../../Components/SideBar.jsx";
+import Sidebar from "../../Components/SideBar.jsx";
 
 import FilePreview from "../../Components/FilePreview/FilePreview.jsx";
 import NewPage from "../../Components/UILayout/NewPage.jsx";
@@ -33,7 +30,13 @@ const MainApp = () => {
 
     return (
         <NewPage>
-            <VerticalDiv padding="0.5rem" style={{ position: "relative", backgroundColor: "var(--secondary-color)" }}>
+            <VerticalDiv
+                padding="1rem"
+                style={{
+                    position: "relative",
+                    backgroundColor: "var(--secondary-color)",
+                }}
+            >
                 <HorizontalDiv>
                     <VerticalDiv
                         width="42.5%"
@@ -46,14 +49,15 @@ const MainApp = () => {
                 </HorizontalDiv>
                 <HorizontalDiv
                     width="60%"
-                    padding="0rem"
+                    padding="1rem"
                     style={{
                         position: "absolute",
-                        borderRadius: "0.5rem",
-                        // border: "1px solid black",
+                        borderRadius: "var(--border-radius)",
+
+                        border: "1px solid var(--border-color)",
                         padding: "1rem",
                         background:
-                            "linear-gradient(var(--special-color), var(--grad-color))",
+                            "linear-gradient(var(--primary-color), var(--grad-color))",
                         transition: "all 0.3s cubic-bezier(.47,1.64,.41,.8)",
                     }}
                     state={[
@@ -80,7 +84,7 @@ const MainApp = () => {
                 >
                     <VerticalDiv width="350px" padding="0rem">
                         <Header />
-                        <DebugSidebar />
+                        <Sidebar />
                         <VerticalDiv height="100%"></VerticalDiv>
                     </VerticalDiv>
                     <HorizontalDiv

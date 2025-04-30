@@ -7,13 +7,13 @@ import FileViewer from "../../Components/Fileviewer/Fileviewer.jsx";
 import { useUser } from "../../Components/Contexts/ctx.user.jsx";
 import { useStore } from "../../Components/Contexts/ctx.appManager.jsx";
 
-import Sidebar from "../../Components/SideBar.jsx";
+import Sidebar from "../../Components/Sidebar.jsx";
 
 import FilePreview from "../../Components/FilePreview/FilePreview.jsx";
 import NewPage from "../../Components/UILayout/NewPage.jsx";
 import HorizontalDiv from "../../Components/UILayout/HorizontalDiv.jsx";
 import VerticalDiv from "../../Components/UILayout/VerticalDiv.jsx";
-import Header from "../../Components/Header.jsx";
+import Header from "../../Components/header.jsx";
 
 const MainApp = () => {
     const { user } = useUser();

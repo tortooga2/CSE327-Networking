@@ -56,7 +56,7 @@ const NotesView = ({ src }) => {
                     <MarkdownPreview
                         rehypePlugins={[rehypeRaw]}
                         components={{
-                            em: ({ children }) => {
+                            file: ({ children }) => {
                                 const fileid = children;
                                 const [fileData, setFileData] = useState(null);
                                 const [fileContent, setFileContent] =

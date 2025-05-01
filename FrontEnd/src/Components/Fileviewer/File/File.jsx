@@ -9,6 +9,8 @@ import Button from "../../Button/Button";
 
 import { useStore } from "../../Contexts/ctx.appManager";
 
+import { copyFileUrl, getFileUrl } from "../../scripts/fileUrlFuncs";
+
 const File = ({ fileData }) => {
     const fileContent = useState(fileData);
 
@@ -24,7 +26,7 @@ const File = ({ fileData }) => {
     });
 
     const ViewFile = (fileId) => (e) => {
-        e.stopPropagation();
+        // e.stopPropagation();
         useStore.getState().setPreviewedFile(fileId);
     };
 
@@ -34,16 +36,7 @@ const File = ({ fileData }) => {
 
     const handleChange = (e) => {
         e.stopPropagation();
-        console.log("Checkbox changed:", e.target.checked);
         setIsSelected(fileContent[0].id, !isSelected);
-    };
-
-    const copyLink = (e) => {
-        e.stopPropagation();
-        navigator.clipboard.writeText(
-            `${window.location.origin}/file/${fileContent[0].id}`
-        );
-        alert("Link copied to clipboard");
     };
 
     const [isHover, setIsHover] = useState(false);
@@ -55,8 +48,10 @@ const File = ({ fileData }) => {
             style={{
                 display: "flex",
                 justifyContent: "space-evenly",
-                padding: !isHover ? "1rem 0.5rem" : "1rem 1rem",
-                backgroundColor: isSelected ? "#f2e9e1" : "#ffffff00",
+                padding: "0.5rem 0.5rem",
+                backgroundColor: isSelected
+                    ? "var(--secondary-color)"
+                    : "#ffffff00",
                 transition: "background-color 0.2s, padding 0.2s ease-in-out",
                 cursor: "pointer",
                 alignItems: "center",
@@ -70,23 +65,27 @@ const File = ({ fileData }) => {
                 setIsHover(false);
             }}
         >
-            <input
-                type="checkbox"
-                ref={checkboxRef}
-                onChange={handleChange}
-                checked={isSelected}
-            />
+            <div style={{ width: "3rem", minWidth: "3rem" }}>
+                <input
+                    type="checkbox"
+                    ref={checkboxRef}
+                    onChange={handleChange}
+                    checked={isSelected}
+                    onClick={(e) => e.stopPropagation()}
+                />
+            </div>
 
             <div
                 style={{
                     flexShrink: "0",
+                    width: "15rem",
                 }}
             >
                 {fileContent[0].createdAt}
             </div>
             <div
                 style={{
-                    minWidth: isLayout ? "5rem" : "2rem",
+                    minWidth: "2rem",
                     textAlign: "left",
                     overflow: "hidden",
                     textOverflow: "ellipsis",
@@ -97,7 +96,7 @@ const File = ({ fileData }) => {
             {isLayout ? (
                 <div
                     style={{
-                        maxWidth: "10rem",
+                        width: "10rem",
                     }}
                 >
                     {fileContent[0].creator_username}
@@ -108,7 +107,7 @@ const File = ({ fileData }) => {
                     style={{
                         textWrap: "nowrap",
                         minWidth: "15rem",
-                        maxWidth: "15rem",
+                        width: "15rem",
                         overflow: "hidden",
                         textOverflow: "ellipsis",
                     }}
@@ -119,11 +118,14 @@ const File = ({ fileData }) => {
             <div
                 style={{
                     minWidth: "3rem",
+                    width: "20rem",
                     overflow: "hidden",
                     textOverflow: "ellipsis",
                 }}
             >
-                {`${window.location.origin}/file/${fileContent[0].id}`}
+                <a href={getFileUrl(fileContent[0].id)} target="_blank">
+                    {getFileUrl(fileContent[0].id)}
+                </a>
             </div>
 
             <div
@@ -132,7 +134,7 @@ const File = ({ fileData }) => {
                     gap: "0.1rem",
                     justifyContent: "center",
                     alignItems: "center",
-                    minWidth: "fit-content",
+                    minWidth: "5rem",
                 }}
             >
                 {isLayout && (
@@ -141,8 +143,7 @@ const File = ({ fileData }) => {
                 <Button
                     onClick={(e) => {
                         e.stopPropagation();
-
-                        copyLink(e);
+                        copyFileUrl(e, fileContent[0].id);
                     }}
                     className={"copy-link"}
                 >

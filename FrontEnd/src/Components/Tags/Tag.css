@@ -22,6 +22,7 @@
 .tag {
     display: flex;
     width: 8rem;
+    min-width: 8rem;
     gap: 1rem;
 }
 

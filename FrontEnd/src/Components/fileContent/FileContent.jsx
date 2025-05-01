@@ -7,13 +7,12 @@ import Button from "../Button/Button";
 import getFileType from "../scripts/getFileType";
 import { FileType } from "../Tags";
 
+import { copyFileUrl, getFileUrl } from "../scripts/fileUrlFuncs";
+
 const FileContent = ({ file }) => {
     const copyLink = (fileId) => (e) => {
         e.stopPropagation();
-        navigator.clipboard.writeText(
-            `${window.location.origin}/file/${fileId}`
-        );
-        alert("Link copied to clipboard");
+        navigator.clipboard.writeText(getFileUrl(fileId));
     };
 
     return (
@@ -69,6 +68,7 @@ const FileContent = ({ file }) => {
                             display: "flex",
                             gap: "0.5rem",
                             alignItems: "center",
+                            textOverflow: "ellipsis",
                         }}
                     >
                         <p>Name:</p> {file ? file.name : ""}
@@ -79,32 +79,41 @@ const FileContent = ({ file }) => {
                             display: "flex",
                             gap: "0.5rem",
                             alignItems: "center",
+                            textOverflow: "ellipsis",
                         }}
                     >
-                        <p>Create At:</p>
-                        {file
-                            ? (() => {
-                                return new Date(
-                                    file.createdAt
-                                ).toLocaleDateString("en-US", {
-                                    year: "numeric",
-                                    month: "short",
-                                    day: "numeric",
-                                });
-                            })()
-                            : ""}
+                        <p>URL:</p>{" "}
+                        <a href={getFileUrl(file.id)} target="_blank">
+                            {file ? getFileUrl(file.id) : ""}
+                        </a>
+                    </div>
+
+                    <div
+                        style={{
+                            display: "flex",
+                            gap: "0.5rem",
+                            alignItems: "center",
+                        }}
+                    >
+                        <p>Created At:</p>
+                        {file ? file.createdAt : ""}
                     </div>
                     <p>Creator: {file ? file.creator_username : ""}</p>
                 </div>
 
-                <Button onClick={copyLink(file.id)}>Copy Link</Button>
+                <Button
+                    onClick={(e) => {
+                        copyFileUrl(e, file.id);
+                    }}
+                >
+                    Copy Link
+                </Button>
             </div>
             <div
                 style={{
                     overflow: "hidden",
                     border: "1px solid var(--border-color)",
                     borderRadius: "0.5rem",
-
                 }}
             >
                 {(() => {

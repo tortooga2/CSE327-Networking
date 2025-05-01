@@ -9,6 +9,7 @@ import Button from "../Button/Button.jsx";
 import FileContent from "../fileContent/FileContent.jsx";
 
 import VerticalDiv from "../UILayout/VerticalDiv";
+import { getFileUrl } from "../scripts/fileUrlFuncs.js";
 
 const FilePreview = ({ width }) => {
     const fileId = useStore((state) => state.previewedFile);
@@ -31,6 +32,8 @@ const FilePreview = ({ width }) => {
         useStore.getState().setPreviewedFile(null);
         console.log("Preview is", closedFile);
     };
+
+    const fileIds = [];
 
     useEffect(() => {
         console.log(`File ID: ${fileId}`);
@@ -160,6 +163,46 @@ const FilePreview = ({ width }) => {
                                 Creator:{" "}
                                 {fileData ? fileData.creator_username : ""}
                             </p>
+                            <div>
+                                Bundle Content Ids:{" "}
+                                {Array.from(fileContent).map((file) => {
+                                    console.log();
+                                    fileIds.push(file.id);
+                                    return (
+                                        <a
+                                            href={getFileUrl(file.id)}
+                                            key={file.id}
+                                            target="_blank"
+                                        >
+                                            {getFileUrl(file.id)}{" "}
+                                        </a>
+                                    );
+                                })}
+                            </div>
+                            <Button
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    let clip = "";
+                                    for (let id in fileIds) {
+                                        clip += `<file>${fileIds[id]}</file>\n`;
+                                    }
+                                    navigator.clipboard.writeText(clip);
+                                }}
+                            >
+                                Copy Note Embedings
+                            </Button>
+                            <Button
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    let clip = "";
+                                    for (let id in fileIds) {
+                                        clip += `${getFileUrl(fileIds[id])}\n`;
+                                    }
+                                    navigator.clipboard.writeText(clip);
+                                }}
+                            >
+                                Copy Urls
+                            </Button>
                         </div>
                     )}
                 </div>

@@ -6,6 +6,8 @@ import { CompareFuncs } from "../scripts/compareFuncs.js"; //Object that include
 
 import VerticalDiv from "../UILayout/VerticalDiv";
 
+import Header from "./FileHeader.jsx";
+
 const FileViewer = ({ width }) => {
     const files = useStore((state) => state.files);
     const sortOrder = useStore((state) => state.sortOrder); //sortOrder is a json object that includes the field, as well as the order.
@@ -29,10 +31,18 @@ const FileViewer = ({ width }) => {
     }, [files, sortOrder]);
 
     return (
-        <VerticalDiv gap="0rem" width={width} padding="0rem">
-            {fileEntries.map((fileData) => (
-                <File key={fileData.id} fileData={fileData} />
-            ))}
+        <VerticalDiv style={{ overflowX: "hidden" }}>
+            <Header />
+            <VerticalDiv
+                gap="1rem"
+                width={width}
+                padding="0rem"
+                style={{ overflowX: "hidden" }}
+            >
+                {fileEntries.map((fileData) => (
+                    <File key={fileData.id} fileData={fileData} />
+                ))}
+            </VerticalDiv>
         </VerticalDiv>
     );
 };

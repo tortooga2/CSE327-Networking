@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { useStore } from "../Contexts/ctx.appManager.jsx";
 import PropTypes from "prop-types";
-import "./FilePreview.css";  // Add this import
 
 import getFileType from "../scripts/getFileType.js";
 import { FileType } from "../Tags";
@@ -82,208 +81,100 @@ const FilePreview = ({ width }) => {
         }
     }, [fileData]);
 
-    // Add function to handle background click
-    const handleBackgroundClick = (e) => {
-        if (e.target === e.currentTarget) {
-            closePreview();
-        }
-    };
-
     return (
-        <>
-            {/* Desktop view */}
-            <VerticalDiv width={width} className="desktop-preview">
+        <VerticalDiv width={width}>
+            <div
+                className="preview-header"
+                style={{
+                    borderBottom: "1px solid var(--border-color)",
+                    paddingBottom: "1rem",
+                    display: "flex",
+                    alignItems: "flex-start",
+                    justifyContent: "space-between",
+                }}
+            >
                 <div
-                    className="preview-header"
                     style={{
-                        borderBottom: "1px solid var(--special-color)",
-                        paddingBottom: "1rem",
                         display: "flex",
-                        alignItems: "flex-start",
-                        justifyContent: "space-between",
+                        gap: "1rem",
+                        flexDirection: "column",
                     }}
                 >
                     <div
                         style={{
-                            display: "flex",
-                            gap: "1rem",
-                            flexDirection: "column",
+                            fontSize: "2rem",
+                            color: "var(--text-color)",
+                            fontWeight: "400",
                         }}
                     >
+                        {"File Preview"}
+                    </div>
+                    {isBundle && (
                         <div
                             style={{
-                                fontSize: "2rem",
-                                color: "var(--special-color)",
-                                fontWeight: "400",
+                                display: "flex",
+                                flexDirection: "column",
+                                gap: " 0.5rem",
                             }}
                         >
-                            {"File Preview"}
-                        </div>
-                        {isBundle && (
                             <div
                                 style={{
                                     display: "flex",
-                                    flexDirection: "column",
-                                    gap: " 0.5rem",
+                                    gap: "0.5rem",
+                                    alignItems: "center",
                                 }}
                             >
-                                <div
-                                    style={{
-                                        display: "flex",
-                                        gap: "0.5rem",
-                                        alignItems: "center",
-                                    }}
-                                >
-                                    {fileData ? FileType(fileData.name) : ""}
-                                </div>
-                                <div
-                                    style={{
-                                        display: "flex",
-                                        gap: "0.5rem",
-                                        alignItems: "center",
-                                    }}
-                                >
-                                    <p>Name:</p> {fileData ? fileData.name : ""}
-                                </div>
-
-                                <div
-                                    style={{
-                                        display: "flex",
-                                        gap: "0.5rem",
-                                        alignItems: "center",
-                                    }}
-                                >
-                                    <p>Create At:</p>
-                                    {fileData
-                                        ? (() => {
-                                              return new Date(
-                                                  fileData.createdAt
-                                              ).toLocaleDateString("en-US", {
-                                                  year: "numeric",
-                                                  month: "short",
-                                                  day: "numeric",
-                                              });
-                                          })()
-                                        : ""}
-                                </div>
-                                <p>
-                                    Creator:{" "}
-                                    {fileData ? fileData.creator_username : ""}
-                                </p>
+                                {fileData ? FileType(fileData.name) : ""}
                             </div>
-                        )}
-                    </div>
-
-                    <Button onClick={closePreview}>Close</Button>
-                </div>
-
-                <VerticalDiv gap="1rem">
-                    {fileContent
-                        ? fileContent.map((file, index) => (
-                              <FileContent key={index} file={file} />
-                          ))
-                        : null}
-                </VerticalDiv>
-            </VerticalDiv>
-
-            {/* Mobile modal view */}
-            {closedFile && (
-                <div className="file-preview-modal" onClick={handleBackgroundClick}>
-                    <div className="modal-content">
-                        <div
-                            className="preview-header"
-                            style={{
-                                borderBottom: "1px solid var(--special-color)",
-                                paddingBottom: "1rem",
-                                padding: "1rem",
-                                display: "flex",
-                                alignItems: "flex-start",
-                                justifyContent: "space-between",
-                            }}
-                        ><div
+                            <div
                                 style={{
                                     display: "flex",
-                                    gap: "1rem",
-                                    flexDirection: "column",
+                                    gap: "0.5rem",
+                                    alignItems: "center",
                                 }}
                             >
-                                <div
-                                    style={{
-                                        fontSize: "1.5rem",
-                                        color: "var(--special-color)",
-                                        fontWeight: "400",
-                                    }}
-                                >
-                                    {"File Preview"}
-                                </div>
-                                {isBundle && (
-                                    <div
-                                        style={{
-                                            display: "flex",
-                                            flexDirection: "column",
-                                            gap: " 0.5rem",
-                                        }}
-                                    >
-                                        <div
-                                            style={{
-                                                display: "flex",
-                                                gap: "0.5rem",
-                                                alignItems: "center",
-                                            }}
-                                        >
-                                            {fileData ? FileType(fileData.name) : ""}
-                                        </div>
-                                        <div
-                                            style={{
-                                                display: "flex",
-                                                gap: "0.5rem",
-                                                alignItems: "center",
-                                            }}
-                                        >
-                                            <p>Name:</p> {fileData ? fileData.name : ""}
-                                        </div>
-
-                                        <div
-                                            style={{
-                                                display: "flex",
-                                                gap: "0.5rem",
-                                                alignItems: "center",
-                                            }}
-                                        >
-                                            <p>Create At:</p>
-                                            {fileData
-                                                ? (() => {
-                                                      return new Date(
-                                                          fileData.createdAt
-                                                      ).toLocaleDateString("en-US", {
-                                                          year: "numeric",
-                                                          month: "short",
-                                                          day: "numeric",
-                                                      });
-                                                  })()
-                                                : ""}
-                                        </div>
-                                        <p>
-                                            Creator:{" "}
-                                            {fileData ? fileData.creator_username : ""}
-                                        </p>
-                                    </div>
-                                )}
+                                <p>Name:</p> {fileData ? fileData.name : ""}
                             </div>
-                            <Button onClick={closePreview}>Close</Button>
-                        </div>
 
-                        <VerticalDiv gap="1rem" style={{ padding: "1rem" }}>
-                            {fileContent
-                                ? fileContent.map((file, index) => (
-                                      <FileContent key={index} file={file} />
-                                  ))
-                                : null}
-                        </VerticalDiv>
-                    </div>
+                            <div
+                                style={{
+                                    display: "flex",
+                                    gap: "0.5rem",
+                                    alignItems: "center",
+                                }}
+                            >
+                                <p>Create At:</p>
+                                {fileData
+                                    ? (() => {
+                                          return new Date(
+                                              fileData.createdAt
+                                          ).toLocaleDateString("en-US", {
+                                              year: "numeric",
+                                              month: "short",
+                                              day: "numeric",
+                                          });
+                                      })()
+                                    : ""}
+                            </div>
+                            <p>
+                                Creator:{" "}
+                                {fileData ? fileData.creator_username : ""}
+                            </p>
+                        </div>
+                    )}
                 </div>
-            )}
-        </>
+
+                <Button onClick={closePreview}>Close</Button>
+            </div>
+
+            <VerticalDiv gap="1rem">
+                {fileContent && closedFile
+                    ? fileContent.map((file, index) => (
+                          <FileContent key={index} file={file} />
+                      ))
+                    : null}
+            </VerticalDiv>
+        </VerticalDiv>
     );
 };
 

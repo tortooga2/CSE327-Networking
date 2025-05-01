@@ -1,48 +1,26 @@
-.mobile-dock {
-  display: none;
+.sidebar {
+    transition: transform 0.3s ease;
 }
 
-@media screen and (max-width: 768px) {
-  .desktop-sidebar {
-    display: none;
-  }
+@media (max-width: 768px) {
+    .mobile-hide {
+        display: none !important;
+    }
 
-  .mobile-dock {
-    display: flex;
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 60px;
-    background: var(--special-color);
-    padding: 8px 16px;
-    justify-content: space-around;
-    align-items: center;
-    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
-    z-index: 1000;
-  }
+    .main-content {
+        padding: 0.5rem !important;
+    }
 
-  .mobile-dock-button {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    color: white;
-    font-size: 0.8rem;
-    gap: 4px;
-  }
+    .main-content > div {
+        padding: 0.5rem !important;
+    }
 
-  .mobile-dock-icon {
-    font-size: 1.5rem;
-  }
+    .main-content {
+        padding-bottom: 5rem !important;
+    }
 
-  .mobile-fileviewer {
-    height: calc(100vh - 60px);
-    overflow-y: auto;
-    padding-bottom: 60px;
-  }
-
-  .desktop-preview {
-    display: none;
-  }
+    .main-content > div:last-child {
+        width: 100% !important;
+    }
 }
 

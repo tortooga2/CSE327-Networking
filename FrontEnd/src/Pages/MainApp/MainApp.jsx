@@ -1,54 +1,50 @@
 import { useState, useRef, useEffect } from "react";
-import { FaUpload, FaLink, FaPlus, FaCog } from "react-icons/fa";
+
 import "./MainApp.css";
 
 import FileViewer from "../../Components/Fileviewer/Fileviewer.jsx";
 
-import Dashboard from "../../Components/Dashboard.jsx";
-import Sidebar from "../../Components/Sidebar.jsx";
-
 import { useUser } from "../../Components/Contexts/ctx.user.jsx";
 import { useStore } from "../../Components/Contexts/ctx.appManager.jsx";
 
-import DebugSidebar from "../../Components/debugSideBar.jsx";
+import Sidebar from "../../Components/Sidebar.jsx";
 
 import FilePreview from "../../Components/FilePreview/FilePreview.jsx";
 import NewPage from "../../Components/UILayout/NewPage.jsx";
 import HorizontalDiv from "../../Components/UILayout/HorizontalDiv.jsx";
 import VerticalDiv from "../../Components/UILayout/VerticalDiv.jsx";
-import Header from "../../Components/Header.jsx";
-
-const MobileDock = () => {
-  return (
-    <div className="mobile-dock">
-      <button className="mobile-dock-button">
-        <FaUpload className="mobile-dock-icon" />
-        <span>Upload</span>
-      </button>
-      <button className="mobile-dock-button">
-        <FaLink className="mobile-dock-icon" />
-        <span>Connect</span>
-      </button>
-      <button className="mobile-dock-button">
-        <FaPlus className="mobile-dock-icon" />
-        <span>Create</span>
-      </button>
-      <button className="mobile-dock-button">
-        <FaCog className="mobile-dock-icon" />
-        <span>Settings</span>
-      </button>
-    </div>
-  );
-};
+import Header from "../../Components/header.jsx";
+import Dock from "../../Components/Dock/Dock.jsx";
+import { FaHome, FaFile, FaSearch, FaCog } from "react-icons/fa";
 
 const MainApp = () => {
     const { user } = useUser();
-
-    const closedFile = useStore((state) => {
-        return state.previewedFile !== null;
-    });
-
+    const closedFile = useStore((state) => state.previewedFile !== null);
     const layoutState = useStore((state) => state.layoutState);
+    const [currentView, setCurrentView] = useState('files');
+
+    const dockItems = [
+        {
+            icon: <FaHome size={24} />,
+            label: 'Home',
+            onClick: () => setCurrentView('home')
+        },
+        {
+            icon: <FaFile size={24} />,
+            label: 'Files',
+            onClick: () => setCurrentView('files')
+        },
+        {
+            icon: <FaSearch size={24} />,
+            label: 'Search',
+            onClick: () => setCurrentView('search')
+        },
+        {
+            icon: <FaCog size={24} />,
+            label: 'Settings',
+            onClick: () => setCurrentView('settings')
+        }
+    ];
 
     useEffect(() => {
         user.ValidateSession();
@@ -56,31 +52,35 @@ const MainApp = () => {
 
     return (
         <NewPage>
-            <VerticalDiv padding="0.5rem" style={{ position: "relative", backgroundColor: "var(--secondary-color)" }}>
+            <VerticalDiv
+                padding="1rem"
+                style={{
+                    position: "relative",
+                    backgroundColor: "var(--secondary-color)",
+                }}
+            >
                 <HorizontalDiv>
                     <VerticalDiv
                         width="42.5%"
                         style={{ backgroundColor: "white" }}
-                        className="desktop-sidebar"
+                        className="mobile-hide"
                     >
                         <h1>This is a placeholder</h1>
                     </VerticalDiv>
-                    <HorizontalDiv width="100%" className="mobile-fileviewer">
-                        <FileViewer width="100%" />
-                    </HorizontalDiv>
+                    <HorizontalDiv width="100%"></HorizontalDiv>
                     <FilePreview width="93%" />
                 </HorizontalDiv>
-                
-                {/* Desktop sidebar */}
                 <HorizontalDiv
                     width="60%"
-                    padding="0rem"
-                    className="desktop-sidebar"
+                    padding="1rem"
+                    className="main-content"
                     style={{
                         position: "absolute",
-                        borderRadius: "0.5rem",
+                        borderRadius: "var(--border-radius)",
+                        border: "1px solid var(--border-color)",
                         padding: "1rem",
-                        background: "linear-gradient(var(--special-color), var(--grad-color))",
+                        background:
+                            "linear-gradient(var(--primary-color), var(--grad-color))",
                         transition: "all 0.3s cubic-bezier(.47,1.64,.41,.8)",
                     }}
                     state={[
@@ -99,11 +99,13 @@ const MainApp = () => {
                     ]}
                     playAnimation={layoutState}
                 >
-                    <VerticalDiv width="350px" padding="0rem">
-                        <Header />
-                        <DebugSidebar />
-                        <VerticalDiv height="100%"></VerticalDiv>
-                    </VerticalDiv>
+                    <div className="sidebar-wrapper">
+                        <VerticalDiv width="350px" padding="0rem" className="sidebar">
+                            <Header />
+                            <Sidebar />
+                            <VerticalDiv height="100%"></VerticalDiv>
+                        </VerticalDiv>
+                    </div>
                     <HorizontalDiv
                         padding="0rem"
                         gap="0rem"
@@ -112,13 +114,10 @@ const MainApp = () => {
                         <FileViewer width="100%" />
                     </HorizontalDiv>
                 </HorizontalDiv>
-
-                {/* Mobile dock */}
-                <MobileDock />
+                <Dock items={dockItems} />
             </VerticalDiv>
         </NewPage>
     );
 };
 
 export default MainApp;
-

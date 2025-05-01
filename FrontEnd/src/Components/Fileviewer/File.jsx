@@ -5,11 +5,16 @@ import "./File.css";
 
 import { useStore } from "../Contexts/zus.fileManager";
 
+import FileButtonLess from "./File.buttonless";
+
 const File = ({ fileData }) => {
+    const navigate = useNavigate();
     const fileContent = useState(fileData);
-
+    const buttonSection = useRef(null);
     const checkboxRef = useRef(null);
-
+    const dropDownRef = useRef(null);
+    const [isExpanded, setIsExpanded] = useState(false);
+    const dropDownClassName = "drop-down";
     const isSelected = useStore((state) =>
         state.selectedFiles.has(fileContent[0].id)
     );
@@ -61,11 +66,21 @@ const File = ({ fileData }) => {
 
     return (
         <div
-            className={isSelected ? "file-item selected" : "file-item"}
+            className={isSelected ? "file-row selected" : "file-row"}
             onClick={() => checkboxRef.current.click()}
+            style={{
+                display: "grid",
+                gridTemplateColumns: "50px 180px 120px 150px 1fr 120px",
+                padding: "16px 24px",
+                borderBottom: "1px solid #E2E8F0",
+                backgroundColor: isSelected ? "#F0EBFF" : "white",
+                transition: "background-color 0.2s",
+                cursor: "pointer",
+                alignItems: "center",
+            }}
         >
-            <div className="id-column" title={fileContent[0].id}>{fileContent[0].id}</div>
-            <div className="date-column">
+            <div>{fileContent[0].id}</div>
+            <div>
                 {new Date(fileContent[0].createdAt).toLocaleDateString(
                     "en-US",
                     {
@@ -75,19 +90,26 @@ const File = ({ fileData }) => {
                     }
                 )}
             </div>
-            <div className="type-column">
-                <span className="type-pill">
-                    {fileType === "bundle" ? "bundle" : fileType}
-                </span>
+            <div>
+                <span style={getTypePillClass(fileType)}>{fileType}</span>
             </div>
-            <div className="owner-column">{fileContent[0].creator_username}</div>
-            <div className="name-column">{fileContent[0].name}</div>
-            <div className="button-column">
+            <div>{fileContent[0].creator_username}</div>
+            <div style={{ fontWeight: "500", minWidth: "100px", textWrap: "nowrap", overflowX: "hidden", textOverflow: "ellipsis" }}>{fileContent[0].name}</div>
+            <div
+                style={{
+                    display: "flex",
+                    gap: "1rem",
+                    justifyContent: "center",
+                    alignItems: "center",
+
+                }}
+            >
                 <input
                     type="checkbox"
                     ref={checkboxRef}
                     onChange={handleChange}
                     checked={isSelected}
+
                 />
                 <button
                     onClick={(e) => {
@@ -100,19 +122,27 @@ const File = ({ fileData }) => {
                 <button
                     onClick={(e) => {
                         e.stopPropagation();
+
                         copyLink(e);
                     }}
-                    className="copy-link"
+                    className={"copy-link"}
                 >
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
                         fill="#000000"
                         className="bi bi-files"
                         viewBox="0 0 16 16"
+                        id="Files--Streamline-Bootstrap"
                         height={16}
                         width={16}
                     >
-                        <path d="M13 0H6a2 2 0 0 0-2 2 2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h7a2 2 0 0 0 2-2 2 2 0 0 0 2-2V2a2 2 0 0 0-2-2m0 13V4a2 2 0 0 0-2-2H5a1 1 0 0 1 1-1h7a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1M3 4a1 1 0 0 1 1-1h7a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V4z" strokeWidth={1} />
+                        <desc>
+                            {"Files Streamline Icon: https://streamlinehq.com"}
+                        </desc>
+                        <path
+                            d="M13 0H6a2 2 0 0 0 -2 2 2 2 0 0 0 -2 2v10a2 2 0 0 0 2 2h7a2 2 0 0 0 2 -2 2 2 0 0 0 2 -2V2a2 2 0 0 0 -2 -2m0 13V4a2 2 0 0 0 -2 -2H5a1 1 0 0 1 1 -1h7a1 1 0 0 1 1 1v10a1 1 0 0 1 -1 1M3 4a1 1 0 0 1 1 -1h7a1 1 0 0 1 1 1v10a1 1 0 0 1 -1 1H4a1 1 0 0 1 -1 -1z"
+                            strokeWidth={1}
+                        />
                     </svg>
                 </button>
             </div>

@@ -1,30 +1,28 @@
 import { create } from "zustand";
 
-const useStore = create((set, get) => ({
+const useStore = create((set) => ({
+    userProfile: {},
+    setUserProfile: (state) => set({ userProfile: state }),
+
+    layoutState: 0,
+    setLayoutState: (state) => set({ layoutState: state }),
+
     files: new Map(),
+    setFiles: (files) => set({ files }),
+
+    newFiles: new Array(),
+    appendNewFiles: (state) => {
+        set((prevState) => ({
+            newFiles: [...prevState.newFiles, state],
+        }));
+    },
+    popNewFiles: () => {
+        set((prevState) => ({
+            newFiles: prevState.newFiles.slice(0, -1),
+        }));
+    },
+
     selectedFiles: new Set(),
-    previewedFile: null,
-    setPreviewedFile: (fileID) => {
-        set({ previewedFile: fileID });
-    },
-    loading: false,
-    getFiles: () => {
-        return Array.from(get().files.values()).sort((a, b) => {
-            return new Date(b.createdAt) - new Date(a.createdAt);
-        });
-    },
-    getFileById: (fileID) => {
-        const file = get().files.get(fileID);
-        if (file) {
-            return file;
-        }
-        return null;
-    },
-    setFiles: (files) => {
-        set({ files: new Map(files.map(file => [file.id, file])) });
-        // Save to localStorage
-        localStorage.setItem('files', JSON.stringify(Array.from(files.entries())));
-    },
     selectFile: (fileID, selectionState) => {
         set((state) => {
             const newSelectedFiles = new Set(state.selectedFiles);
@@ -33,79 +31,149 @@ const useStore = create((set, get) => ({
             } else {
                 newSelectedFiles.delete(fileID);
             }
+            console.log(newSelectedFiles);
             return { selectedFiles: newSelectedFiles };
         });
     },
     unSelectAll: () => {
         set({ selectedFiles: new Set() });
     },
+    previewedFile: null,
+    setPreviewedFile: (fileID) => {
+        if (fileID === null) {
+            set({ layoutState: 0 });
+        } else {
+            set({ layoutState: 1 });
+        }
+        set({ previewedFile: fileID });
+    },
+    loading: false,
+
     loadFiles: async () => {
         set({ loading: true });
-        // Load from localStorage
-        const savedFiles = localStorage.getItem('files');
-        if (savedFiles) {
-            const filesArray = JSON.parse(savedFiles);
-            set({ files: new Map(filesArray) });
+        try {
+            const response = await fetch("/api/file/all", {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                credentials: "include",
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                const filesArray = data.data;
+
+                set((state) => {
+                    const newFiles = new Map(state.files);
+                    for (const file of filesArray) {
+                        newFiles.set(file.id, file);
+                    }
+                    return { files: newFiles };
+                });
+                set({ loading: false });
+            }
+        } catch (error) {
+            console.error(error);
         }
-        set({ loading: false });
     },
     updateFiles: (data) => {
         set((state) => {
             const filesMap = new Map(state.files);
             data.forEach((file) => filesMap.set(file.id, file));
-            // Save to localStorage
-            localStorage.setItem('files', JSON.stringify(Array.from(filesMap.entries())));
             return { files: filesMap };
         });
     },
     connectFiles: async () => {
-        const selectedFiles = Array.from(get().selectedFiles);
-        // Create a bundle locally
-        const bundleFile = {
-            id: 'bundle-' + Date.now(),
-            name: 'Bundle ' + new Date().toLocaleDateString(),
-            type: 'bundle',
-            createdAt: new Date().toISOString(),
-            creator_username: 'local-user',
-            files: selectedFiles.map(id => get().files.get(id))
-        };
-        get().updateFiles([bundleFile]);
-        get().unSelectAll();
+        try {
+            const response = await fetch("/api/file/connect", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                credentials: "include",
+                body: JSON.stringify({
+                    file_ids: Array.from(useStore.getState().selectedFiles),
+                }),
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                console.log("Data from RTCPeerConnection", data);
+                useStore.getState().updateFiles(data.data);
+                useStore.getState().unSelectAll();
+            }
+        } catch (error) {
+            console.error(error);
+        }
     },
     uploadFiles: async (files) => {
-        const uploadedFiles = [];
-        for (let file of files) {
-            const reader = new FileReader();
-            await new Promise((resolve) => {
-                reader.onload = () => {
-                    const fileData = {
-                        id: 'file-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9),
-                        name: file.name,
-                        type: file.type || file.name.split('.').pop(),
-                        createdAt: new Date().toISOString(),
-                        creator_username: 'local-user',
-                        metadata: {
-                            url: reader.result
-                        }
-                    };
-                    uploadedFiles.push(fileData);
-                    resolve();
-                };
-                reader.readAsDataURL(file);
-            });
+        //Separate name from each file
+        const fileNames = [];
+        for (let index = 0; index < files.length; index++) {
+            fileNames.push(files[index].name);
         }
-        get().updateFiles(uploadedFiles);
-    },
-    deleteFiles: () => {
-        set((state) => {
-            const filesMap = new Map(state.files);
-            state.selectedFiles.forEach((id) => {
-                filesMap.delete(id);
+
+        try {
+            const response = await fetch("/api/file/upload-helper", {
+                method: "POST",
+                credentials: "include",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    fileCount: files.length,
+                    fileNames: fileNames,
+                }),
             });
-            // Save to localStorage
-            localStorage.setItem('files', JSON.stringify(Array.from(filesMap.entries())));
-            return { files: filesMap, selectedFiles: new Set() };
-        });
+
+            const { urls, data } = await response.json();
+
+            //Push each file to s3
+            for (let index = 0; index < files.length; index++) {
+                await fetch(urls[index], {
+                    method: "PUT",
+                    body: files[index],
+                });
+            }
+
+            //Now check to see if the files were uploaded successfully and if so, save to db
+            await fetch("/api/file/verify", {
+                method: "POST",
+                credentials: "include",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    data: data,
+                }),
+            });
+            //             if (response.ok) {
+            //                 const data = await response.json();
+            //                 console.log("Data from upload", data);
+            //                 useStore.getState().updateFiles([data.data]);
+            //                 useStore.getState().unSelectAll();
+            //             }
+        } catch (err) {
+            console.log(err);
+        }
+    },
+    deleteFiles: async () => {
+        try {
+            const response = fetch("/api/file/delete/", {
+                method: "DELETE",
+                credentials: "include",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    file_ids: Array.from(useStore.getState().selectedFiles),
+                }),
+            });
+            console.log(response);
+        } catch (err) {
+            console.log(err);
+        }
     },
 }));
 

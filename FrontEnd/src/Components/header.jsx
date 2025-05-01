@@ -1,34 +1,104 @@
 import { useState } from "react";
+import VerticalDiv from "./UILayout/VerticalDiv";
+import Button from "./Button/Button";
+import UserButton from "./UserButton";
+import HorizontalDiv from "./UILayout/HorizontalDiv";
 
-export const Header = () => {
+import { FaCog } from "react-icons/fa";
+
+import { FaFile } from "react-icons/fa";
+import { useStore } from "./Contexts/ctx.appManager";
+import { useUser } from "./Contexts/ctx.user";
+
+const Header = () => {
     const [searchTerm, setSearchTerm] = useState("");
     const handleSearch = (e) => {
         setSearchTerm(e.target.value);
     };
 
+    const { username_base, username_suffix } = useStore(
+        (state) => state.userProfile
+    );
+
+    const user = useUser();
+
+
+
+    const buttonStyle = {
+        border: "1px solid black",
+        borderRadius: "0.5rem",
+        padding: "0.5rem",
+        position: "relative",
+        overflow: "hidden",
+        width: "80%",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        gap: "0.5rem",
+    };
+
+    const buttonClickStyle = {
+        backgroundColor: "#E2E8F0",
+        color: "#000",
+    };
+
     return (
-        <div className="px-4 py-3 h-16 flex items-center justify-between">
-            <div className="flex items-center gap-4">
-                <h1 className="text-xl font-semibold text-[#1E0B33] hidden lg:block">Files</h1>
+        <div
+            style={{
+                // border: "1px solid",
+                borderRadius: "0.5rem",
+                padding: "1rem",
+                display: "flex",
+                flexDirection: "column",
+                gap: "0.5rem",
+                height: "fit-content",
+            }}
+        >
+            <div
+                style={{
+                    textAlign: "left",
+                    width: "100%",
+                    marginBottom: "2rem",
+                    padding: "0.5rem",
+                    borderRadius: "0.5rem",
+                    fontWeight: "900",
+                    fontSize: "2rem",
+                    backgroundColor: "var(--secondary-color)",
+                    color: "var(--special-color)",
+                }}
+            >
+                ConnectWork
             </div>
-            {/* Center the search bar on all screens */}
-            <div className="flex-1 flex justify-center max-w-xl w-full">
-                <div className="relative w-full max-w-xs sm:max-w-xl">
-                    <input
-                        type="text"
-                        placeholder="Search files..."
-                        value={searchTerm}
-                        onChange={handleSearch}
-                        className="w-full px-4 py-2 pl-10 rounded-lg border border-gray-200 focus:outline-none focus:border-purple-400 transition-colors"
-                    />
-                    <div className="absolute inset-y-0 left-3 flex items-center pointer-events-none">
-                        <svg className="w-4 h-4 text-gray-400" fill="none" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24" stroke="currentColor">
-                            <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-                        </svg>
-                    </div>
-                </div>
+            <div>
+                <UserButton username={username_base + '#' + username_suffix} SignOut={user.SignOut} />
             </div>
-            <div className="w-[100px]"></div> {/* Spacer to center search */}
+            <div
+                style={{
+                    display: "flex",
+                    gap: "1rem",
+                    alignItems: "left",
+                    paddingTop: "1rem",
+                    paddingBottom: "1rem",
+                }}
+            >
+                <Button
+                    onClick={(e) => {
+                        e.stopPropagation();
+                        useStore.getState().setLayoutState(2);
+                    }}
+                >
+                    {" "}
+                    <FaCog />
+                    Settings
+                </Button>
+                <Button>
+                    <FaFile />
+                    File
+                </Button>
+                <Button>Help</Button>
+            </div>
         </div>
     );
 };
+
+export default Header;

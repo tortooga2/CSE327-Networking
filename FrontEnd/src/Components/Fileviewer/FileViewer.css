@@ -3,31 +3,23 @@
 }
 
 .table-wrapper {
-    background-color: #F8F6FD;
-    border-radius: 12px;
-    overflow-x: auto;
-    margin: 16px auto;
-    box-shadow: 0 2px 4px rgba(30, 11, 51, 0.05);
+    background-color: #F8F6FD; /* From the second code block */
+    border-radius: 12px; /* From the second code block */
+    overflow: hidden; /* From the second code block */
+    margin: 16px; /* Existing margin from .content-body */
+    box-shadow: 0 2px 4px rgba(30, 11, 51, 0.05); /* Existing box-shadow */
     height: 100%; /* Consider if you need this here or on a parent */
-    width: 100%; /* Make table take full width */
-    max-width: 1920px; /* Cap at 1920px for ultra-wide screens, but fill up to that */
-    min-width: 0;
-    box-sizing: border-box;
 }
 
 .file-header {
-    background-color: #1E0B33;
-    color: white;
-    font-weight: 500;
-    font-size: 14px;
-    display: grid;
-    grid-template-columns: 1fr 2fr 1fr 1.5fr 2fr 1fr;
-    padding: 16px 24px;
-    border-bottom: 1px solid #E0E0E0;
-    position: sticky;
-    top: 0;
-    z-index: 10;
-    box-sizing: border-box;
+    background-color: #1E0B33; /* From the second code block's header row */
+    color: white; /* From the second code block's header row */
+    font-weight: 500; /* From the second code block's header row */
+    font-size: 14px; /* From the second code block's header row */
+    display: grid; /* Use grid for layout */
+    grid-template-columns: 50px 180px 120px 150px 1fr 200px 120px; /* Define column widths */
+    padding: 16px 24px; /* From the second code block's header row */
+    border-bottom: 1px solid #E0E0E0; /* Keep the existing border */
 }
 
 .file-header > div {
@@ -44,29 +36,20 @@
     height: 40px;
     line-height: normal;
     gap: 8px; /* For sort icons */
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
 }
 
 .file-header > div:hover {
     background-color: rgba(255, 255, 255, 0.05); /* Lighten on hover for dark background */
 }
 
-.file-content {
-    overflow-x: auto;
-    max-height: calc(100vh - 200px);
-}
-
 .file-item {
     display: grid; /* Use grid for layout */
-    grid-template-columns: 1fr 2fr 1fr 1.5fr 2fr 1fr; /* Match header columns */
+    grid-template-columns: 50px 180px 120px 150px 1fr 200px 120px; /* Match header columns */
     align-items: center;
-    padding: 12px 24px; /* Match padding of the table rows in the second block */
+    padding: 16px 24px; /* Match padding of the table rows in the second block */
     border-bottom: 1px solid #E2E8F0; /* From the second code block's table rows */
     transition: background-color 0.2s ease;
     margin-bottom: 0;
-    box-sizing: border-box;
 }
 
 .file-item:hover {
@@ -91,16 +74,16 @@
     align-items: center;
     height: auto; /* Allow content to dictate height */
     line-height: normal;
-    padding: 0 8px;
 }
 
-.id-column {
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    font-family: monospace;
-    font-size: 0.85rem;
-    color: #666;
+/* Adjust padding to match the second code block's table rows */
+.id-column,
+.date-column,
+.type-column,
+.owner-column,
+.name-column,
+.button-column {
+    padding: 16px 24px;
 }
 
 .notes-column {
@@ -132,10 +115,6 @@
     border: none;
     display: inline-block;
     transition: opacity 0.2s ease;
-    max-width: 100px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
 }
 
 .type-pill:hover {
@@ -157,86 +136,9 @@
     text-align: right; /* Align buttons to the right */
     justify-content: flex-end; /* Align buttons to the end of the flex container */
 }
-
-.button-column button {
-    
-}
-
-/* Mobile styles */
-@media (max-width: 768px) {
-    .table-wrapper {
-        margin: 4px;
-        font-size: 0.875rem;
-    }
-
-    .file-header,
-    .file-item {
-        grid-template-columns: 1fr 2fr 1fr;
-        padding: 6px 2px;
-        gap: 4px;
-    }
-
-    .owner-column,
-    .actions-column,
-    .date-column {
-        display: none;
-    }
-
-    .type-pill {
-        padding: 2px 6px;
-        font-size: 0.75rem;
-    }
-}
-
-/* Small mobile styles */
-@media (max-width: 480px) {
-    .table-wrapper {
-        margin: 2px;
-        font-size: 0.75rem;
-    }
-
-    .file-header,
-    .file-item {
-        grid-template-columns: 1fr 2fr;
-        font-size: 0.7rem;
-        padding: 4px 1px;
-    }
-
-    .date-column,
-    .owner-column,
-    .actions-column {
-        display: none;
-    }
-}
-
-@media (max-width: 1024px) {
-    .table-wrapper {
-        margin: 8px;
-        max-width: 100vw;
-    }
-    
-    .file-header,
-    .file-item {
-        grid-template-columns: 1fr 2fr 1fr 1fr;
-        padding: 8px 4px;
-    }
-
-    .owner-column,
-    .actions-column {
-        display: none;
-    }
-}
-
-@media (max-width: 1440px) {
-    .table-wrapper {
-        max-width: 100vw;
-    }
-
-    .file-header,
-    .file-item {
-        grid-template-columns: 1fr 2fr 1fr 1fr 2fr 1fr;
-        padding: 12px 8px;
-    }
+.table-header-row > div {
+    position: relative;
+    padding-right: 20px; /* Reserve space for the arrow */
 }
 
 

@@ -3,7 +3,7 @@ import { useState, useRef, useEffect } from "react";
 import { useStore } from "../Contexts/ctx.appManager";
 import MDEditor from "@uiw/react-md-editor";
 import VerticalDiv from "../UILayout/VerticalDiv";
-import MarkdownPreview from "react-markdown"
+import MarkdownPreview from "react-markdown";
 import rehypeRaw from "rehype-raw";
 import FileContent from "./FileContent.jsx";
 
@@ -48,21 +48,27 @@ const NotesView = ({ src }) => {
                 height: "100%",
             }}
         >
-            <VerticalDiv height={"100%"} style={{ maxHeight: "60vh", padding: "0 4rem" }}>
+            <VerticalDiv
+                height={"100%"}
+                style={{ maxHeight: "60vh", padding: "0 4rem" }}
+            >
                 <div className="markdown">
                     <MarkdownPreview
                         rehypePlugins={[rehypeRaw]}
                         components={{
-
                             em: ({ children }) => {
                                 const fileid = children;
                                 const [fileData, setFileData] = useState(null);
-                                const [fileContent, setFileContent] = useState(null);
+                                const [fileContent, setFileContent] =
+                                    useState(null);
                                 const [loading, setLoading] = useState(true);
 
                                 useEffect(() => {
                                     console.log(`File ID: ${children}`);
-                                    console.log("Fetching file data @", `/api/file/user/${fileid}`);
+                                    console.log(
+                                        "Fetching file data @",
+                                        `/api/file/user/${fileid}`
+                                    );
                                     if (!fileid) {
                                         setLoading(false);
                                         return;
@@ -70,21 +76,32 @@ const NotesView = ({ src }) => {
 
                                     const getFileData = async () => {
                                         try {
-                                            const response = await fetch(`/api/file/focus/${fileid}`, {
-                                                method: "GET",
-                                                headers: {
-                                                    "Content-Type": "application/json",
-                                                },
-                                                credentials: "include",
-                                            });
+                                            const response = await fetch(
+                                                `/api/file/focus/${fileid}`,
+                                                {
+                                                    method: "GET",
+                                                    headers: {
+                                                        "Content-Type":
+                                                            "application/json",
+                                                    },
+                                                    credentials: "include",
+                                                }
+                                            );
                                             if (response.ok) {
-                                                const data = await response.json();
+                                                const data =
+                                                    await response.json();
                                                 console.log(data);
-                                                setFileData(data.files.originalFile);
+                                                setFileData(
+                                                    data.files.originalFile
+                                                );
                                                 if (data.files.files) {
-                                                    setFileContent(data.files.files);
+                                                    setFileContent(
+                                                        data.files.files
+                                                    );
                                                 } else {
-                                                    setFileContent([data.files.originalFile]);
+                                                    setFileContent([
+                                                        data.files.originalFile,
+                                                    ]);
                                                 }
                                             } else {
                                                 setFileData({
@@ -105,32 +122,34 @@ const NotesView = ({ src }) => {
                                 }, [fileid]);
 
                                 return (
-                                    <div style={{
-                                        maxWidth: "40vw",
-                                        margin: "0 auto",
-
-                                    }}
+                                    <div
+                                        style={{
+                                            maxWidth: "40vw",
+                                            margin: "0 auto",
+                                        }}
                                     >
                                         {loading ? (
                                             <div>Loading file...</div>
                                         ) : !fileData ? (
                                             <div>No file data found</div>
                                         ) : fileData.error ? (
-                                            <div>Error: {fileData.error.toString()}</div>
+                                            <div>
+                                                Error:{" "}
+                                                {fileData.error.toString()}
+                                            </div>
                                         ) : (
                                             <FileContent file={fileData} />
-                                        )
-                                        }
+                                        )}
                                     </div>
                                 );
-                            }
+                            },
                         }}
                     >
                         {text}
                     </MarkdownPreview>
                 </div>
-            </VerticalDiv >
-        </div >
+            </VerticalDiv>
+        </div>
     );
 };
 

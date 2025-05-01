@@ -5,7 +5,7 @@
 
 :root {
   --text-color: #333;
-  --background-color: #bae1f5;
+  --background-color: #fff;
   --primary-button-color: #333; /* Dark background for buttons */
   --primary-button-text-color: #fff;
   --link-color: #333;
@@ -43,13 +43,20 @@ body {
 }
 
 .left-background {
-  flex: 0.4; 
+  flex-grow: 35; 
+  flex-shrink: 1;
+  flex-basis: 0;
   background-color: #eddada; 
-  min-height: 90vh;
+  min-height: 65vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Center the sections horizontally within the right content */
+  padding: 20px; /* Add some padding around the content in the right side */
+  box-sizing: border-box; /* Ensure padding doesn't increase the width */
 }
 
-.right-content {
-  flex: 0.6; /* Adjust the ratio as needed */
+.right-background {
+  flex: 0.4; /* Adjust the ratio as needed */
   display: flex;
   flex-direction: column;
   align-items: center; /* Center the sections horizontally within the right content */
@@ -135,6 +142,7 @@ body {
 .network-info-section .network-left {
     flex: 1;
     display: flex;
+    padding-left: 20px;
     justify-content: center;
 }
 
@@ -157,10 +165,11 @@ body {
 }
 
 .hero-heading {
-  font-size: 2.5rem;
+  font-size: 2.2rem;
   margin-bottom: 20px;
   color: var(--primary-color);
   font-family: var(--font-family);
+  text-align: center;
 }
 
 .hero-description {
@@ -169,6 +178,7 @@ body {
   color: #666;
   margin-bottom: 30px;
   font-family: 'Playfair Display', serif;
+  text-align: center;
 }
 
 .start-button {
@@ -187,11 +197,11 @@ body {
 }
 
 .section-heading {
-  font-size: 1.7rem;
+  font-size: 2.0rem;
   margin-bottom: 15px;
-  margin-vertical: 20px; /* Add vertical spacing for better readability */
+  /* margin-vertical: 20px;  */
   color: var(--primary-color);
-  font-family: var(--font-family);
+  font-family: 'Playfair Display', serif;
   text-align: center; /* Center the heading within the white box */
 }
 
@@ -241,7 +251,6 @@ body {
   width: 100%;
   height: 100%;
 }
-
 
 
 .auth-section {

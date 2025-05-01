@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
-
 import Button from "../Button/Button";
 import { useUser } from "../Contexts/ctx.user";
+// import { GoogleLogin } from 'react-google-login';
 
 const LoginWindow = ({ setState }) => {
     const formRef = useRef(null);
@@ -56,9 +56,25 @@ const LoginWindow = ({ setState }) => {
 
             console.log("Login with email:", email, "and password", password);
 
-            await user.SignIn(email, password);
+            try {
+                const response = await user.SignIn(email, password);
+
+                if (response && response.data && response.data.accessToken) {
+
+                    localStorage.setItem('authToken', response.data.accessToken);
+                    console.log("Logged in!, token stored:", response.data.accessToken);
+
+                    setState(false);
+                } else if (response && response.data && response.data.error) {
+                    console.error("Try again with logging in:", response.data.error);
+                } else {
+                    console.error("Failed login: Invalid response");
+                }
+            } catch (error) {
+                console.error("Errors encounter with the login:", error);
+            }
         });
-    }, [user]);
+    }, [user, setState]);
 
     return (
         <div style={style}>
@@ -79,6 +95,7 @@ const LoginWindow = ({ setState }) => {
                     Login
                 </Button>
             </form>
+            
             <Button
                 style={closeStyle}
                 onClick={() => {

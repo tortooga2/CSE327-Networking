@@ -9,6 +9,8 @@ import Button from "../Button/Button.jsx";
 import FileContent from "../fileContent/FileContent.jsx";
 
 import VerticalDiv from "../UILayout/VerticalDiv";
+import UploadProgressBar from "../UploadProgressBar";
+import useFileUpload from "../../features/useFileUpload";
 
 const isMobile = () => window.innerWidth <= 768;
 
@@ -82,6 +84,8 @@ const FilePreview = ({ width }) => {
             setIsBundle(getFileType(fileData.name) === "Bundle");
         }
     }, [fileData]);
+
+    const { uploadFiles, progress, isUploading } = useFileUpload();
 
     const mobileStyle = isMobile()
         ? {
@@ -184,6 +188,16 @@ const FilePreview = ({ width }) => {
             </div>
 
             <VerticalDiv gap="1rem">
+                {isUploading && progress < 100 && (
+                    <div style={{ width: "100%", margin: "1rem 0" }}>
+                        <UploadProgressBar progress={progress} />
+                    </div>
+                )}
+                {isUploading && progress === 100 && (
+                    <div style={{ width: "100%", margin: "1rem 0" }}>
+                        <LoadingSpinner />
+                    </div>
+                )}
                 {fileContent && closedFile
                     ? fileContent.map((file, index) => (
                           <FileContent key={index} file={file} />

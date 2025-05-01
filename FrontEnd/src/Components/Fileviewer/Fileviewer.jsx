@@ -18,25 +18,8 @@ const FileViewer = ({ width }) => {
         loadFiles();
     }, []);
 
-    // debug logs
-    useEffect(() => {
-        console.log('Search state:', {
-            query: searchQuery,
-            isSearching,
-            resultsCount: searchResults.length,
-            results: searchResults
-        });
-    }, [searchQuery, searchResults, isSearching]);
-
     const fileEntries = useMemo(() => {
-        console.log("Files Updated", {
-            hasSearchQuery: Boolean(searchQuery),
-            searchResultsLength: searchResults.length,
-            filesSize: files.size
-        });
-
         if (searchQuery && searchQuery.length >= 2) {
-            console.log("Using search results", searchResults);
             return searchResults;
         }
 

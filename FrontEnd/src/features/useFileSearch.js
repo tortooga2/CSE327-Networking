@@ -5,46 +5,64 @@ const useFileSearch = create((set, get) => ({
     searchQuery: '',
     searchResults: [],
     isSearching: false,
+    page: 1,
+    limit: 20,
+    total: 0,
     
     setSearchQuery: (query) => {
-        set({ searchQuery: query });
+        set({ searchQuery: query, page: 1 }); // Reset page when new search starts
         if (query.length >= 2) {
             get().debouncedSearch(query);
         } else {
-            set({ searchResults: [] });
+            set({ searchResults: [], total: 0 });
         }
     },
 
-    debouncedSearch: debounce(async (query) => {
+    setPage: (newPage) => {
+        set({ page: newPage });
+        const { searchQuery } = get();
+        if (searchQuery.length >= 2) {
+            get().debouncedSearch(searchQuery, newPage);
+        }
+    },
+
+    debouncedSearch: debounce(async (query, page = 1) => {
         set({ isSearching: true });
         try {
-            const response = await fetch(`/api/file/search?q=${encodeURIComponent(query)}`, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                credentials: 'include'
-            });
+            const { limit } = get();
+            const response = await fetch(
+                `/api/file/search?q=${encodeURIComponent(query)}&page=${page}&limit=${limit}`, 
+                {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    credentials: 'include'
+                }
+            );
             
             if (response.ok) {
                 const data = await response.json();
-                console.log('Search results:', data); // Added for debugging
                 set({ 
-                    searchResults: data.files || [],
-                    isSearching: false 
+                    searchResults: data.files,
+                    total: data.total,
+                    isSearching: false,
+                    page: data.page
                 });
             } else {
                 console.error('Search failed:', response.statusText);
                 set({ 
                     searchResults: [],
-                    isSearching: false 
+                    isSearching: false,
+                    total: 0 
                 });
             }
         } catch (error) {
             console.error('Search error:', error);
             set({ 
                 searchResults: [],
-                isSearching: false 
+                isSearching: false,
+                total: 0
             });
         }
     }, 300),
@@ -52,7 +70,9 @@ const useFileSearch = create((set, get) => ({
     clearSearch: () => set({ 
         searchQuery: '', 
         searchResults: [], 
-        isSearching: false 
+        isSearching: false,
+        page: 1,
+        total: 0
     })
 }));
 

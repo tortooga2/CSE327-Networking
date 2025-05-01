@@ -1,14 +1,15 @@
 import { useState, useEffect, useMemo } from "react";
-
+import PropTypes from "prop-types";
 import File from "./File/File.jsx";
 import { useStore } from "../Contexts/ctx.appManager.jsx";
-import { CompareFuncs } from "../scripts/compareFuncs.js"; //Object that includes function prototypes for our compare functions.
-
+import { CompareFuncs } from "../scripts/compareFuncs.js";
 import VerticalDiv from "../UILayout/VerticalDiv";
+import { useFileSearch } from "../../features/useFileSearch";
 
 const FileViewer = ({ width }) => {
     const files = useStore((state) => state.files);
-    const sortOrder = useStore((state) => state.sortOrder); //sortOrder is a json object that includes the field, as well as the order.
+    const sortOrder = useStore((state) => state.sortOrder);
+    const { searchQuery, searchResults, isSearching } = useFileSearch();
 
     useEffect(() => {
         const loadFiles = async () => {
@@ -17,32 +18,64 @@ const FileViewer = ({ width }) => {
         loadFiles();
     }, []);
 
-    //Get files and sort then when ever the state of our files updates.
+    // debug logs
+    useEffect(() => {
+        console.log('Search state:', {
+            query: searchQuery,
+            isSearching,
+            resultsCount: searchResults.length,
+            results: searchResults
+        });
+    }, [searchQuery, searchResults, isSearching]);
+
     const fileEntries = useMemo(() => {
-        console.log("Files Updated");
-        const fileArray = Array.from(files.values());
+        console.log("Files Updated", {
+            hasSearchQuery: Boolean(searchQuery),
+            searchResultsLength: searchResults.length,
+            filesSize: files.size
+        });
 
-        fileArray.sort(CompareFuncs[sortOrder.field](sortOrder)); //will be replaced once we update the endpoint, but for right now it works.
-        //see we get the function protype using the field as a key, then we pass along the sortOrder itself to contruct the final (a, b) => {} function.
+        if (searchQuery && searchQuery.length >= 2) {
+            console.log("Using search results", searchResults);
+            return searchResults;
+        }
 
+        let fileArray = Array.from(files.values());
+        fileArray.sort(CompareFuncs[sortOrder.field](sortOrder));
         return fileArray;
-    }, [files, sortOrder]);
+    }, [files, sortOrder, searchQuery, searchResults]);
 
-
-
+    if (isSearching) {
+        return (
+            <VerticalDiv gap="0rem" width={width} padding="0rem">
+                <div style={{ textAlign: 'center', padding: '2rem' }}>
+                    Searching...
+                </div>
+            </VerticalDiv>
+        );
+    }
 
     return (
         <VerticalDiv gap="0rem" width={width} padding="0rem">
-            {fileEntries.map(
-                (
-                    fileData,
-                    index //map app files to a file component.
-                ) => (
+            {fileEntries.length > 0 ? (
+                fileEntries.map((fileData) => (
                     <File key={fileData.id} fileData={fileData} />
-                )
+                ))
+            ) : (
+                <div style={{ 
+                    textAlign: 'center', 
+                    padding: '2rem',
+                    color: 'var(--text-color)'
+                }}>
+                    {searchQuery ? 'No files found matching your search' : 'No files available'}
+                </div>
             )}
         </VerticalDiv>
     );
+};
+
+FileViewer.propTypes = {
+    width: PropTypes.string
 };
 
 export default FileViewer;

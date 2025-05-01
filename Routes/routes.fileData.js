@@ -15,6 +15,8 @@ import {
     verifyFiles,
     getFileChunk,
 } from "../Modules/Data Process/import.dataProcess.js";
+import { Data } from "../Modules/Database/module.db.js";
+import { debugMessage, debugError } from "../Modules/module.debugHelpers.js";
 
 const fileDataRouter = Router();
 
@@ -38,5 +40,57 @@ fileDataRouter.get("/load", getFileChunk);
 
 // Test the creation of a user data
 fileDataRouter.post("/createtest", testCreateUserData);
+
+// search endpoint
+fileDataRouter.get('/search', async (req, res) => {
+    try {
+        const { q } = req.query;
+        if (!q) {
+            return res.status(400).json({ error: 'Search query is required' });
+        }
+
+        const { profile_id } = req.user;
+        if (!profile_id) {
+            return res.status(401).json({ error: 'User not authenticated' });
+        }
+
+        // Query database 
+        const data = await Data.findAll({
+            attributes: [
+                "id",
+                "creator_username",
+                "name",
+                "type",
+                "metadata",
+                "parents",
+                "children",
+                "createdAt",
+                "updatedAt",
+            ],
+            where: {
+                owner_id: profile_id,
+            },
+        });
+
+        // Filter on search query
+        const searchResults = data.filter(file => {
+            const searchTermLower = q.toLowerCase();
+            return (
+                file.name.toLowerCase().includes(searchTermLower) ||
+                (file.metadata && file.metadata.description && 
+                 file.metadata.description.toLowerCase().includes(searchTermLower))
+            );
+        });
+
+        debugMessage('Search results:', searchResults);
+        res.json({ files: searchResults });
+    } catch (error) {
+        debugError('Search error:', error);
+        res.status(500).json({ 
+            error: 'Failed to search files',
+            details: error.message
+        });
+    }
+});
 
 export default fileDataRouter;

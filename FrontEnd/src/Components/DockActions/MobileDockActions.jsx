@@ -3,6 +3,7 @@ import UnselectAllButton from "./UnselectAllButton";
 import ConnectFilesButton from "./ConnectFilesButton";
 import UploadFilesButton from "./UploadFilesButton";
 import DeleteFilesButton from "./DeleteFilesButton";
+import SearchButton from "./SearchButton";
 import NoteCreation from "../NoteCreation";
 import { FaStickyNote } from "react-icons/fa";
 
@@ -47,6 +48,9 @@ const MobileDockActions = () => {
                 </button>
                 <button style={{ ...dockButtonStyle, background: "#C8B0FF", color: "#1E0B33" }}>
                     <ConnectFilesButton minimal />
+                </button>
+                <button style={{ ...dockButtonStyle, background: "#7B61FF", color: "#fff" }}>
+                    <SearchButton minimal />
                 </button>
                 <button style={{ ...dockButtonStyle, background: "#F7FAFC", color: "#1E0B33" }}>
                     <UploadFilesButton minimal />

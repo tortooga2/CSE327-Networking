@@ -1,5 +1,5 @@
  import "./LandingPage.css";
- import React, { useState, useEffect} from "react";
+ import React, { useState, useEffect, useCallback} from "react";
  import Lottie from "lottie-react";
  import { useNavigate } from "react-router-dom";
  import heroAnimation from "../../Components/Animations/heroAnimation.json";
@@ -9,12 +9,85 @@
  import { FaArrowCircleUp } from "react-icons/fa";
  import Button from "../../Components/Button/Button";
  import LoginWindow from "../../Components/LoginDialog/LoginWindow";
+ import Particles from "react-tsparticles";
+ import { loadFull } from "tsparticles";
+ 
 
 
 function LandingPage() {
   const [scrollProgress, setScrollProgress] = useState(0);
   const [showLogin, setShowLogin] = useState(false);
   const [showSignUp, setShowSignUp] = useState(false);
+  const navigate = useNavigate();
+
+  const particlesInit = useCallback(async (engine) => {
+    await loadFull(engine);
+  }, []);
+
+  const particlesLoaded = useCallback(async (container) => {
+// something else can be added here
+  }, []);
+
+  const particlesOptions = {
+    background: {
+        color: {
+            value: "#f4f6f8",
+        },
+    },
+    particles: {
+        number : {
+            value: 30,
+            density: {
+                enable: true,
+                area: 600,
+            },
+        },
+        opacity: {
+            value: 0.3,
+        },
+        size: {
+            value: { min: 5, max: 10 },
+        },
+        move: {
+            enable: true,
+            speed: 0.5,
+            direction: "none",
+            random: false,
+            straight: false,
+            outModes: "bounce",
+        },
+        shape: {
+            type: "circle",
+        },
+        color: {
+            value: "#90a4ae",
+        },
+        links: {
+            enable: true,
+            distance: 150,
+            color: "#bdbdbd",
+            opacity: 0.2,
+            width: 1,
+        },
+    },
+    interactivity: {
+        events: {
+            onHover: {
+                enable: true,
+                mode: "grab",
+            },
+        },
+        modes: {
+            grab: {
+                distance: 140,
+                links: {
+                    opacity: 0.5,
+                },
+            },
+        },
+    },
+    retinaDetect: true,
+  };
 
   const handleScroll = () => {
     const totalHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
@@ -42,7 +115,14 @@ function LandingPage() {
   };
 
   return (
-    <div className="landing-page-container">
+    <div className="landing-page-container" style = {{ position: 'relative', overflow: 'hidden' }}>
+        <Particles
+            id = "tsparticles"
+            init = {particlesInit}
+            loaded = {particlesLoaded}
+            options = {particlesOptions}
+            style = {{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', zIndex: -1 }}
+        />
       <div className="scroll-indicator-container">
         <div
           className="scroll-indicator"
@@ -70,7 +150,7 @@ function LandingPage() {
                 events that has links, business cards, photos, and detailed description
                 of your links such as date, location, and type.
               </p>
-              <button className="start-button" onClick={() => console.log("Start Here Clicked")}>Start Here</button>
+              {/* <button className="start-button" onClick={() => console.log("Start Here Clicked")}>Start Here</button> */}
             </div>
             <div className="hero-right">
               <Lottie animationData= {heroAnimation} loop = {true} style = {{ width:"100%", maxWidth: "400px", margin: "0 auto" }} />
@@ -199,5 +279,6 @@ function LandingPage() {
     </div>
   );
 }
+
 
 export default LandingPage;

@@ -32,6 +32,49 @@ body {
   display: flex; /* Add flex to the container */
   flex-direction: column; /* Stack header, main, footer vertically */
   align-items: center; /* Center content horizontally within the viewport */
+  background: linear-gradient(45deg, #e3f2fd, #bbdefb);
+  background-size: 400% 400%;
+  animation: subtleGradientShift 10s ease infinite;
+}
+
+@keyframes gradientShift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.animated-circle {
+  position: absolute;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background-color: rgba(173, 216, 230, 0.3);
+  animation: moveCircle 10s linear infinite alternate;
+}
+
+.circle-1 { top: 10%; left: 15%; }
+.circle-2 { top: 60%; right: 20%; animation-delay: 2s; }
+
+@keyframes moveCircle {
+  0% { transform: translateY(0) scale(1); opacity: 0.5; }
+  100% { transform: translateY(50px) scale(1.2); opacity: 0.8}
+}
+
+@keyframes subtlePatternMove {
+  0% { background-position: 0 0; }
+  100% { background-position: 100% 100%; }
+}
+
+@keyframes subtleGradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
 }
 
 .split-screen {
@@ -53,6 +96,7 @@ body {
   align-items: center; /* Center the sections horizontally within the right content */
   padding: 20px; /* Add some padding around the content in the right side */
   box-sizing: border-box; /* Ensure padding doesn't increase the width */
+  justify-content: center;
 }
 
 .right-background {
@@ -62,6 +106,7 @@ body {
   align-items: center; /* Center the sections horizontally within the right content */
   padding: 20px; /* Add some padding around the content in the right side */
   box-sizing: border-box; /* Ensure padding doesn't increase the width */
+  justify-content: center;
 }
 
 .landing-header {
@@ -77,6 +122,8 @@ body {
 .header-title {
   font-size: 2.3rem;
   color: var(--primary-color);
+  font-family: var(--heading-font);
+  font-weight: bold;
 }
 
 .header-nav {
@@ -88,7 +135,7 @@ body {
 
 .header-nav a,
 .header-nav button {
-  margin-left: 15px;
+  margin-left: 0;
   text-decoration: none;
   color: var(--link-color);
   border: none;
@@ -96,6 +143,11 @@ body {
   cursor: pointer;
   font-size: 1.2rem;
   padding: 8px 0;
+  transition: color 0.3s ease;
+}
+
+.header-nav a:hover {
+  color: var(--primary-button-color);
 }
 
 .signup-button {
@@ -118,12 +170,13 @@ body {
   width: 100%;
   max-width: 1200px;
   min-height: 80vh;
+  margin-top: 2rem;
 }
 
 
 .main-section {
   background-color: #fff;
-  border: 1px solid #e0e0e0;
+  border: none;
   border-radius: 12px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
   padding: 30px;
@@ -136,7 +189,7 @@ body {
 .main-section.network-info-section {
   display: flex;
   flex-direction: column; /* Stack text and Lottie vertically on smaller screens */
-  align-items: center; /* Center content horizontally */
+  align-items: flex-start; /* Center content horizontally */
 }
 
 .network-info-section .network-left {
@@ -148,14 +201,17 @@ body {
 
 .main-section.capture-info-section {
   display: flex;
-  align-items: center;
+  flex-direction: column;
+  align-items: flex-start;
   justify-content: space-between; /* Space out text and Lottie on larger screens */
+  text-align: left;
 }
 
 .capture-info-section .hero-left {
   flex: 1;
   padding-right: 20px;
   text-align: left;
+  margin-bottom: 20px;
 }
 
 .capture-info-section .hero-right {
@@ -170,6 +226,8 @@ body {
   color: var(--primary-color);
   font-family: var(--font-family);
   text-align: center;
+  font-weight: bold;
+  line-height: 1.2;
 }
 
 .hero-description {
@@ -179,6 +237,7 @@ body {
   margin-bottom: 30px;
   font-family: 'Playfair Display', serif;
   text-align: center;
+  max-width: 550px;
 }
 
 .start-button {
@@ -190,6 +249,7 @@ body {
   cursor: pointer;
   font-size: 1.2rem;
   transition: background-color 0.3s ease;
+  margin-top: 1rem;
 }
 
 .start-button:hover {
@@ -203,6 +263,8 @@ body {
   color: var(--primary-color);
   font-family: 'Playfair Display', serif;
   text-align: center; /* Center the heading within the white box */
+  font-weight: bold;
+  line-height: 1.2;
 }
 
 .lottie-wrapper {
@@ -236,6 +298,8 @@ body {
 
 .welcome-section .title h1 {
   font-size: 2.5em;
+  font-weight: bold;
+  color: var(--text-color);
 }
 
 .welcome-section .title .special {
@@ -264,6 +328,7 @@ body {
   justify-content: center;
   align-items: center;
   z-index: 1000; /* Ensure it's on top */
+  pointer-events: auto;
 }
 
 .landing-footer {
@@ -273,6 +338,7 @@ body {
   font-size: 0.9rem;
   width: 100%;
   box-sizing: border-box;
+  margin-top: 2rem;
 }
 
 .scroll-to-top-button {
@@ -309,7 +375,7 @@ body {
   animation: moveLines 20s linear infinite;
 }
 
-@keyframes moveDiagonalLines {
+@keyframes moveLines {
   0% {
     background-position: 0 0;
   }
@@ -317,3 +383,4 @@ body {
     background-position: 100% 100%;
   }
 }
+

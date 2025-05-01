@@ -10,6 +10,8 @@ import FileContent from "../fileContent/FileContent.jsx";
 
 import VerticalDiv from "../UILayout/VerticalDiv";
 
+const isMobile = () => window.innerWidth <= 768;
+
 const FilePreview = ({ width }) => {
     const fileId = useStore((state) => state.previewedFile);
     const closedFile = useStore((state) => {
@@ -81,8 +83,22 @@ const FilePreview = ({ width }) => {
         }
     }, [fileData]);
 
+    const mobileStyle = isMobile()
+        ? {
+              position: "fixed",
+              top: 0,
+              left: 0,
+              width: "100vw",
+              height: "100vh",
+              background: "#23263a",
+              zIndex: 3000,
+              overflowY: "auto",
+              boxShadow: "0 0 16px rgba(0,0,0,0.2)",
+          }
+        : {};
+
     return (
-        <VerticalDiv width={width}>
+        <VerticalDiv width={isMobile() ? "100vw" : width} style={mobileStyle}>
             <div
                 className="preview-header"
                 style={{

@@ -25,6 +25,13 @@ body {
   color: var(--text-color);
 }
 
+.main-section-border {
+  border: 2px solid #daa520;  /* 2px solid gold border */
+  border-radius: 12px;
+  padding: 10px; /* Add padding between the border and the section content */
+  margin-bottom: 30px; /* Maintain spacing between sections */
+}
+
 .landing-page-container {
   min-height: 100vh;
   overflow: hidden;
@@ -32,7 +39,7 @@ body {
   display: flex; /* Add flex to the container */
   flex-direction: column; /* Stack header, main, footer vertically */
   align-items: center; /* Center content horizontally within the viewport */
-  background: linear-gradient(45deg, #e3f2fd);
+  background: repeating-linear-gradient(45deg, #e3f2fd);
   background-size: 400% 400%;
   animation: subtleGradientShift 10s ease infinite;
 }

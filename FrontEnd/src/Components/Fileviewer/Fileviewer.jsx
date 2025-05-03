@@ -31,19 +31,19 @@ const FileViewer = ({ width }) => {
     }, [files, sortOrder]);
 
     return (
-        <VerticalDiv style={{ overflowX: "hidden" }}>
-            <Header />
-            <VerticalDiv
-                gap="1rem"
-                width={width}
-                padding="0rem"
-                style={{ overflowX: "hidden" }}
-            >
-                {fileEntries.map((fileData) => (
-                    <File key={fileData.id} fileData={fileData} />
-                ))}
-            </VerticalDiv>
-        </VerticalDiv>
+        // <VerticalDiv style={{ overflowX: "hidden" }}>
+        //     <Header />
+        <div
+            style={{
+                display: "grid",
+            }}
+        >
+            {fileEntries.map((fileData) => (
+                <File key={fileData.id} fileData={fileData} />
+            ))}
+            {/* </VerticalDiv>
+        </VerticalDiv> */}
+        </div>
     );
 };
 

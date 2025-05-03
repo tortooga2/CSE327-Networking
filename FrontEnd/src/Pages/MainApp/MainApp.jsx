@@ -24,16 +24,9 @@ const MainApp = () => {
 
     const layoutState = useStore((state) => state.layoutState);
 
-
-
-
-
-
     useEffect(() => {
         user.ValidateSession();
     }, [user]);
-
-
 
     return (
         <NewPage>

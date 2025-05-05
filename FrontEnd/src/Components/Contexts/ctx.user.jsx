@@ -29,11 +29,10 @@ export const UserProvider = ({ children }) => {
                     if (response.ok) {
                         setSignedIn(true);
                         const data = await response.json();
-                        const { email } = data;
-                        console.log("HEHEHEHE", data);
-                        useStore
-                            .getState()
-                            .setUserProfile({ email });
+                        const { email, settings } = data;
+                        useStore.getState().setUserProfile({ email });
+                        useStore.getState().setUserSettings(settings);
+                        console.log(settings);
                     } else {
                         const data = await response.json();
                         console.log(data);

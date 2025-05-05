@@ -28,6 +28,74 @@ const MainApp = () => {
         user.ValidateSession();
     }, [user]);
 
+    const userSettings = useStore((state) => state.userSettings);
+
+    useEffect(() => {
+        const root = document.getElementById("root");
+        for (let setting in userSettings) {
+            switch (setting) {
+                case "dark_mode":
+                    root.style.setProperty(
+                        "--dark-mode",
+                        userSettings[setting]
+                    );
+                    break;
+
+                case "bundle_color":
+                    root.style.setProperty(
+                        "--bundle-color-2",
+                        userSettings[setting]
+                    );
+                    break;
+
+                case "doc_color":
+                    root.style.setProperty(
+                        "--document-color-2",
+                        userSettings[setting]
+                    );
+                    break;
+
+                case "note_color":
+                    root.style.setProperty(
+                        "--note-color-2",
+                        userSettings[setting]
+                    );
+                    break;
+
+                case "rec_color":
+                    root.style.setProperty(
+                        "--video-color-2",
+                        userSettings[setting]
+                    );
+                    break;
+
+                case "img_color":
+                    root.style.setProperty(
+                        "--img-color-2",
+                        userSettings[setting]
+                    );
+                    break;
+
+                case "font_size":
+                    root.style.setProperty(
+                        "--font-size",
+                        userSettings[setting]
+                    );
+                    break;
+
+                case "font_family":
+                    root.style.setProperty(
+                        "--font-family",
+                        userSettings[setting]
+                    );
+                    break;
+
+                default:
+                    console.warn(`Unknown setting “${setting}”`);
+            }
+        }
+    }, [userSettings]);
+
     return (
         <NewPage>
             <VerticalDiv

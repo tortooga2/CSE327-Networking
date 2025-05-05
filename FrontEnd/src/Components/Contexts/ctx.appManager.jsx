@@ -4,6 +4,26 @@ const useStore = create((set) => ({
     userProfile: {},
     setUserProfile: (state) => set({ userProfile: state }),
 
+    userSettings: {},
+    setUserSettings: (state) => set({ userSettings: state }),
+    updateUserSettings: async (state) => {
+        const response = await fetch("api/user/settings/update", {
+            headers: {
+                "Content-Type": "application/json",
+            },
+            credentials: "include",
+            body: JSON.stringify({
+                ...useStore.getState().userSettings,
+            }),
+        });
+        if (response.ok) {
+            const { data } = await response.json();
+            useStore.getState().setUserSettings(data);
+        } else {
+            console.error("failed to update settings");
+        }
+    },
+
     layoutState: 0,
     setLayoutState: (state) => set({ layoutState: state }),
 
@@ -188,8 +208,6 @@ const useStore = create((set) => ({
     },
 
     isWindowReducedWidth: window.innerWidth < 1500,
-
-
 }));
 
 export { useStore };

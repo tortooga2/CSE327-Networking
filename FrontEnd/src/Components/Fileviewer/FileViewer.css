@@ -3,61 +3,61 @@
 }
 
 .table-wrapper {
-    background-color: #F8F6FD; /* From the second code block */
-    border-radius: 12px; /* From the second code block */
-    overflow: hidden; /* From the second code block */
-    margin: 16px; /* Existing margin from .content-body */
-    box-shadow: 0 2px 4px rgba(30, 11, 51, 0.05); /* Existing box-shadow */
-    height: 100%; /* Consider if you need this here or on a parent */
+    background-color: #F8F6FD; 
+    border-radius: 12px; 
+    overflow: hidden; 
+    margin: 16px; 
+    box-shadow: 0 2px 4px rgba(30, 11, 51, 0.05); 
+    height: 100%; 
 }
 
 .file-header {
-    background-color: #1E0B33; /* From the second code block's header row */
-    color: white; /* From the second code block's header row */
-    font-weight: 500; /* From the second code block's header row */
-    font-size: 14px; /* From the second code block's header row */
-    display: grid; /* Use grid for layout */
-    grid-template-columns: 50px 180px 120px 150px 1fr 200px 120px; /* Define column widths */
-    padding: 16px 24px; /* From the second code block's header row */
-    border-bottom: 1px solid #E0E0E0; /* Keep the existing border */
+    background-color: #1E0B33; 
+    color: white; 
+    font-weight: 500; 
+    font-size: 14px; 
+    display: grid;
+    grid-template-columns: 50px 180px 120px 150px 1fr 200px 120px;
+    padding: 16px 24px; 
+    border-bottom: 1px solid #E0E0E0;
 }
 
 .file-header > div {
     padding: 8px 16px;
-    color: inherit; /* Inherit color from .file-header */
+    color: inherit; 
     cursor: pointer;
     user-select: none;
     display: flex;
     align-items: center;
-    font-size: inherit; /* Inherit font-size */
+    font-size: inherit; 
     text-transform: uppercase;
     text-align: left;
     justify-content: flex-start;
     height: 40px;
     line-height: normal;
-    gap: 8px; /* For sort icons */
+    gap: 8px; 
 }
 
 .file-header > div:hover {
-    background-color: rgba(255, 255, 255, 0.05); /* Lighten on hover for dark background */
+    background-color: rgba(255, 255, 255, 0.05); 
 }
 
 .file-item {
-    display: grid; /* Use grid for layout */
-    grid-template-columns: 50px 180px 120px 150px 1fr 200px 120px; /* Match header columns */
+    display: grid; 
+    grid-template-columns: 50px 180px 120px 150px 1fr 200px 120px; 
     align-items: center;
-    padding: 16px 24px; /* Match padding of the table rows in the second block */
-    border-bottom: 1px solid #E2E8F0; /* From the second code block's table rows */
+    padding: 16px 24px; 
+    border-bottom: 1px solid #E2E8F0; 
     transition: background-color 0.2s ease;
     margin-bottom: 0;
 }
 
 .file-item:hover {
-    background-color: rgba(30, 11, 51, 0.02); /* Keep existing hover */
+    background-color: rgba(30, 11, 51, 0.02); 
 }
 
 .file-item.selected {
-    background-color: rgba(30, 11, 51, 0.1); /* Keep existing selected */
+    background-color: rgba(30, 11, 51, 0.1); 
 }
 
 .id-column,
@@ -67,16 +67,15 @@
 .name-column,
 .notes-column,
 .button-column {
-    font-size: 0.9rem; /* Keep existing font size */
+    font-size: 0.9rem; 
     text-align: left;
     display: flex;
     justify-content: flex-start;
     align-items: center;
-    height: auto; /* Allow content to dictate height */
+    height: auto; 
     line-height: normal;
 }
 
-/* Adjust padding to match the second code block's table rows */
 .id-column,
 .date-column,
 .type-column,
@@ -87,21 +86,21 @@
 }
 
 .notes-column {
-    align-items: flex-start; /* Align textarea to the top */
+    align-items: flex-start; 
 }
 
 .notes-column textarea {
     width: 100%;
     height: 100%;
     box-sizing: border-box;
-    font-size: 12px; /* Match the font size in the second code block's textarea */
-    border: 1px solid #ccc; /* Basic textarea border */
+    font-size: 12px; 
+    border: 1px solid #ccc; 
     padding: 8px;
     resize: vertical;
 }
 
 .type-column {
-    width: auto; /* Adjust if needed */
+    width: auto; 
 }
 
 .type-pill {
@@ -121,7 +120,6 @@
     opacity: 0.9;
 }
 
-/* Remove individual type styles since we're standardizing them */
 .type-pill.note,
 .type-pill.bundle,
 .type-pill.image,
@@ -133,12 +131,31 @@
 }
 
 .button-column {
-    text-align: right; /* Align buttons to the right */
-    justify-content: flex-end; /* Align buttons to the end of the flex container */
+    text-align: right; 
+    justify-content: flex-end; 
 }
 .table-header-row > div {
     position: relative;
-    padding-right: 20px; /* Reserve space for the arrow */
+    padding-right: 20px; 
+}
+
+.mobile-files-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1rem;
+}
+
+@media (min-width: 768px) {
+    .mobile-files-grid {
+        display: none;
+    }
+}
+
+@media (max-width: 768px) {
+    .desktop-file-view {
+        display: none;
+    }
 }
 
 

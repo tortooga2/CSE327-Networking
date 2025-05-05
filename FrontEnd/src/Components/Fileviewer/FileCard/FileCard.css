@@ -1,0 +1,117 @@
+.file-card-checkbox {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    z-index: 2;
+}
+
+.file-card-checkbox input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    border: 2px solid var(--special-color);
+    border-radius: 4px;
+}
+
+.file-card {
+    position: relative;
+    background: var(--primary-color);
+    border-radius: var(--border-radius);
+    padding: 1rem;
+    margin-bottom: 1rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease, background-color 0.2s ease;
+    border: 2px solid transparent;
+}
+
+.file-card:active {
+    transform: scale(0.98);
+}
+
+.file-card-selected {
+    background-color: var(--secondary-color);
+    border-color: var(--special-color);
+}
+
+.file-card-header {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    margin-bottom: 0.75rem;
+}
+
+.file-card-type {
+    display: flex;
+    align-items: center;
+}
+
+.file-card-content {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.file-card-name {
+    font-size: 1.125rem;
+    font-weight: 500;
+    color: var(--text-color);
+    margin: 0;
+    word-break: break-word;
+}
+
+.file-card-details {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.875rem;
+    color: var(--text-muted);
+}
+
+.file-card-creator {
+    font-weight: 500;
+}
+
+.file-card-date {
+    opacity: 0.8;
+}
+
+.file-card-preview {
+    margin-top: 0.5rem;
+    border-radius: var(--border-radius);
+    overflow: hidden;
+}
+
+.file-card-preview img {
+    width: 100%;
+    height: auto;
+    max-height: 200px;
+    object-fit: cover;
+    display: block;
+}
+
+.share-icon-button {
+    position: absolute;
+    top: 1rem;
+    right: 3.5rem; /*  left of the checkbox, this toke me an hour!!!!!!!!!! */
+    background: none;
+    border: none;
+    color: var(--text-color);
+    padding: 0.25rem;
+    cursor: pointer;
+    opacity: 0.7;
+    transition: opacity 0.2s ease;
+    z-index: 2;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.share-icon-button svg {
+    width: 14px;
+    height: 14px;
+}
+
+.share-icon-button:hover {
+    opacity: 1;
+}

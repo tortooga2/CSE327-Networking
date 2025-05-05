@@ -33,11 +33,7 @@ const FileViewer = ({ width }) => {
     return (
         <VerticalDiv style={{ overflowX: "hidden" }}>
             <Header />
-            <VerticalDiv
-                style={{
-                    display: "grid",
-                }}
-            >
+            <VerticalDiv padding="0rem">
                 {fileEntries.map((fileData) => (
                     <File key={fileData.id} fileData={fileData} />
                 ))}

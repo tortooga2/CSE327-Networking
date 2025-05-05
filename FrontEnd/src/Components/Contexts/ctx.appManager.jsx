@@ -171,7 +171,7 @@ const useStore = create((set) => ({
     },
     deleteFiles: async () => {
         try {
-            const response = fetch("/api/file/delete/", {
+            const response = await fetch("/api/file/delete", {
                 method: "DELETE",
                 credentials: "include",
                 headers: {
@@ -181,11 +181,23 @@ const useStore = create((set) => ({
                     file_ids: Array.from(useStore.getState().selectedFiles),
                 }),
             });
-            console.log(response);
+            
+            if (response.ok) {
+                // Remove deleted files from the store
+                set((state) => {
+                    const filesMap = new Map(state.files);
+                    state.selectedFiles.forEach((id) => {
+                        filesMap.delete(id);
+                    });
+                    return { files: filesMap, selectedFiles: new Set() };
+                });
+            } else {
+                console.error('Failed to delete files:', await response.text());
+            }
         } catch (err) {
-            console.log(err);
+            console.error('Error deleting files:', err);
         }
-    },
+    }
 }));
 
 export { useStore };

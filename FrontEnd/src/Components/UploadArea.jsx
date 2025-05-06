@@ -24,6 +24,7 @@ const ListItem = ({ index, name, remove, percentage }) => {
                 padding: "0.5rem",
                 paddingLeft: "1rem",
                 paddingRight: "1rem",
+                borderBottom: "1px solid var(--text-color)",
             }}
             onMouseEnter={() => {
                 setIsHovered(true);
@@ -135,7 +136,6 @@ const UploadArea = () => {
         <div>
             <div
                 style={{
-                    border: "1px solid var(--secondary-color)",
                     borderRadius: "0.5rem",
 
                     display: "flex",

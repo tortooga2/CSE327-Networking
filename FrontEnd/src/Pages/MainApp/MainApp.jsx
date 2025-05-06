@@ -86,7 +86,7 @@ const MainApp = () => {
                 }}
             >
                 <HorizontalDiv>
-                    <VerticalDiv width="180%">
+                    <VerticalDiv width="175%" padding="0rem">
                         <Menu />
                     </VerticalDiv>
                     <HorizontalDiv width="100%"></HorizontalDiv>

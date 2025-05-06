@@ -54,14 +54,15 @@ const Menu = () => {
     };
 
     return (
-        <VerticalDiv>
+        <VerticalDiv padding="0rem">
             <div
                 style={{
                     display: "flex",
                     justifyContent: "space-between",
                     ...(isFileMenu || isSettings
-                        ? { width: "45%" }
+                        ? { width: "48%" }
                         : { width: "100%" }),
+                    borderBottom: "1px solid var(--border-color)",
                 }}
             >
                 <div

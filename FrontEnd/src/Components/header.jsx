@@ -9,6 +9,7 @@ import { FaCog, FaLink } from "react-icons/fa";
 import { FaFile } from "react-icons/fa";
 import { useStore } from "./Contexts/ctx.appManager";
 import { useUser } from "./Contexts/ctx.user";
+import UtcClock from "./UTCClock";
 
 const Header = () => {
     const [searchTerm, setSearchTerm] = useState("");
@@ -54,7 +55,6 @@ const Header = () => {
                 style={{
                     textAlign: "left",
 
-                    marginBottom: "2rem",
                     padding: "0.5rem",
                     borderRadius: "0.5rem",
                     fontWeight: "900",
@@ -68,6 +68,16 @@ const Header = () => {
             >
                 <FaLink />
                 ConnectWork
+            </div>
+            <div>
+                <UtcClock
+                    style={{
+                        color: "var(--text-color)",
+                        opacity: "0.5",
+                        fontSize: "small",
+                        marginBottom: "2rem",
+                    }}
+                />
             </div>
             <div>
                 <UserButton username={email} />

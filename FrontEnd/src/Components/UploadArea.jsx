@@ -24,6 +24,7 @@ const ListItem = ({ index, name, remove, percentage }) => {
                 padding: "0.5rem",
                 paddingLeft: "1rem",
                 paddingRight: "1rem",
+
                 borderBottom: "1px solid var(--text-color)",
             }}
             onMouseEnter={() => {
@@ -133,11 +134,22 @@ const UploadArea = () => {
     };
 
     return (
-        <div>
+        <div
+            style={{
+                border: "1px solid var(--secondary-color)",
+                borderRadius: "0.5rem",
+                padding: "1rem",
+            }}
+        >
             <div
                 style={{
-                    borderRadius: "0.5rem",
-
+                    paddingBottom: "1rem",
+                }}
+            >
+                File Upload
+            </div>
+            <div
+                style={{
                     display: "flex",
                     flexDirection: "column",
                     overflowY: "auto",
@@ -155,91 +167,102 @@ const UploadArea = () => {
             </div>
             <div
                 style={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "space-between",
                     padding: "0.5rem",
+                    border: "1px solid var(--secondary-color)",
+                    borderRadius: "0.5rem",
+                    marginTop: "0.5rem",
                 }}
             >
                 <div
                     style={{
                         display: "flex",
                         alignItems: "center",
+                        justifyContent: "space-between",
+                        // padding: "0.5rem",
                     }}
                 >
-                    <Button
-                        onClick={(e) => {
-                            if (!fileInputRef) {
-                                setError(true);
-                            }
-                            fileInputRef.current.click();
+                    <div
+                        style={{
+                            display: "flex",
+                            alignItems: "center",
                         }}
                     >
-                        <FaPlus /> Add
-                        <input
-                            ref={fileInputRef}
-                            type="file"
-                            multiple
-                            style={{
-                                visibility: "hidden",
-                                position: "absolute",
-                            }}
-                            onChange={(event) => {
-                                const newfiles = event.target.files;
-                                const newList = [...files, ...newfiles];
-                                if (newList.length > 10) {
-                                    newList.length = 10;
+                        <Button
+                            onClick={(e) => {
+                                if (!fileInputRef) {
+                                    setError(true);
                                 }
-                                setFiles(newList);
-
-                                const newProgress = {};
-
-                                for (let i = 0; i < newList.length; i++) {
-                                    newProgress[newList[i].name] = 0;
-                                }
-
-                                console.log(newProgress);
-
-                                setProgress(newProgress);
+                                fileInputRef.current.click();
                             }}
-                        />
-                    </Button>
-                    <Button
-                        onClick={() => {
-                            setFiles([]);
-                        }}
-                    >
-                        <FaMinus />
-                        Clear
-                    </Button>
+                        >
+                            <FaPlus /> Add
+                            <input
+                                ref={fileInputRef}
+                                type="file"
+                                multiple
+                                style={{
+                                    visibility: "hidden",
+                                    position: "absolute",
+                                }}
+                                onChange={(event) => {
+                                    const newfiles = event.target.files;
+                                    const newList = [...files, ...newfiles];
+                                    if (newList.length > 10) {
+                                        newList.length = 10;
+                                    }
+                                    setFiles(newList);
+
+                                    const newProgress = {};
+
+                                    for (let i = 0; i < newList.length; i++) {
+                                        newProgress[newList[i].name] = 0;
+                                    }
+
+                                    console.log(newProgress);
+
+                                    setProgress(newProgress);
+                                }}
+                            />
+                        </Button>
+                        <Button
+                            onClick={() => {
+                                setFiles([]);
+                            }}
+                        >
+                            <FaMinus />
+                            Clear
+                        </Button>
+                    </div>
+
+                    <div>{files.length}/10</div>
                 </div>
+                <Button
+                    style={
+                        {
+                            // marginLeft: "0.5rem",
+                        }
+                    }
+                    onClick={async (e) => {
+                        e.preventDefault();
 
-                <div>{files.length}/10</div>
+                        if (!files || files.length === 0) {
+                            console.error("No files selected");
+                            return;
+                        }
+
+                        try {
+                            await uploadFile(files, onProgress);
+
+                            setProgress([]);
+                            setFiles([]);
+                        } catch (error) {
+                            setError(error);
+                        }
+                    }}
+                >
+                    <FaUpload /> Upload
+                </Button>
             </div>
-            <Button
-                style={{
-                    marginLeft: "0.5rem",
-                }}
-                onClick={async (e) => {
-                    e.preventDefault();
-
-                    if (!files || files.length === 0) {
-                        console.error("No files selected");
-                        return;
-                    }
-
-                    try {
-                        await uploadFile(files, onProgress);
-
-                        setProgress([]);
-                        setFiles([]);
-                    } catch (error) {
-                        setError(error);
-                    }
-                }}
-            >
-                <FaUpload /> Upload
-            </Button>
         </div>
     );
 };

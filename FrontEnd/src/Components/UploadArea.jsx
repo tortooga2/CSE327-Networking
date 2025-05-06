@@ -185,6 +185,7 @@ const UploadArea = () => {
                         style={{
                             display: "flex",
                             alignItems: "center",
+                            gap: "0.5rem",
                         }}
                     >
                         <Button

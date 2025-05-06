@@ -21,7 +21,6 @@ const FileViewer = ({ width }) => {
 
     //Get files and sort then when ever the state of our files updates.
     const fileEntries = useMemo(() => {
-        console.log("Files Updated");
         const fileArray = Array.from(files.values());
 
         fileArray.sort(CompareFuncs[sortOrder.field](sortOrder)); //will be replaced once we update the endpoint, but for right now it works.

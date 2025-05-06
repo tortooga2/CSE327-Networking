@@ -1,5 +1,7 @@
 import { create } from "zustand";
 
+import { useUser } from "./ctx.user";
+
 const useStore = create((set) => ({
     userProfile: {},
     setUserProfile: (state) => set({ userProfile: state }),
@@ -20,6 +22,7 @@ const useStore = create((set) => ({
             const { data } = await response.json();
             useStore.getState().setUserSettings(data);
         } else {
+            useStore.getState().user.ValidateSession();
             console.error("failed to update settings");
         }
     },
@@ -62,7 +65,6 @@ const useStore = create((set) => ({
             } else {
                 newSelectedFiles.delete(fileID);
             }
-            console.log(newSelectedFiles);
             return { selectedFiles: newSelectedFiles };
         });
     },
@@ -111,6 +113,9 @@ const useStore = create((set) => ({
 
     connectFiles: async () => {
         if (useStore.getState().selectedFiles.size == 0) {
+            useStore
+                .getState()
+                .setError("Oh no, no files to connect :(", "bad");
             return;
         }
         try {
@@ -127,7 +132,7 @@ const useStore = create((set) => ({
 
             if (response.ok) {
                 const data = await response.json();
-                console.log("Data from RTCPeerConnection", data);
+
                 useStore.getState().updateFiles(data.data);
                 useStore.getState().unSelectAll();
             }
@@ -136,7 +141,7 @@ const useStore = create((set) => ({
         }
     },
 
-    uploadFiles: async (files, onProgress) => {
+    uploadFiles: async (files, onProgress = null) => {
         //Separate name from each file
         const fileNames = [];
         for (let index = 0; index < files.length; index++) {
@@ -153,7 +158,7 @@ const useStore = create((set) => ({
             );
 
             if (!response.ok) {
-                throw new Error(
+                console.error(
                     "An error occurred when attempting to fetch from upload-helper"
                 );
             }
@@ -167,22 +172,67 @@ const useStore = create((set) => ({
                         const xhr = new XMLHttpRequest();
                         xhr.open("PUT", urls[index]);
 
-                        xhr.onload = () => {
+                        xhr.onload = async () => {
                             if (xhr.status === 200) {
-                                onProgress(files[index].name, 100);
+                                onProgress
+                                    ? onProgress(files[index].name, 100)
+                                    : null;
+                                await (async () => {
+                                    const fileVerResponse = await fetch(
+                                        "/api/file/verify",
+                                        {
+                                            method: "POST",
+                                            credentials: "include",
+                                            headers: {
+                                                "Content-Type":
+                                                    "application/json",
+                                            },
+                                            body: JSON.stringify({
+                                                keys: keys,
+                                                fileNames: fileNames,
+                                            }),
+                                        }
+                                    );
+
+                                    if (!fileVerResponse.ok) {
+                                        throw new Error(
+                                            "An error occurred when verifying your files"
+                                        );
+                                    }
+
+                                    const { data } =
+                                        await fileVerResponse.json();
+                                    console.log(data);
+                                    useStore.getState().updateFiles(data);
+                                })();
+                                useStore
+                                    .getState()
+                                    .setError(
+                                        `✅ Uploaded File: ${files[index].name}`,
+                                        "good"
+                                    );
                                 resolve(xhr.responseText);
                             } else {
+                                useStore
+                                    .getState()
+                                    .setError(
+                                        `❌ Failed to Upload File: ${files[index].name}`,
+                                        "bad"
+                                    );
                                 reject(new Error("Upload failed"));
                             }
                         };
 
-                        xhr.onerror = () => reject(new Error("XHR error"));
+                        xhr.onerror = () => {
+                            useStore.getState().user.ValidateSession();
+                            reject(new Error("XHR error"));
+                        };
 
                         xhr.upload.onprogress = (event) => {
                             if (event.lengthComputable && onProgress) {
                                 const percent =
                                     (event.loaded / event.total) * 100;
-                                // console.log(percent);
+
                                 onProgress(files[index].name, percent);
                             }
                         };
@@ -191,51 +241,45 @@ const useStore = create((set) => ({
                     });
                 })();
             }
-
-            const fileVerResponse = await fetch("/api/file/verify", {
-                method: "POST",
-                credentials: "include",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    keys: keys,
-                    fileNames: fileNames,
-                }),
-            });
-
-            if (!fileVerResponse.ok) {
-                throw new Error("An error occurred when verifying your files");
-            }
-
-            const { data } = await fileVerResponse.json();
-
-            useStore.getState().updateFiles(data);
-        } catch (err) {
-            console.log(err);
+        } catch (error) {
+            console.error(error);
         }
 
         //Now check to see if the files were uploaded successfully and if so, save to db
     },
     deleteFiles: async () => {
+        const files = useStore.getState().files;
+        const selectedFiles = useStore.getState().selectedFiles;
         try {
-            const response = fetch("/api/file/delete/", {
+            const response = await fetch("/api/file/delete/", {
                 method: "DELETE",
                 credentials: "include",
                 headers: {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify({
-                    file_ids: Array.from(useStore.getState().selectedFiles),
+                    file_ids: Array.from(selectedFiles),
                 }),
             });
-            console.log(response);
+
+            if (!response.ok) {
+                throw new Error("failed to delete files");
+            }
+            const newFiles = new Map(files);
+            Array.from(selectedFiles).forEach((key) => {
+                console.log(key);
+                newFiles.delete(key);
+            });
+            useStore.getState().setFiles(newFiles);
         } catch (err) {
-            console.log(err);
+            console.error(err);
         }
     },
 
-    isWindowReducedWidth: window.innerWidth < 1500,
+    Error: {},
+    setError: (message, errorType) => {
+        set({ Error: { message, errorType } });
+    },
 }));
 
 export { useStore };

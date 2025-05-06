@@ -30,15 +30,11 @@ const FilePreview = ({ width }) => {
 
     const closePreview = () => {
         useStore.getState().setPreviewedFile(null);
-        console.log("Preview is", closedFile);
     };
 
     const fileIds = [];
 
     useEffect(() => {
-        console.log(`File ID: ${fileId}`);
-
-        console.log("Fetching file data @", `/api/file/user/${fileId}`);
         if (!fileId) {
             return;
         }
@@ -53,7 +49,6 @@ const FilePreview = ({ width }) => {
                 });
                 if (response.ok) {
                     const data = await response.json();
-                    console.log(data);
                     setFileData(data.files.originalFile);
                     if (data.files.files) {
                         setFileContent(data.files.files);
@@ -166,7 +161,6 @@ const FilePreview = ({ width }) => {
                             <div>
                                 Bundle Content Ids:{" "}
                                 {Array.from(fileContent).map((file) => {
-                                    console.log();
                                     fileIds.push(file.id);
                                     return (
                                         <a

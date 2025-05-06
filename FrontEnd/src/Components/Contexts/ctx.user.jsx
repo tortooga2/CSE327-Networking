@@ -32,10 +32,9 @@ export const UserProvider = ({ children }) => {
                         const { email, settings } = data;
                         useStore.getState().setUserProfile({ email });
                         useStore.getState().setUserSettings(settings);
-                        console.log(settings);
                     } else {
                         const data = await response.json();
-                        console.log(data);
+
                         setSignedIn(false);
                     }
                 } catch (error) {

@@ -16,6 +16,7 @@ import VerticalDiv from "../../Components/UILayout/VerticalDiv.jsx";
 import Header from "../../Components/header.jsx";
 import Menu from "../../Components/Menu.jsx";
 import SearchArea from "../../Components/SearchArea.jsx";
+import ErrorPopup from "../../Components/ErrorPopup.jsx";
 
 const MainApp = () => {
     const { user } = useUser();
@@ -28,7 +29,7 @@ const MainApp = () => {
 
     useEffect(() => {
         user.ValidateSession();
-    }, [user]);
+    }, []);
 
     const userSettings = useStore((state) => state.userSettings);
 
@@ -161,6 +162,7 @@ const MainApp = () => {
                     </HorizontalDiv>
                 </HorizontalDiv>
             </VerticalDiv>
+            <ErrorPopup />
         </NewPage>
     );
 };

@@ -8,6 +8,7 @@ import { useStore } from "./Contexts/ctx.appManager";
 const ListItem = ({ index, name, remove, percentage }) => {
     const [isHovered, setIsHovered] = useState(false);
     const [logoutHovered, setLogoutHovered] = useState(false);
+    const setError = useStore((state) => state.setError);
 
     useEffect(() => {
         console.log(percentage);
@@ -67,6 +68,7 @@ const ListItem = ({ index, name, remove, percentage }) => {
                     setIsHovered(true);
                 }}
                 onClick={() => {
+                    setError("File Removed", "good");
                     remove(name);
                 }}
             >
@@ -108,8 +110,8 @@ const UploadArea = () => {
     const fileInputRef = useRef(null);
     const [files, setFiles] = useState([]);
     const [progress, setProgress] = useState([]);
-    const [error, setError] = useState(false);
     const uploadFile = useStore((state) => state.uploadFiles);
+    const setError = useStore((state) => state.setError);
 
     const onProgress = (name, percent) => {
         const newList = { ...progress };
@@ -209,6 +211,7 @@ const UploadArea = () => {
                                     const newfiles = event.target.files;
                                     const newList = [...files, ...newfiles];
                                     if (newList.length > 10) {
+                                        setError("Hit upload limit :(", "bad");
                                         newList.length = 10;
                                     }
                                     setFiles(newList);

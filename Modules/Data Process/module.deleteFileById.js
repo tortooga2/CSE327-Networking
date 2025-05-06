@@ -2,6 +2,7 @@ import { Data, sequelize } from "../Database/module.db.js";
 import { s3Client, bucketName } from "../S3 Stuff/module.s3client.js";
 import { DeleteObjectsCommand } from "@aws-sdk/client-s3";
 import { debugError } from "../module.debugHelpers.js";
+import { parse } from "path";
 
 //Delete file by ID
 export const deleteFileById = async (req, res) => {
@@ -18,10 +19,23 @@ export const deleteFileById = async (req, res) => {
 
     const transaction = await sequelize.transaction(); //Start transaction with database
     try {
+        const parsedIds = [];
+        for (let id = 0; id < file_ids.length; id++) {
+            const parsedId = parseInt(file_ids[id]);
+            if (isNaN(parsedId)) {
+                return res.status(400).json({
+                    okay: false,
+                    error: "Bad request",
+                    message: "All file ids must be integers"
+                });
+            }
+            parsedIds.push(parsedId);
+        }
+
         //Obtain all file keys
         const fileKeys = (await Data.findAll({
             where: {
-                id: file_ids,
+                id: parsedIds,
                 owner_id: profile_id,
             },
             attributes: ['metadata'],

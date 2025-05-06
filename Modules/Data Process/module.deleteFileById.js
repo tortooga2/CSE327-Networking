@@ -2,7 +2,6 @@ import { Data, sequelize } from "../Database/module.db.js";
 import { s3Client, bucketName } from "../S3 Stuff/module.s3client.js";
 import { DeleteObjectsCommand } from "@aws-sdk/client-s3";
 import { debugError } from "../module.debugHelpers.js";
-import { parse } from "path";
 
 //Delete file by ID
 export const deleteFileById = async (req, res) => {

@@ -110,6 +110,9 @@ const useStore = create((set) => ({
     },
 
     connectFiles: async () => {
+        if (useStore.getState().selectedFiles.size == 0) {
+            return;
+        }
         try {
             const response = await fetch("/api/file/connect", {
                 method: "POST",
@@ -133,7 +136,7 @@ const useStore = create((set) => ({
         }
     },
 
-    uploadFiles: async (files) => {
+    uploadFiles: async (files, onProgress) => {
         //Separate name from each file
         const fileNames = [];
         for (let index = 0; index < files.length; index++) {
@@ -159,13 +162,36 @@ const useStore = create((set) => ({
 
             //Push each file to s3
             for (let index = 0; index < files.length; index++) {
-                await fetch(urls[index], {
-                    method: "PUT",
-                    body: files[index],
-                });
+                await (async () => {
+                    return new Promise((resolve, reject) => {
+                        const xhr = new XMLHttpRequest();
+                        xhr.open("PUT", urls[index]);
+
+                        xhr.onload = () => {
+                            if (xhr.status === 200) {
+                                onProgress(files[index].name, 100);
+                                resolve(xhr.responseText);
+                            } else {
+                                reject(new Error("Upload failed"));
+                            }
+                        };
+
+                        xhr.onerror = () => reject(new Error("XHR error"));
+
+                        xhr.upload.onprogress = (event) => {
+                            if (event.lengthComputable && onProgress) {
+                                const percent =
+                                    (event.loaded / event.total) * 100;
+                                // console.log(percent);
+                                onProgress(files[index].name, percent);
+                            }
+                        };
+
+                        xhr.send(files[index]);
+                    });
+                })();
             }
 
-            //Now check to see if the files were uploaded successfully and if so, save to db
             const fileVerResponse = await fetch("/api/file/verify", {
                 method: "POST",
                 credentials: "include",
@@ -188,6 +214,8 @@ const useStore = create((set) => ({
         } catch (err) {
             console.log(err);
         }
+
+        //Now check to see if the files were uploaded successfully and if so, save to db
     },
     deleteFiles: async () => {
         try {

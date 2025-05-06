@@ -55,8 +55,8 @@ const SignupWindow = ({ setState }) => {
         formRef.current.addEventListener("submit", async (e) => {
             e.preventDefault();
 
-            const email = e.target[1].value;
-            const password = e.target[2].value;
+            const email = e.target[0].value;
+            const password = e.target[1].value;
 
             console.log("email:", email, "and password", password);
 

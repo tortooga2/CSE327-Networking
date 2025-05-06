@@ -7,7 +7,15 @@ const Button = ({
     onClick = () => {
         console.log("Button clicked");
     },
+    style = {},
+    hover = {
+        backgroundColor: "rgba(0, 0, 0, 0.2)",
+    },
+    click = {},
+    disabled = false,
+}) => {
     style = {
+        ...style,
         // border: "1px solid var(--primary-color)",
         backgroundColor: "transparent",
         borderRadius: "0.5rem",
@@ -20,18 +28,8 @@ const Button = ({
         alignItems: "center",
         justifyContent: "center",
         gap: "0.5rem",
-    },
-    hover = {
-        backgroundColor: "rgba(0, 0, 0, 0.2)",
-    },
-    click = {},
-    disabled = false,
-}) => {
-    style = {
-        ...style,
         userSelect: "none",
         cursor: "pointer",
-        width: "fit-content",
     };
 
     const [styleState, setStyleState] = useState(style);

@@ -1,12 +1,20 @@
 import { useEffect, useRef } from "react";
 
-import { FaUpload, FaLink, FaTimes, FaTrash } from "react-icons/fa";
+import {
+    FaUpload,
+    FaLink,
+    FaTimes,
+    FaTrash,
+    FaStickyNote,
+} from "react-icons/fa";
 import { useStore } from "./Contexts/ctx.appManager";
 
 // import NoteCreation from "./NoteCreation";
 import VerticalDiv from "./UILayout/VerticalDiv";
 
 import NoteCreation from "./NoteCreation";
+import Button from "./Button/Button";
+import UploadArea from "./UploadArea";
 
 const Sidebar = () => {
     const selectedFiles = useStore((state) => state.selectedFiles);
@@ -69,46 +77,30 @@ const Sidebar = () => {
                 display: "flex",
             }}
         >
-            <div
-                onClick={UnSelectAll}
-                style={{
-                    padding: "0.75rem 1rem",
-                    backgroundColor: "#1E0B33",
-                    color: "white",
-                    border: "none",
-                    borderRadius: "6px",
-                    cursor: "pointer",
-                    transition: "background-color 0.2s",
-                    fontSize: "0.9rem",
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "0.5rem",
-                }}
-            >
-                <FaTimes /> Unselect All ({selectedFiles.size})
-            </div>
-
-            <div
+            <Button
                 onClick={connectFiles}
                 style={{
-                    padding: "0.75rem 1rem",
-                    backgroundColor: "#C8B0FF",
-                    color: "#1E0B33",
-                    border: "none",
-                    borderRadius: "6px",
-                    cursor: "pointer",
-                    transition: "background-color 0.2s",
-                    fontSize: "0.9rem",
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "0.5rem",
+                    color: "var(--bundle-color-2)",
                 }}
             >
                 <FaLink />
-                Connect Files
-            </div>
+                Bundle Files
+            </Button>
+            <Button
+                onClick={(e) => {
+                    useStore.getState().setLayoutState(2);
+                }}
+                style={{
+                    color: "var(--note-color-2)",
+                }}
+            >
+                <FaStickyNote />
+                New Note
+            </Button>
 
-            <form
+            <UploadArea />
+
+            {/* <form
                 id="fileForm"
                 ref={formRef}
                 style={{
@@ -147,27 +139,7 @@ const Sidebar = () => {
                 >
                     Upload
                 </button>
-            </form>
-
-            <div
-                onClick={deleteFiles}
-                style={{
-                    padding: "0.75rem 1rem",
-                    backgroundColor: "#FF8A8A",
-                    color: "white",
-                    border: "none",
-                    borderRadius: "6px",
-                    cursor: "pointer",
-                    transition: "background-color 0.2s",
-                    fontSize: "0.9rem",
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "0.5rem",
-                }}
-            >
-                <FaTrash /> <p>Delete Files ({selectedFiles.size})</p>
-            </div>
-            <NoteCreation />
+            </form> */}
         </div>
     );
 };

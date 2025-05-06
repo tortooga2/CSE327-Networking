@@ -4,7 +4,7 @@ import Button from "./Button/Button";
 import UserButton from "./UserButton";
 import HorizontalDiv from "./UILayout/HorizontalDiv";
 
-import { FaCog } from "react-icons/fa";
+import { FaCog, FaLink } from "react-icons/fa";
 
 import { FaFile } from "react-icons/fa";
 import { useStore } from "./Contexts/ctx.appManager";
@@ -16,13 +16,9 @@ const Header = () => {
         setSearchTerm(e.target.value);
     };
 
-    const { email } = useStore(
-        (state) => state.userProfile
-    );
+    const { email } = useStore((state) => state.userProfile);
 
     const user = useUser();
-
-
 
     const buttonStyle = {
         border: "1px solid black",
@@ -57,16 +53,20 @@ const Header = () => {
             <div
                 style={{
                     textAlign: "left",
-                    width: "100%",
+
                     marginBottom: "2rem",
                     padding: "0.5rem",
                     borderRadius: "0.5rem",
                     fontWeight: "900",
                     fontSize: "2rem",
                     backgroundColor: "var(--secondary-color)",
-                    color: "var(--special-color)",
+                    color: "var(--bundle-color-2)",
+                    display: "flex",
+                    gap: "1rem",
+                    alignItems: "center",
                 }}
             >
+                <FaLink />
                 ConnectWork
             </div>
             <div>
@@ -84,14 +84,19 @@ const Header = () => {
                 <Button
                     onClick={(e) => {
                         e.stopPropagation();
-                        useStore.getState().setLayoutState(2);
+                        useStore.getState().setLayoutState(3);
                     }}
                 >
                     {" "}
                     <FaCog />
                     Settings
                 </Button>
-                <Button>
+                <Button
+                    onClick={(e) => {
+                        e.stopPropagation();
+                        useStore.getState().setLayoutState(4);
+                    }}
+                >
                     <FaFile />
                     File
                 </Button>

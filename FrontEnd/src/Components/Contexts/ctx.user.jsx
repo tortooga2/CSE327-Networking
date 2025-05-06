@@ -19,7 +19,7 @@ export const UserProvider = ({ children }) => {
 
             ValidateSession: async () => {
                 try {
-                    const response = await fetch(`api/auth/verify`, {
+                    const response = await fetch(`/api/auth/verify`, {
                         method: "GET",
                         headers: {
                             "Content-Type": "application/json",
@@ -45,7 +45,7 @@ export const UserProvider = ({ children }) => {
             },
             SignIn: async (email, password) => {
                 try {
-                    const response = await fetch(`api/auth/login`, {
+                    const response = await fetch(`/api/auth/login`, {
                         method: "POST",
                         headers: {
                             "Content-Type": "application/json",
@@ -63,7 +63,7 @@ export const UserProvider = ({ children }) => {
             },
             SignOut: async () => {
                 try {
-                    const response = await fetch(`api/auth/logout`, {
+                    const response = await fetch(`/api/auth/logout`, {
                         method: "POST",
                         headers: {
                             "Content-Type": "application/json",
@@ -78,15 +78,19 @@ export const UserProvider = ({ children }) => {
                     console.error(error);
                 }
             },
-            SignUp: async (username, email, password) => {
+            SignUp: async (email, password) => {
                 try {
-                    const response = await fetch(`api/auth/signup`, {
+                    const response = await fetch(`/api/auth/signup`, {
                         method: "POST",
                         headers: {
                             "Content-Type": "application/json",
                         },
                         credentials: "include",
-                        body: JSON.stringify({ email, password, username }),
+                        body: JSON.stringify({
+                            email,
+                            password,
+                            username: email,
+                        }),
                     });
                     if (response.ok) {
                         user.ValidateSession();

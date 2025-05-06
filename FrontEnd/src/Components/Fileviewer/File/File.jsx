@@ -65,7 +65,15 @@ const File = ({ fileData }) => {
                 setIsHover(false);
             }}
         >
-            <div style={{ width: "3rem", minWidth: "3rem" }}>
+            <div
+                style={{
+                    width: "3rem",
+                    minWidth: "3rem",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                }}
+            >
                 <input
                     type="checkbox"
                     ref={checkboxRef}

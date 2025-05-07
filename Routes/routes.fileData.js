@@ -55,7 +55,7 @@ fileDataRouter.get('/search', async (req, res) => {
             return res.status(401).json({ error: 'User not authenticated' });
         }
 
-        // Use SQL-level search with word similarity and pagination
+        // SQL-level search with word similarity and pagination
         const query = `
             SELECT 
                 "id", 

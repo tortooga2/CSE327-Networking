@@ -10,13 +10,16 @@ import Sidebar from "../../Components/Sidebar.jsx";
 import { useUser } from "../../Components/Contexts/ctx.user.jsx";
 import { useStore } from "../../Components/Contexts/ctx.appManager.jsx";
 
-import DebugSidebar from "../../Components/debugSideBar.jsx";
+import Sidebar from "../../Components/Sidebar.jsx";
 
 import FilePreview from "../../Components/FilePreview/FilePreview.jsx";
 import NewPage from "../../Components/UILayout/NewPage.jsx";
 import HorizontalDiv from "../../Components/UILayout/HorizontalDiv.jsx";
 import VerticalDiv from "../../Components/UILayout/VerticalDiv.jsx";
-import Header from "../../Components/Header.jsx";
+import Header from "../../Components/header.jsx";
+import Menu from "../../Components/Menu.jsx";
+import SearchArea from "../../Components/SearchArea.jsx";
+import ErrorPopup from "../../Components/ErrorPopup.jsx";
 
 const MobileDock = () => {
   return (
@@ -40,7 +43,6 @@ const MobileDock = () => {
     </div>
   );
 };
-
 const MainApp = () => {
     const { user } = useUser();
 
@@ -52,56 +54,128 @@ const MainApp = () => {
 
     useEffect(() => {
         user.ValidateSession();
-    }, [user]);
+    }, []);
+
+    const userSettings = useStore((state) => state.userSettings);
+
+    // useEffect(() => {
+    //     const root = document.getElementById("root");
+    //     for (let setting in userSettings) {
+    //         switch (setting) {
+    //             case "bundle_color":
+    //                 root.style.setProperty("--bundle-color-2", "#C8B0FF");
+    //                 break;
+
+    //             case "doc_color":
+    //                 root.style.setProperty("--document-color-2", "#2A9D8F");
+    //                 break;
+
+    //             case "note_color":
+    //                 root.style.setProperty("--note-color-2", "#E9C46A");
+    //                 break;
+
+    //             case "rec_color":
+    //                 root.style.setProperty("--video-color-2", "#F4A261");
+    //                 break;
+
+    //             case "img_color":
+    //                 root.style.setProperty("--img-color-2", "#E76F51");
+    //                 break;
+
+    //             case "font_size":
+    //                 root.style.setProperty(
+    //                     "--font-size",
+    //                     userSettings[setting]
+    //                 );
+    //                 break;
+
+    //             case "font_family":
+    //                 root.style.setProperty(
+    //                     "--font-family",
+    //                     userSettings[setting]
+    //                 );
+    //                 break;
+
+    //             default:
+    //                 console.warn(`Unknown setting “${setting}”`);
+    //         }
+    //     }
+    // }, [userSettings]);
 
     return (
         <NewPage>
-            <VerticalDiv padding="0.5rem" style={{ position: "relative", backgroundColor: "var(--secondary-color)" }}>
+            <VerticalDiv
+                padding="1rem"
+                style={{
+                    position: "relative",
+                    backgroundColor: "var(--secondary-color)",
+                }}
+            >
                 <HorizontalDiv>
-                    <VerticalDiv
-                        width="42.5%"
-                        style={{ backgroundColor: "white" }}
-                        className="desktop-sidebar"
-                    >
-                        <h1>This is a placeholder</h1>
+                    <VerticalDiv width="175%" padding="0rem">
+                        <Menu />
                     </VerticalDiv>
-                    <HorizontalDiv width="100%" className="mobile-fileviewer">
-                        <FileViewer width="100%" />
-                    </HorizontalDiv>
-                    <FilePreview width="93%" />
+                    <HorizontalDiv width="100%"></HorizontalDiv>
+                    <FilePreview width="180%" />
                 </HorizontalDiv>
-                
-                {/* Desktop sidebar */}
                 <HorizontalDiv
                     width="60%"
-                    padding="0rem"
-                    className="desktop-sidebar"
+                    padding="1rem"
                     style={{
                         position: "absolute",
-                        borderRadius: "0.5rem",
+                        borderRadius: "var(--border-radius)",
+
+                        border: "1px solid var(--border-color)",
                         padding: "1rem",
-                        background: "linear-gradient(var(--special-color), var(--grad-color))",
+                        background:
+                            "linear-gradient(var(--primary-color), var(--grad-color))",
                         transition: "all 0.3s cubic-bezier(.47,1.64,.41,.8)",
                     }}
                     state={[
                         {
                             width: "100%",
                             left: "0",
+                            // transition:
+                            //     "all 0.3s cubic-bezier(.47,1.64,.41,.8)",
                         },
                         {
                             width: "60%",
                             left: "0",
+                            // transition:
+                            //     "all 0.3s cubic-bezier(.47,1.64,.41,.8)",
+                        },
+                        {
+                            width: "60%",
+                            left: "40%",
+                            // transition:
+                            //     "all 0.3s cubic-bezier(.47,1.64,.41,.8)",
                         },
                         {
                             width: "80%",
                             left: "20%",
+                            // transition:
+                            //     "all 0.3s cubic-bezier(.47,1.64,.41,.8)",
+                        },
+                        {
+                            width: "80%",
+                            left: "20%",
+                            // transition:
+                            //     "all 0.3s cubic-bezier(.47,1.64,.41,.8)",
+                        },
+                        {
+                            width: "80%",
+                            left: "20%",
+                            // transition:
+                            //     "all 0.3s cubic-bezier(.47,1.64,.41,.8)",
                         },
                     ]}
                     playAnimation={layoutState}
                 >
                     <VerticalDiv width="350px" padding="0rem">
                         <Header />
-                        <DebugSidebar />
+                        <SearchArea />
+                        <Sidebar />
+
                         <VerticalDiv height="100%"></VerticalDiv>
                     </VerticalDiv>
                     <HorizontalDiv
@@ -112,10 +186,8 @@ const MainApp = () => {
                         <FileViewer width="100%" />
                     </HorizontalDiv>
                 </HorizontalDiv>
-
-                {/* Mobile dock */}
-                <MobileDock />
             </VerticalDiv>
+            <ErrorPopup />
         </NewPage>
     );
 };

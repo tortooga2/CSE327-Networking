@@ -6,9 +6,11 @@ const ImageView = ({ src, name }) => {
             src={src}
             style={{
                 width: "100%",
-                height: "auto",
-                maxWidth: "1000px",
-                borderRadius: "8px",
+                maxHeight: "40vh",
+                objectFit: "scale-down",
+
+
+                borderRadius: "var(--border-radius)",
                 display: "block",
             }}
             alt={name}

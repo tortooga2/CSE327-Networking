@@ -6,6 +6,8 @@ import { CompareFuncs } from "../scripts/compareFuncs.js"; //Object that include
 
 import VerticalDiv from "../UILayout/VerticalDiv";
 
+import Header from "./FileHeader.jsx";
+
 const FileViewer = ({ width }) => {
     const files = useStore((state) => state.files);
     const sortOrder = useStore((state) => state.sortOrder); //sortOrder is a json object that includes the field, as well as the order.
@@ -19,7 +21,6 @@ const FileViewer = ({ width }) => {
 
     //Get files and sort then when ever the state of our files updates.
     const fileEntries = useMemo(() => {
-        console.log("Files Updated");
         const fileArray = Array.from(files.values());
 
         fileArray.sort(CompareFuncs[sortOrder.field](sortOrder)); //will be replaced once we update the endpoint, but for right now it works.
@@ -28,19 +29,14 @@ const FileViewer = ({ width }) => {
         return fileArray;
     }, [files, sortOrder]);
 
-
-
-
     return (
-        <VerticalDiv gap="0rem" width={width} padding="0rem">
-            {fileEntries.map(
-                (
-                    fileData,
-                    index //map app files to a file component.
-                ) => (
+        <VerticalDiv style={{ overflowX: "hidden" }}>
+            <Header />
+            <VerticalDiv padding="0rem">
+                {fileEntries.map((fileData) => (
                     <File key={fileData.id} fileData={fileData} />
-                )
-            )}
+                ))}
+            </VerticalDiv>
         </VerticalDiv>
     );
 };

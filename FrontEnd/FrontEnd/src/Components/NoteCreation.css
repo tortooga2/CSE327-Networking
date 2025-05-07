@@ -1,0 +1,16 @@
+/* .w-md-editor-text-pre.wmde-markdown-color {
+    font-family: monospace;
+    font-size: large;
+} */
+
+.CodeMirror {
+    background-color: #00000000;
+    color: var(--text-color);
+    height: 60vh;
+    z-index: 0;
+    caret-color: auto;
+}
+
+.CodeMirror-cursor {
+    border-left-color: var(--text-color);
+}

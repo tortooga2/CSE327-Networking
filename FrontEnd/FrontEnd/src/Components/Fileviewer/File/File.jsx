@@ -2,11 +2,14 @@ import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import propTypes from "prop-types";
 import "./File.css";
+import { FaCopy } from "react-icons/fa";
 
 import { FileType } from "../../Tags";
 import Button from "../../Button/Button";
 
 import { useStore } from "../../Contexts/ctx.appManager";
+
+import { copyFileUrl, getFileUrl } from "../../scripts/fileUrlFuncs";
 
 const File = ({ fileData }) => {
     const fileContent = useState(fileData);
@@ -23,7 +26,7 @@ const File = ({ fileData }) => {
     });
 
     const ViewFile = (fileId) => (e) => {
-        e.stopPropagation();
+        //e.stopPropagation();
         useStore.getState().setPreviewedFile(fileId);
     };
 
@@ -33,7 +36,6 @@ const File = ({ fileData }) => {
 
     const handleChange = (e) => {
         e.stopPropagation();
-        console.log("Checkbox changed:", e.target.checked);
         setIsSelected(fileContent[0].id, !isSelected);
     };
 
@@ -47,118 +49,158 @@ const File = ({ fileData }) => {
 
     const [isHover, setIsHover] = useState(false);
 
+    const [onEnter, setOnEnter] = useState({ width: "100%" });
+    const [onEnter2, setOnEnter2] = useState({ height: "0%" });
+
+    useEffect(() => {
+        setOnEnter({ width: "0%" });
+        setOnEnter2({ height: "fit-content" });
+    }, []);
+
     return (
         <div
-            className={isSelected ? "file-row selected" : "file-row"}
-            onClick={() => checkboxRef.current.click()}
             style={{
-                display: "flex",
-                justifyContent: "space-evenly",
-                padding: !isHover ? "1rem 0.5rem" : "1rem 1rem",
-                backgroundColor: isSelected ? "#f2e9e1" : "#ffffff00",
-                transition: "background-color 0.2s, padding 0.2s ease-in-out",
-                cursor: "pointer",
-                alignItems: "center",
-            }}
-            onMouseEnter={() => {
-                setIsHover(true);
-            }}
-            onMouseLeave={() => {
-                setIsHover(false);
+                ...onEnter2,
+                transition: "height 0.5s ease-in-out",
             }}
         >
-            {isLayout && (
+            <div
+                className={isSelected ? "file-row selected" : "file-row"}
+                onClick={ViewFile(fileContent[0].id)}
+                style={{
+                    display: "flex",
+                    justifyContent: "space-evenly",
+                    padding: "0.5rem 0.5rem",
+                    backgroundColor: isSelected
+                        ? "var(--secondary-color)"
+                        : "#ffffff00",
+                    transition:
+                        "background-color 0.2s, padding 0.2s ease-in-out",
+                    cursor: "pointer",
+                    alignItems: "center",
+                    gap: "min(10rem, 3rem)",
+                    minWidth: "30vw",
+                    position: "relative",
+                }}
+                onMouseEnter={() => {
+                    setIsHover(true);
+                }}
+                onMouseLeave={() => {
+                    setIsHover(false);
+                }}
+            >
+                <div
+                    className="cover"
+                    style={{
+                        position: "absolute",
+                        height: "100%",
+                        top: "0",
+                        right: "0",
+                        backgroundColor: "var(--primary-color",
+                        ...onEnter,
+                        transition: "width 0.5s ease-in-out 0.2s",
+                        zIndex: "1000",
+                    }}
+                ></div>
+                <div
+                    style={{
+                        width: "3rem",
+                        minWidth: "3rem",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        gap: "0.5rem",
+                    }}
+                >
+                    <p>{fileData.id}</p>
+                    <input
+                        type="checkbox"
+                        ref={checkboxRef}
+                        onChange={handleChange}
+                        checked={isSelected}
+                        onClick={(e) => e.stopPropagation()}
+                    />
+                </div>
+
+                <div
+                    style={{
+                        flexShrink: "0",
+                        width: "15rem",
+                    }}
+                >
+                    {fileContent[0].createdAt}
+                </div>
+                <div
+                    style={{
+                        minWidth: "2rem",
+                        textAlign: "left",
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                    }}
+                >
+                    {FileType(fileContent[0].name, isLayout)}
+                </div>
+                {isLayout ? (
+                    <div
+                        style={{
+                            width: "10rem",
+                        }}
+                    >
+                        {fileContent[0].creator_username}
+                    </div>
+                ) : null}
+                {isLayout ? (
+                    <div
+                        style={{
+                            textWrap: "nowrap",
+                            minWidth: "15rem",
+                            width: "15rem",
+                            overflow: "hidden",
+                            textOverflow: "ellipsis",
+                        }}
+                    >
+                        {fileContent[0].name}
+                    </div>
+                ) : null}
                 <div
                     style={{
                         minWidth: "3rem",
-                    }}
-                >
-                    {fileContent[0].id}
-                </div>
-            )}
-            <div
-                style={{
-                    flexShrink: "0",
-                    width: "10rem",
-                    minWidth: "10rem",
-                }}
-            >
-                {new Date(fileContent[0].createdAt).toLocaleDateString(
-                    "en-US",
-                    {
-                        year: "numeric",
-                        month: "short",
-                        day: "numeric",
-                    }
-                )}
-            </div>
-            <div>{FileType(fileContent[0].name)}</div>
-            <div
-                style={{
-                    maxWidth: "10rem",
-                }}
-            >
-                {fileContent[0].creator_username}
-            </div>
-            {isLayout && (
-                <div
-                    style={{
-                        fontWeight: "500",
-                        textWrap: "nowrap",
-                        overflowX: "hidden",
+                        width: "20rem",
+                        overflow: "hidden",
                         textOverflow: "ellipsis",
-                        minWidth: "30rem",
                     }}
                 >
-                    {fileContent[0].name}
+                    <a href={getFileUrl(fileContent[0].id)} target="_blank">
+                        {getFileUrl(fileContent[0].id)}
+                    </a>
                 </div>
-            )}
-            <div
-                style={{
-                    display: "flex",
-                    gap: "0.1rem",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    minWidth: "fit-content",
-                }}
-            >
-                <input
-                    type="checkbox"
-                    ref={checkboxRef}
-                    onChange={handleChange}
-                    checked={isSelected}
-                />
-                <Button onClick={ViewFile(fileContent[0].id)}>view</Button>
-                {isLayout && (
-                    <button
+
+                <div
+                    className="buttons"
+                    style={{
+                        display: "flex",
+                        gap: "0.1rem",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        minWidth: "5rem",
+                        zIndex: "0",
+                    }}
+                >
+                    {isLayout && (
+                        <Button onClick={ViewFile(fileContent[0].id)}>
+                            view
+                        </Button>
+                    )}
+                    <Button
                         onClick={(e) => {
                             e.stopPropagation();
-
-                            copyLink(e);
+                            copyFileUrl(e, fileContent[0].id);
                         }}
                         className={"copy-link"}
                     >
-                        <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            fill="#000000"
-                            className="bi bi-files"
-                            viewBox="0 0 16 16"
-                            id="Files--Streamline-Bootstrap"
-                            height={16}
-                            width={16}
-                        >
-                            <desc>
-                                {
-                                    "Files Streamline Icon: https://streamlinehq.com"
-                                }
-                            </desc>
-                            <path
-                                d="M13 0H6a2 2 0 0 0 -2 2 2 2 0 0 0 -2 2v10a2 2 0 0 0 2 2h7a2 2 0 0 0 2 -2 2 2 0 0 0 2 -2V2a2 2 0 0 0 -2 -2m0 13V4a2 2 0 0 0 -2 -2H5a1 1 0 0 1 1 -1h7a1 1 0 0 1 1 1v10a1 1 0 0 1 -1 1M3 4a1 1 0 0 1 1 -1h7a1 1 0 0 1 1 1v10a1 1 0 0 1 -1 1H4a1 1 0 0 1 -1 -1z"
-                                strokeWidth={1}
-                            />
-                        </svg>
-                    </button>
-                )}
+                        <FaCopy />
+                    </Button>
+                </div>
             </div>
         </div>
     );

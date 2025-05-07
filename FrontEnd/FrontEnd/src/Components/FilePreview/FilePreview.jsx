@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import { useStore } from "../Contexts/ctx.appManager.jsx";
 import PropTypes from "prop-types";
-import "./FilePreview.css";  // Add this import
+
+import "./FilePreview.css";  
 
 import getFileType from "../scripts/getFileType.js";
 import { FileType } from "../Tags";
@@ -28,15 +29,13 @@ const FilePreview = ({ width }) => {
         alert("Link copied to clipboard");
     };
 
+    const { user } = useUser();
+
     const closePreview = () => {
         useStore.getState().setPreviewedFile(null);
-        console.log("Preview is", closedFile);
     };
 
     useEffect(() => {
-        console.log(`File ID: ${fileId}`);
-
-        console.log("Fetching file data @", `/api/file/user/${fileId}`);
         if (!fileId) {
             return;
         }
@@ -51,7 +50,6 @@ const FilePreview = ({ width }) => {
                 });
                 if (response.ok) {
                     const data = await response.json();
-                    console.log(data);
                     setFileData(data.files.originalFile);
                     if (data.files.files) {
                         setFileContent(data.files.files);
@@ -59,15 +57,10 @@ const FilePreview = ({ width }) => {
                         setFileContent([data.files.originalFile]);
                     }
                 } else {
-                    setFileData({
-                        error: response.statusText,
-                    });
+                    user.ValidateSession();
                 }
             } catch (error) {
-                console.error(error);
-                setFileData({
-                    error: error,
-                });
+                user.ValidateSession();
             }
         };
 

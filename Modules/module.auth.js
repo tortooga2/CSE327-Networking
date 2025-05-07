@@ -6,7 +6,7 @@ import dotenv from "dotenv";
 dotenv.config();
 
 import { Redis } from "ioredis";
-import { Users } from "./Database/module.db.js";
+import { Users, UserSettings } from "./Database/module.db.js";
 import { debugMessage, debugError, DEBUG } from "./module.debugHelpers.js";
 import { Sequelize } from "sequelize";
 import { generateUsername } from "./module.usernameGenerator.js";
@@ -329,13 +329,50 @@ const auth = {
                 message: "Missing session token",
             });
         }
-        return auth.Verify(req, res, () => {
+
+        return auth.Verify(req, res, async () => {
             console.log("running from TestVerify", req.user);
             const user = req.user;
+            const { profile_id } = req.user;
+            const userSettings = await (async () => {
+                let userSettings;
+                userSettings = await UserSettings.findOne({
+                    where: { profile_id },
+                });
+
+                if (!userSettings) {
+                    userSettings = await UserSettings.create({
+                        profile_id,
+                    });
+                }
+
+                const {
+                    dark_mode,
+                    bundle_color,
+                    doc_color,
+                    note_color,
+                    rec_color,
+                    img_color,
+                    font_size,
+                    font_family,
+                } = userSettings;
+
+                return {
+                    dark_mode,
+                    bundle_color,
+                    doc_color,
+                    note_color,
+                    rec_color,
+                    img_color,
+                    font_size,
+                    font_family,
+                };
+            })();
+
             return res.status(200).json({
                 okay: true,
-                username_base: user.username_base,
-                username_suffix: user.username_suffix,
+                email: user.email,
+                settings: userSettings,
             });
         });
     },

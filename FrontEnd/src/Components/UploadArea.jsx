@@ -25,8 +25,6 @@ const ListItem = ({ index, name, remove, percentage }) => {
                 padding: "0.5rem",
                 paddingLeft: "1rem",
                 paddingRight: "1rem",
-
-                borderBottom: "1px solid var(--text-color)",
             }}
             onMouseEnter={() => {
                 setIsHovered(true);

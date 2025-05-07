@@ -111,6 +111,52 @@ const useStore = create((set) => ({
         }
     },
 
+    SortOrder: {
+        DESC: "desc",
+        ASC: "asc",
+    },
+
+    searchFiles: async (
+        searchString = null,
+        sortColumn = null,
+        sortOrder = null,
+        filter
+    ) => {
+        ///api/file/load?limit=5&chunk=1&order=asc&search=flowers&type=png&sort=createdAt
+
+        let endpoint = `/api/file/load?limit=99999&chunk=1&`;
+        if (searchString) {
+            endpoint += `search=${searchString}&`;
+        }
+        if (sortColumn) {
+            endpoint += `sort=${sortColumn}&`;
+        }
+        if (sortOrder) {
+            endpoint += `order=${sortOrder}&`;
+        }
+        if (filter) {
+            endpoint += `type=${filter}`;
+        }
+        try {
+            const response = await fetch(endpoint, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                credentials: "include",
+            });
+
+            const { files } = await response.json();
+            const newMap = new Map();
+            files.forEach((f) => {
+                newMap.set(f.id, f);
+            });
+            useStore.getState().setFiles(newMap);
+        } catch (err) {
+            throw new Error("failed to search files", err);
+        }
+    },
+
     connectFiles: async () => {
         if (useStore.getState().selectedFiles.size == 0) {
             useStore
@@ -188,8 +234,8 @@ const useStore = create((set) => ({
                                                     "application/json",
                                             },
                                             body: JSON.stringify({
-                                                keys: keys,
-                                                fileNames: fileNames,
+                                                keys: [keys[index]],
+                                                fileNames: [fileNames[index]],
                                             }),
                                         }
                                     );

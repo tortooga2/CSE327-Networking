@@ -34,7 +34,6 @@ export const UserProvider = ({ children }) => {
                         useStore.getState().setUserSettings(settings);
                     } else {
                         const data = await response.json();
-
                         setSignedIn(false);
                     }
                 } catch (error) {

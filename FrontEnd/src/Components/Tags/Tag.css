@@ -24,11 +24,13 @@
     width: 8rem;
     min-width: 8rem;
     gap: 1rem;
+    align-items: center;
 }
 
 .tag.small {
     width: 2rem;
     gap: 0rem;
+    margin-left: 0.5rem;
 }
 
 .tag .marker {

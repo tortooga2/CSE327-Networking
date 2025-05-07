@@ -9,7 +9,9 @@ import Button from "../Button/Button.jsx";
 import FileContent from "../fileContent/FileContent.jsx";
 
 import VerticalDiv from "../UILayout/VerticalDiv";
+
 import { getFileUrl } from "../scripts/fileUrlFuncs.js";
+import { useUser } from "../Contexts/ctx.user.jsx";
 
 const FilePreview = ({ width }) => {
     const fileId = useStore((state) => state.previewedFile);
@@ -20,13 +22,7 @@ const FilePreview = ({ width }) => {
     const [fileContent, setFileContent] = useState(null);
     const scrollableRef = useRef(null);
 
-    const copyLink = (e, fileId) => {
-        e.stopPropagation();
-        navigator.clipboard.writeText(
-            `${window.location.origin}/file/owner_id/${fileId}`
-        );
-        alert("Link copied to clipboard");
-    };
+    const { user } = useUser();
 
     const closePreview = () => {
         useStore.getState().setPreviewedFile(null);
@@ -56,15 +52,10 @@ const FilePreview = ({ width }) => {
                         setFileContent([data.files.originalFile]);
                     }
                 } else {
-                    setFileData({
-                        error: response.statusText,
-                    });
+                    user.ValidateSession();
                 }
             } catch (error) {
-                console.error(error);
-                setFileData({
-                    error: error,
-                });
+                user.ValidateSession();
             }
         };
 

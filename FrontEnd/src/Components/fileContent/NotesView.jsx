@@ -7,7 +7,7 @@ import MarkdownPreview from "react-markdown";
 import rehypeRaw from "rehype-raw";
 import FileContent from "./FileContent.jsx";
 
-const NotesView = ({ src }) => {
+const NotesView = ({ src, maxHeight = "60vh" }) => {
     const [loaded, setLoaded] = useState(false);
     const closedFile = useStore((state) => {
         return state.previewedFile !== null;
@@ -50,7 +50,7 @@ const NotesView = ({ src }) => {
         >
             <VerticalDiv
                 height={"100%"}
-                style={{ maxHeight: "60vh", padding: "0 4rem" }}
+                style={{ maxHeight: maxHeight, padding: "0 4rem" }}
             >
                 <div className="markdown">
                     <MarkdownPreview

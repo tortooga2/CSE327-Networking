@@ -41,12 +41,12 @@ const File = ({ fileData }) => {
 
     const [isHover, setIsHover] = useState(false);
 
-    const [onEnter, setOnEnter] = useState({ width: "150%" });
+    const [onEnter, setOnEnter] = useState({ width: "100%" });
     const [onEnter2, setOnEnter2] = useState({ height: "0%" });
 
     useEffect(() => {
         setOnEnter({ width: "0%" });
-        setOnEnter2({ height: "100%" });
+        setOnEnter2({ height: "fit-content" });
     }, []);
 
     return (
@@ -87,7 +87,7 @@ const File = ({ fileData }) => {
                         position: "absolute",
                         height: "100%",
                         top: "0",
-                        left: "0",
+                        right: "0",
                         backgroundColor: "var(--primary-color",
                         ...onEnter,
                         transition: "width 0.5s ease-in-out 0.2s",
@@ -101,8 +101,10 @@ const File = ({ fileData }) => {
                         display: "flex",
                         alignItems: "center",
                         justifyContent: "center",
+                        gap: "0.5rem",
                     }}
                 >
+                    <p>{fileData.id}</p>
                     <input
                         type="checkbox"
                         ref={checkboxRef}

@@ -2,50 +2,94 @@ import "./LandingPage.css";
 import * as react from 'react';
 import React, { useState, useEffect, useCallback} from "react";
 import Lottie from "lottie-react";
+// import { Player } from '@lottiefiles/react-lottie-player';
 import { useNavigate } from "react-router-dom";
 import heroAnimation from "../../Components/Animations/heroAnimation.json";
 import secondAnimation from "../../Components/Animations/secondAnimation.json";
 import thirdAnimation from "../../Components/Animations/thirdAnimation.json";
 import networkAnimation from "../../Components/Animations/networkAnimation.json";
+import landingpgAnimation from "../../Components/Animations/landingpgAnimation.json";
+import background from "../../Components/Animations/background.json";
+import sideAnimation from "../../Components/Animations/sideAnimation.json";
+import notesAnimation from "../../Components/Animations/notesAnimation.json";
+import network from "../../Components/Animations/network.json";
+import networktwo from "../../Components/Animations/networktwo.json";
 import { FaArrowCircleUp } from "react-icons/fa";
 import Button from "../../Components/Button/Button";
 import LoginWindow from "../../Components/LoginDialog/LoginWindow";
-// import SignupWindow from "../../Components/SignupDialog/SignupWindow";
+import SignupWindow from "../../Components/SingupDialog/SignupDialog";
 // import SignupWindow from "./SignupWindow.jsx";
 import Particles from "react-tsparticles";
 import { loadFull } from "tsparticles";
+import { Canvas } from '@react-three/fiber';
+import { OrbitControls } from '@react-three/drei';
 // import CalendarApp from "./CalendarApp";
 // import 'react-calendar/dist/Calendar.css';
-
 // Import Material UI components for the backdrop
 // import * as React from 'react';  // Corrected import
-import Backdrop from '@mui/material/Backdrop';
-import CircularProgress from '@mui/material/CircularProgress';
+// import Backdrop from '@mui/material/Backdrop';
+// import CircularProgress from '@mui/material/CircularProgress';
+import FrontBackground from "../../Components/FrontBackground";
+import { AmbientLight, MeshStandardMaterial } from "three";
 //import Button from '@mui/material/Button'; //This import was already present.
 
+// const LandingPage = () => {
+//   return (
+//     <div className = "landing-container">
+//       <Player
+//         autoplay
+//         loop
+//         src = {backgroundAnimation}
+//         style = {{
+//           position: 'fixed',
+//           top: 0,
+//           left: 0,
+//           width: '100vw',
+//           height: '100vh',
+//           zIndex: -1,
+//         }}
+//       />
+//     </div>
+//   )
+// }
 
-const SimpleBackdrop = () => {
-  const [open, setOpen] = React.useState(false); // Changed to React.useState
-  const handleClose = () => {
-    setOpen(false);
-  };
-  const handleOpen = () => {
-    setOpen(true);
-  };
+// const SimpleBackdrop = () => {
+//   const [open, setOpen] = React.useState(false); // Changed to React.useState
+//   const handleClose = () => {
+//     setOpen(false);
+//   };
+//   const handleOpen = () => {
+//     setOpen(true);
+//   };
 
-  return (
-    <div>
-      <Button onClick={handleOpen}>Show backdrop</Button>
-      <Backdrop
-        sx={(theme) => ({ color: '#fff', zIndex: theme.zIndex.drawer + 1 })}
-        open={open}
-        onClick={handleClose}
-      >
-        <CircularProgress color="inherit" />
-      </Backdrop>
-    </div>
-  );
-};
+//   return (
+//     <div className = "landing-page-container" style = {{ position: "relative", overflow: "hidden" }}>
+//       <Lottie
+//         animationData = {backgroundAnimation}
+//         loop
+//         style = {{
+//           position: "fixed",
+//           top: 0,
+//           left: 0,
+//           width: "100vw",
+//           height: "100vh",
+//           zIndex: -5,
+//           opacity: 0.6,
+//         }}
+//       />
+//     </div>
+//     <div>
+//       <Button onClick={handleOpen}>Show backdrop</Button>
+//       <Backdrop
+//         sx={(theme) => ({ color: '#fff', zIndex: theme.zIndex.drawer + 1 })}
+//         open={open}
+//         onClick={handleClose}
+//       >
+//         <CircularProgress color="inherit" />
+//       </Backdrop>
+//     </div>
+//   );
+// };
 
 
 function LandingPage() {
@@ -54,11 +98,11 @@ function LandingPage() {
   const [showSignUp, setShowSignUp] = useState(false);
   const navigate = useNavigate();
   // const [selectedDate, setSelectedDate] = useState<Date | null>(null);
-    const [isBackdropOpen, setIsBackdropOpen] = useState(false); // State for backdrop
+  // const [isBackdropOpen, setIsBackdropOpen] = useState(false); // State for backdrop
 
-  const particlesInit = useCallback(async (engine) => {
-    await loadFull(engine);
-  }, []);
+  // const particlesInit = useCallback(async (engine) => {
+  //   await loadFull(engine);
+  // }, []);
 
   const particlesLoaded = useCallback(async (container) => {
     // something else can be added here
@@ -137,26 +181,47 @@ function LandingPage() {
   };
 
   useEffect(() => {
+    // console.log("showLogin:", showLogin);
+    const sections = document.querySelectorAll('.fade-in-section');
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-visible');
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.1 }
+    );
+
+    sections.forEach((section) => {
+      observer.observe(section);
+    });
     window.addEventListener("scroll", handleScroll);
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
-    console.log("Current directory:", process.cwd());
-  }, []);
+    // console.log("Current directory:", process.cwd());
+    observer.disconnect();
+
+  }, [showLogin]);
 
     const handleButtonClick = (type) => {
         if (type === 'login') {
             setShowLogin(!showLogin);
             setShowSignUp(false);
+            setIsBackdropOpen(false);
         } else if (type === 'signup') {
             setShowSignUp(!showSignUp);
             setShowLogin(false);
-        }
-        setIsBackdropOpen(true); // Show backdrop when login/signup is clicked
+            setIsBackdropOpen(true);
+        // setIsBackdropOpen(true); // Show backdrop when login/signup is clicked
         // Simulate loading and close backdrop after a delay
-        setTimeout(() => {
-            setIsBackdropOpen(false);
-        }, 2000); // Adjust the time as needed (e.g., 2000ms = 2 seconds)
+            setTimeout(() => {
+              setIsBackdropOpen(false);
+            }, 2000); // Adjust the time as needed (e.g., 2000ms = 2 seconds)
+        }
     };
 
   const handleDateSelect = (date) => {
@@ -166,13 +231,45 @@ function LandingPage() {
 
   return (
     <div className="landing-page-container" style={{ position: "relative", overflow: "hidden" }}>
-      <Particles
+      <Lottie 
+        animationData = {background}
+        loop
+        style = {{
+          position: "fixed",
+          top: 0,
+          left: 0,
+          width: "170vw",
+          height: "200vh",
+          zIndex: -5,
+          opacity: 0.6,
+        }}
+      />
+      {/* <FrontBackground />
+      <Canvas
+        style = {{
+          position: "relative",
+          top: 0,
+          left: 0,
+          width: "100%",
+          height: "100%",
+          zIndex: -4,
+        }}
+      >
+        <ambientLight />
+        <pointLight position = {[10, 10, 10]} />
+        <mesh>
+          <sphereGeometry args = {[1, 32, 32]} />
+          <meshStandardMaterial color = "#cc674b" />
+        </mesh>
+        <OrbitControls enableZoom = {false} />
+      </Canvas> */}
+      {/* <Particles
         id="tsparticles"
         init={particlesInit}
         loaded={particlesLoaded}
         options={particlesOptions}
-        style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", zIndex: -1 }}
-      />
+        style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", zIndex: -3 }}
+      /> */}
       <div className="scroll-indicator-container">
         <div
           className="scroll-indicator"
@@ -183,17 +280,22 @@ function LandingPage() {
       <header className="landing-header">
         <h1 className="header-title">Networking Application</h1>
         <nav className="header-nav">
-          <a href="#login" onClick={() => handleButtonClick("login")}>
+          <button className = "login-button" onClick={() => handleButtonClick("login")}>
             Log In
-          </a>
+          </button>
+          {/* <Button onClick = {() => handleButtonClick("login")}>Login</Button> */}
           <button className="signup-button" onClick={() => handleButtonClick("signup")}>
             Sign Up
           </button>
         </nav>
       </header>
+
       <main className="landing-main split-background">
         <div className="left-background">
-          {/* might have to add something here later, make sure to get group's input */}
+        <Lottie animationData={network} loop={true} style={{ width: "100%", maxWidth: "400px", margin: "0 auto" }} />
+        <Lottie animationData={networktwo} loop={true} style={{ width: "100%", maxWidth: "400px", margin: "0 auto" }} />
+        <Lottie animationData={sideAnimation} loop={true} style={{ width: "100%", maxWidth: "450px", margin: "0 auto" }} />
+        <Lottie animationData={notesAnimation} loop={true} style={{ width: "100%", maxWidth: "400px", margin: "0 auto" }} />
         </div>
         <div className="right-content">
           <div className="main-section-border">
@@ -229,8 +331,8 @@ function LandingPage() {
             <section className="main-section share-section">
               <h2 className="section-heading">Share</h2>
               <p className="section-description">
-                Curate information and connect with the professionals and for
-                improving with your own digital profile.
+                Curate information and connect with professionals and
+                improve your own digital profile. Make sure to save your notes so you can send links about it later.
               </p>
               <div className="lottie-wrapper">
                 <Lottie animationData={thirdAnimation} loop={true} style={{ width: "100%", maxWidth: "400px", margin: "0 auto" }} />
@@ -244,7 +346,7 @@ function LandingPage() {
               <h2 className="section-heading">Connections</h2>
               <p className="hero-description">
                 Allow yourself for organized and quick access of relevant information
-                for a specific topic or entities.
+                for a specific topic or entities. This would ensure links, forms, pictures, and other related data to be stored properly.
               </p>
               <div classname="network-left">
                 <Lottie
@@ -267,8 +369,8 @@ function LandingPage() {
         </div>
       </main>
 
-      {showLogin && <LoginWindow setState={(state) => setShowLogin(state)} />}
-      {showSignUp && <SignupWindow setState={(state) => setShowSignUp(state)} />}
+      {showLogin && <LoginWindow setState={ setShowLogin} />}
+      {showSignUp && <SignupWindow setState={setShowSignUp} />}
 
       <div
         className={"landing-page welcome-section"}
@@ -300,7 +402,7 @@ function LandingPage() {
             <span className="miamor"> mio amore</span>
           </h1>
         </div>
-        <div
+        {/* <div
           style={{
             display: "flex",
             justifyContent: "space-evenly",
@@ -337,7 +439,7 @@ function LandingPage() {
           >
             Sign Up
           </Button>
-        </div>
+        </div> */}
 
         <div
           style={{
@@ -355,12 +457,12 @@ function LandingPage() {
           rights reserved.
         </div>
       </div>
-            <Backdrop
+            {/* <Backdrop
                 sx={(theme) => ({ color: '#fff', zIndex: theme.zIndex.drawer + 1 })}
                 open={isBackdropOpen}
             >
                 <CircularProgress color="inherit" />
-            </Backdrop>
+            </Backdrop> */}
       {/* <ScrollButton /> You can keep or remove the scroll-to-top button */}
     </div>
   );

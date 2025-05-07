@@ -47,29 +47,36 @@ const SignupWindow = ({ setState }) => {
         fontFamily: "monospace",
     });
 
-    useEffect(() => {
-        if (!formRef.current) {
-            return;
-        }
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        const username = e.target[0].value;
+        const email = e.target[1].value;
+        const password = e.target[2].value;
 
-        formRef.current.addEventListener("submit", async (e) => {
-            e.preventDefault();
-            const username = e.target[0].value;
-            const email = e.target[1].value;
-            const password = e.target[2].value;
+        console.log("Signup here:", username, "email:", email, "password:", password);
+        await user.SignUp(username, email, password);
+    };
 
-            console.log(
-                "Signup with username:",
-                username,
-                "email:",
-                email,
-                "and password",
-                password
-            );
+    <form style = {formStyle} ref = {formRef} onSubmit = {handleSubmit}></form>
+   
+    //     formRef.current.addEventListener("submit", async (e) => {
+    //         e.preventDefault();
+    //         const username = e.target[0].value;
+    //         const email = e.target[1].value;
+    //         const password = e.target[2].value;
 
-            await user.SignUp(username, email, password);
-        });
-    }, [navigate]);
+    //         console.log(
+    //             "Signup with username:",
+    //             username,
+    //             "email:",
+    //             email,
+    //             "and password",
+    //             password
+    //         );
+
+    //         await user.SignUp(username, email, password);
+    //     });
+    // }, [navigate]);
 
     return (
         <div style={style}>

@@ -4,6 +4,8 @@ import { useNavigate } from "react-router-dom";
 
 export const UserContext = createContext(null);
 
+import { useStore } from "./ctx.appManager";
+
 export const UserProvider = ({ children }) => {
     const [signedIn, setSignedIn] = useState(false);
     const navigate = useNavigate();
@@ -17,7 +19,7 @@ export const UserProvider = ({ children }) => {
 
             ValidateSession: async () => {
                 try {
-                    const response = await fetch(`api/auth/verify/`, {
+                    const response = await fetch(`/api/auth/verify`, {
                         method: "GET",
                         headers: {
                             "Content-Type": "application/json",
@@ -26,12 +28,13 @@ export const UserProvider = ({ children }) => {
                     });
                     if (response.ok) {
                         setSignedIn(true);
+                        const data = await response.json();
+                        const { email, settings } = data;
+                        useStore.getState().setUserProfile({ email });
+                        useStore.getState().setUserSettings(settings);
                     } else {
                         const data = await response.json();
-                        console.log(data);
-                        if (data.okay === false) {
-                            setSignedIn(false);
-                        }
+                        setSignedIn(false);
                     }
                 } catch (error) {
                     setSignedIn(false);
@@ -40,7 +43,7 @@ export const UserProvider = ({ children }) => {
             },
             SignIn: async (email, password) => {
                 try {
-                    const response = await fetch(`api/auth/login`, {
+                    const response = await fetch(`/api/auth/login`, {
                         method: "POST",
                         headers: {
                             "Content-Type": "application/json",
@@ -58,7 +61,7 @@ export const UserProvider = ({ children }) => {
             },
             SignOut: async () => {
                 try {
-                    const response = await fetch(`api/auth/logout`, {
+                    const response = await fetch(`/api/auth/logout`, {
                         method: "POST",
                         headers: {
                             "Content-Type": "application/json",
@@ -73,15 +76,19 @@ export const UserProvider = ({ children }) => {
                     console.error(error);
                 }
             },
-            SignUp: async (username, email, password) => {
+            SignUp: async (email, password) => {
                 try {
-                    const response = await fetch(`api/auth/signup`, {
+                    const response = await fetch(`/api/auth/signup`, {
                         method: "POST",
                         headers: {
                             "Content-Type": "application/json",
                         },
                         credentials: "include",
-                        body: JSON.stringify({ email, password, username }),
+                        body: JSON.stringify({
+                            email,
+                            password,
+                            username: email,
+                        }),
                     });
                     if (response.ok) {
                         user.ValidateSession();
@@ -98,7 +105,7 @@ export const UserProvider = ({ children }) => {
     useEffect(() => {
         user.ValidateSession();
 
-        const isPublicFileRoute = location.pathname.startsWith("/file/");
+        const isPublicFileRoute = location.pathname.startsWith("/file");
         if (!isPublicFileRoute) {
             if (!signedIn) {
                 navigate("/");

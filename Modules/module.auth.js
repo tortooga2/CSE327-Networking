@@ -6,7 +6,7 @@ import dotenv from "dotenv";
 dotenv.config();
 
 import { Redis } from "ioredis";
-import { Users } from "./Database/module.db.js";
+import { Users, UserSettings } from "./Database/module.db.js";
 import { debugMessage, debugError, DEBUG } from "./module.debugHelpers.js";
 import { Sequelize } from "sequelize";
 import { generateUsername } from "./module.usernameGenerator.js";
@@ -88,8 +88,8 @@ const auth = {
         res.cookie("sessionToken", sessionToken, {
             maxAge: Number(process.env.TOKEN_EXP) * 1000,
             httpOnly: true,
-            sameSite: "none", // Must be "none" for cross-origin
-            secure: true, // Must be true when sameSite is "none"
+            sameSite: "lax", // Must be "none" for cross-origin
+            secure: DEBUG ? false : true, // Must be true when sameSite is "none"
             path: "/", // Apply to all paths
         });
 
@@ -329,10 +329,51 @@ const auth = {
                 message: "Missing session token",
             });
         }
-        return auth.Verify(req, res, () => {
-            return res
-                .status(200)
-                .json({ okay: true, message: "Session token is valid" });
+
+        return auth.Verify(req, res, async () => {
+            console.log("running from TestVerify", req.user);
+            const user = req.user;
+            const { profile_id } = req.user;
+            const userSettings = await (async () => {
+                let userSettings;
+                userSettings = await UserSettings.findOne({
+                    where: { profile_id },
+                });
+
+                if (!userSettings) {
+                    userSettings = await UserSettings.create({
+                        profile_id,
+                    });
+                }
+
+                const {
+                    dark_mode,
+                    bundle_color,
+                    doc_color,
+                    note_color,
+                    rec_color,
+                    img_color,
+                    font_size,
+                    font_family,
+                } = userSettings;
+
+                return {
+                    dark_mode,
+                    bundle_color,
+                    doc_color,
+                    note_color,
+                    rec_color,
+                    img_color,
+                    font_size,
+                    font_family,
+                };
+            })();
+
+            return res.status(200).json({
+                okay: true,
+                email: user.email,
+                settings: userSettings,
+            });
         });
     },
 
@@ -377,8 +418,6 @@ const auth = {
             });
         }
 
-        console.log(user);
-
         //reset the expire time of the session token
         await auth.sessionDB.expire(
             sessionToken,
@@ -386,7 +425,7 @@ const auth = {
         );
 
         //Add the profile_id to the request object to be used in the route.
-        console.log(user);
+
         req.user = user;
 
         next();

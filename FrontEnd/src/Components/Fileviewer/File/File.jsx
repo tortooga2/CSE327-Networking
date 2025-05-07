@@ -9,6 +9,8 @@ import Button from "../../Button/Button";
 
 import { useStore } from "../../Contexts/ctx.appManager";
 
+import { copyFileUrl, getFileUrl } from "../../scripts/fileUrlFuncs";
+
 const File = ({ fileData }) => {
     const fileContent = useState(fileData);
 
@@ -24,7 +26,7 @@ const File = ({ fileData }) => {
     });
 
     const ViewFile = (fileId) => (e) => {
-        e.stopPropagation();
+        // e.stopPropagation();
         useStore.getState().setPreviewedFile(fileId);
     };
 
@@ -34,120 +36,163 @@ const File = ({ fileData }) => {
 
     const handleChange = (e) => {
         e.stopPropagation();
-        console.log("Checkbox changed:", e.target.checked);
         setIsSelected(fileContent[0].id, !isSelected);
-    };
-
-    const copyLink = (e) => {
-        e.stopPropagation();
-        navigator.clipboard.writeText(
-            `${window.location.origin}/file/owner_id/${fileContent[0].id}`
-        );
-        alert("Link copied to clipboard");
     };
 
     const [isHover, setIsHover] = useState(false);
 
+    const [onEnter, setOnEnter] = useState({ width: "100%" });
+    const [onEnter2, setOnEnter2] = useState({ height: "0%" });
+
+    useEffect(() => {
+        setOnEnter({ width: "0%" });
+        setOnEnter2({ height: "fit-content" });
+    }, []);
+
     return (
         <div
-            className={isSelected ? "file-row selected" : "file-row"}
-            onClick={() => checkboxRef.current.click()}
             style={{
-                display: "flex",
-                justifyContent: "space-evenly",
-                padding: !isHover ? "1rem 0.5rem" : "1rem 1rem",
-                backgroundColor: isSelected ? "#f2e9e1" : "#ffffff00",
-                transition: "background-color 0.2s, padding 0.2s ease-in-out",
-                cursor: "pointer",
-                alignItems: "center",
-            }}
-            onMouseEnter={() => {
-                setIsHover(true);
-            }}
-            onMouseLeave={() => {
-                setIsHover(false);
+                ...onEnter2,
+                transition: "height 0.5s ease-in-out",
             }}
         >
             <div
-                style={{
-                    minWidth: "3rem",
-                }}
-            >
-                {fileContent[0].id}
-            </div>
-
-            <div
-                style={{
-                    flexShrink: "0",
-                    width: "fit-content",
-                    // minWidth: "10rem",
-                }}
-            >
-                {new Date(fileContent[0].createdAt).toLocaleDateString(
-                    "en-US",
-                    {
-                        year: "numeric",
-                        month: "short",
-                        day: "numeric",
-                    }
-                )}
-            </div>
-            <div
-                style={{ width: isLayout ? "5rem" : "2rem", textAlign: "left" }}
-            >
-                {FileType(fileContent[0].name, isLayout)}
-            </div>
-            {isLayout ? (
-                <div
-                    style={{
-                        maxWidth: "10rem",
-                    }}
-                >
-                    {fileContent[0].creator_username}
-                </div>
-            ) : null}
-
-            <div
-                style={{
-                    textWrap: "nowrap",
-                    overflowX: "hidden",
-                    textOverflow: "ellipsis",
-                    width: "30rem",
-                    minWidth: "15rem",
-                    // margin: "1rem",
-                }}
-            >
-                {fileContent[0].name}
-            </div>
-
-            <div
+                className={isSelected ? "file-row selected" : "file-row"}
+                onClick={ViewFile(fileContent[0].id)}
                 style={{
                     display: "flex",
-                    gap: "0.1rem",
-                    justifyContent: "center",
+                    justifyContent: "space-evenly",
+                    padding: "0.5rem 0.5rem",
+                    backgroundColor: isSelected
+                        ? "var(--secondary-color)"
+                        : "#ffffff00",
+                    transition:
+                        "background-color 0.2s, padding 0.2s ease-in-out",
+                    cursor: "pointer",
                     alignItems: "center",
-                    minWidth: "fit-content",
+                    gap: "min(10rem, 3rem)",
+                    minWidth: "30vw",
+                    position: "relative",
+                }}
+                onMouseEnter={() => {
+                    setIsHover(true);
+                }}
+                onMouseLeave={() => {
+                    setIsHover(false);
                 }}
             >
-                <input
-                    type="checkbox"
-                    ref={checkboxRef}
-                    onChange={handleChange}
-                    checked={isSelected}
-                />
-                <Button onClick={ViewFile(fileContent[0].id)}>view</Button>
-                {isLayout && (
+                <div
+                    className="cover"
+                    style={{
+                        position: "absolute",
+                        height: "100%",
+                        top: "0",
+                        right: "0",
+                        backgroundColor: "var(--primary-color",
+                        ...onEnter,
+                        transition: "width 0.5s ease-in-out 0.2s",
+                        zIndex: "1000",
+                    }}
+                ></div>
+                <div
+                    style={{
+                        width: "3rem",
+                        minWidth: "3rem",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        gap: "0.5rem",
+                    }}
+                >
+                    <p>{fileData.id}</p>
+                    <input
+                        type="checkbox"
+                        ref={checkboxRef}
+                        onChange={handleChange}
+                        checked={isSelected}
+                        onClick={(e) => e.stopPropagation()}
+                    />
+                </div>
+
+                <div
+                    style={{
+                        flexShrink: "0",
+                        width: "15rem",
+                    }}
+                >
+                    {fileContent[0].createdAt}
+                </div>
+                <div
+                    style={{
+                        minWidth: "2rem",
+                        textAlign: "left",
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                    }}
+                >
+                    {FileType(fileContent[0].name, isLayout)}
+                </div>
+                {isLayout ? (
+                    <div
+                        style={{
+                            width: "10rem",
+                        }}
+                    >
+                        {fileContent[0].creator_username}
+                    </div>
+                ) : null}
+                {isLayout ? (
+                    <div
+                        style={{
+                            textWrap: "nowrap",
+                            minWidth: "15rem",
+                            width: "15rem",
+                            overflow: "hidden",
+                            textOverflow: "ellipsis",
+                        }}
+                    >
+                        {fileContent[0].name}
+                    </div>
+                ) : null}
+                <div
+                    style={{
+                        minWidth: "3rem",
+                        width: "20rem",
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                    }}
+                >
+                    <a href={getFileUrl(fileContent[0].id)} target="_blank">
+                        {getFileUrl(fileContent[0].id)}
+                    </a>
+                </div>
+
+                <div
+                    className="buttons"
+                    style={{
+                        display: "flex",
+                        gap: "0.1rem",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        minWidth: "5rem",
+                        zIndex: "0",
+                    }}
+                >
+                    {isLayout && (
+                        <Button onClick={ViewFile(fileContent[0].id)}>
+                            view
+                        </Button>
+                    )}
                     <Button
                         onClick={(e) => {
                             e.stopPropagation();
-
-                            copyLink(e);
+                            copyFileUrl(e, fileContent[0].id);
                         }}
                         className={"copy-link"}
                     >
                         <FaCopy />
                     </Button>
-                )}
+                </div>
             </div>
         </div>
     );

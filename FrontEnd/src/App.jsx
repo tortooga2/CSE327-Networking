@@ -12,7 +12,7 @@ const App = () => {
             <Routes>
                 <Route path="/" element={<LandingPage />} />
                 <Route path="/app" element={<MainApp />} />
-                <Route path="/file/:ownerId/:fileId" element={<FilePage />} />
+                <Route path="/file/:fileId" element={<FilePage />} />
             </Routes>
         </UserProvider>
     );

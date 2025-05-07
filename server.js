@@ -7,10 +7,15 @@ import { createServer as createViteServer } from "vite";
 import http from "http";
 
 //Import the router from the module
-import { SyncDB, enablePG_TGRM, createIndexes } from "./Modules/Database/module.db.js";
+import {
+    SyncDB,
+    enablePG_TGRM,
+    createIndexes,
+} from "./Modules/Database/module.db.js";
 import authRouter from "./Routes/routes.auth.js";
 import fileDataRouter from "./Routes/routes.fileData.js";
 import s3Router from "./Routes/routes.s3.js";
+import userSettingsRouter from "./Routes/routes.userSettings.js";
 
 import { DEBUG } from "./Modules/module.debugHelpers.js";
 import { fileURLToPath } from "url";
@@ -73,6 +78,7 @@ async function startServer() {
     app.use("/api/auth", authRouter);
     app.use("/api/file", fileDataRouter);
     app.use("/api/bin", s3Router);
+    app.use("/api/user/settings", userSettingsRouter);
     //_____________________________________________________________________________________
 
     if (DEBUG) {

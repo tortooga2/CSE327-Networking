@@ -1,6 +1,5 @@
 import "./LandingPage.css";
-import * as react from 'react';
-import React, { useState, useEffect, useCallback} from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import Lottie from "lottie-react";
 // import { Player } from '@lottiefiles/react-lottie-player';
 import { useNavigate } from "react-router-dom";
@@ -9,7 +8,7 @@ import secondAnimation from "../../Components/Animations/secondAnimation.json";
 import thirdAnimation from "../../Components/Animations/thirdAnimation.json";
 import networkAnimation from "../../Components/Animations/networkAnimation.json";
 import landingpgAnimation from "../../Components/Animations/landingpgAnimation.json";
-import background from "../../Components/Animations/background.json";
+// import bac from "../../Components/Animations/background.json";
 import sideAnimation from "../../Components/Animations/sideAnimation.json";
 import notesAnimation from "../../Components/Animations/notesAnimation.json";
 import network from "../../Components/Animations/network.json";
@@ -26,70 +25,12 @@ import { OrbitControls } from '@react-three/drei';
 // import CalendarApp from "./CalendarApp";
 // import 'react-calendar/dist/Calendar.css';
 // Import Material UI components for the backdrop
-// import * as React from 'react';  // Corrected import
+// import * as React from 'react';  // Corrected import
 // import Backdrop from '@mui/material/Backdrop';
 // import CircularProgress from '@mui/material/CircularProgress';
 import FrontBackground from "../../Components/FrontBackground";
 import { AmbientLight, MeshStandardMaterial } from "three";
 //import Button from '@mui/material/Button'; //This import was already present.
-
-// const LandingPage = () => {
-//   return (
-//     <div className = "landing-container">
-//       <Player
-//         autoplay
-//         loop
-//         src = {backgroundAnimation}
-//         style = {{
-//           position: 'fixed',
-//           top: 0,
-//           left: 0,
-//           width: '100vw',
-//           height: '100vh',
-//           zIndex: -1,
-//         }}
-//       />
-//     </div>
-//   )
-// }
-
-// const SimpleBackdrop = () => {
-//   const [open, setOpen] = React.useState(false); // Changed to React.useState
-//   const handleClose = () => {
-//     setOpen(false);
-//   };
-//   const handleOpen = () => {
-//     setOpen(true);
-//   };
-
-//   return (
-//     <div className = "landing-page-container" style = {{ position: "relative", overflow: "hidden" }}>
-//       <Lottie
-//         animationData = {backgroundAnimation}
-//         loop
-//         style = {{
-//           position: "fixed",
-//           top: 0,
-//           left: 0,
-//           width: "100vw",
-//           height: "100vh",
-//           zIndex: -5,
-//           opacity: 0.6,
-//         }}
-//       />
-//     </div>
-//     <div>
-//       <Button onClick={handleOpen}>Show backdrop</Button>
-//       <Backdrop
-//         sx={(theme) => ({ color: '#fff', zIndex: theme.zIndex.drawer + 1 })}
-//         open={open}
-//         onClick={handleClose}
-//       >
-//         <CircularProgress color="inherit" />
-//       </Backdrop>
-//     </div>
-//   );
-// };
 
 
 function LandingPage() {
@@ -101,7 +42,7 @@ function LandingPage() {
   // const [isBackdropOpen, setIsBackdropOpen] = useState(false); // State for backdrop
 
   // const particlesInit = useCallback(async (engine) => {
-  //   await loadFull(engine);
+  //   await loadFull(engine);
   // }, []);
 
   const particlesLoaded = useCallback(async (container) => {
@@ -207,23 +148,15 @@ function LandingPage() {
 
   }, [showLogin]);
 
-    const handleButtonClick = (type) => {
-        if (type === 'login') {
-            setShowLogin(!showLogin);
-            setShowSignUp(false);
-            setIsBackdropOpen(false);
-        } else if (type === 'signup') {
-            setShowSignUp(!showSignUp);
-            setShowLogin(false);
-            setIsBackdropOpen(true);
-        // setIsBackdropOpen(true); // Show backdrop when login/signup is clicked
-        // Simulate loading and close backdrop after a delay
-            setTimeout(() => {
-              setIsBackdropOpen(false);
-            }, 2000); // Adjust the time as needed (e.g., 2000ms = 2 seconds)
-        }
-    };
-
+  const handleButtonClick = (type) => {
+    if (type === 'login') {
+      setShowLogin(true);
+      setShowSignUp(false);
+    } else if (type === 'signup') {
+      setShowSignUp(true);
+      setShowLogin(false);
+    }
+  };
   const handleDateSelect = (date) => {
     setSelectedDate(date);
     console.log("Select the date:", date);
@@ -231,10 +164,10 @@ function LandingPage() {
 
   return (
     <div className="landing-page-container" style={{ position: "relative", overflow: "hidden" }}>
-      <Lottie 
-        animationData = {background}
+      <Lottie
+        animationData={landingpgAnimation}
         loop
-        style = {{
+        style={{
           position: "fixed",
           top: 0,
           left: 0,
@@ -244,58 +177,33 @@ function LandingPage() {
           opacity: 0.6,
         }}
       />
-      {/* <FrontBackground />
-      <Canvas
-        style = {{
-          position: "relative",
-          top: 0,
-          left: 0,
-          width: "100%",
-          height: "100%",
-          zIndex: -4,
-        }}
-      >
-        <ambientLight />
-        <pointLight position = {[10, 10, 10]} />
-        <mesh>
-          <sphereGeometry args = {[1, 32, 32]} />
-          <meshStandardMaterial color = "#cc674b" />
-        </mesh>
-        <OrbitControls enableZoom = {false} />
-      </Canvas> */}
-      {/* <Particles
-        id="tsparticles"
-        init={particlesInit}
-        loaded={particlesLoaded}
-        options={particlesOptions}
-        style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", zIndex: -3 }}
-      /> */}
+
       <div className="scroll-indicator-container">
         <div
           className="scroll-indicator"
           style={{ width: `${scrollProgress}%` }}
         ></div>
+        {/* Closing the div properly */}
       </div>
       <div className="animated-lines-background"></div>
       <header className="landing-header">
         <h1 className="header-title">Networking Application</h1>
         <nav className="header-nav">
-          <button className = "login-button" onClick={() => handleButtonClick("login")}>
+          <button className="login-button" onClick={() => handleButtonClick('login')}>
             Log In
           </button>
-          {/* <Button onClick = {() => handleButtonClick("login")}>Login</Button> */}
-          <button className="signup-button" onClick={() => handleButtonClick("signup")}>
+          <button className="signup-button" onClick={() => handleButtonClick('signup')}>
             Sign Up
           </button>
         </nav>
       </header>
 
       <main className="landing-main split-background">
-        <div className="left-background">
-        <Lottie animationData={network} loop={true} style={{ width: "100%", maxWidth: "400px", margin: "0 auto" }} />
+        <div className="left-background" style={{ position: 'relative', overflow: 'hidden' }}>
+          {/* <Lottie animationData={network} loop={true} style={{ width: "auto", height: "auto", maxWidth: "400px", margin: "0 auto" }} />
         <Lottie animationData={networktwo} loop={true} style={{ width: "100%", maxWidth: "400px", margin: "0 auto" }} />
         <Lottie animationData={sideAnimation} loop={true} style={{ width: "100%", maxWidth: "450px", margin: "0 auto" }} />
-        <Lottie animationData={notesAnimation} loop={true} style={{ width: "100%", maxWidth: "400px", margin: "0 auto" }} />
+        <Lottie animationData={notesAnimation} loop={true} style={{ width: "100%", maxWidth: "400px", margin: "0 auto" }} /> */}
         </div>
         <div className="right-content">
           <div className="main-section-border">
@@ -369,7 +277,7 @@ function LandingPage() {
         </div>
       </main>
 
-      {showLogin && <LoginWindow setState={ setShowLogin} />}
+      {showLogin && <LoginWindow setState={setShowLogin} />}
       {showSignUp && <SignupWindow setState={setShowSignUp} />}
 
       <div
@@ -396,74 +304,65 @@ function LandingPage() {
                 color: "#cc674b",
               }}
             >
-              Bundle
+              Connectwork
             </span>
-            ,
-            <span className="miamor"> mio amore</span>
+            
           </h1>
         </div>
         {/* <div
+          style={{
+            display: "flex",
+            justifyContent: "space-evenly",
+            gap: "1rem",
+            marginTop: "1rem",
+          }}
+        > */}
+        <Button
           style={{
-            display: "flex",
-            justifyContent: "space-evenly",
-            gap: "1rem",
-            marginTop: "1rem",
+            color: "var(--primary-color)",
+            paddingLeft: "0.5rem",
+            paddingRight: "0.5rem",
+          }}
+          onClick={() => {
+            handleButtonClick("login");
+            // setShowLogin(!showLogin);
+            // setShowSignUp(false);
           }}
         >
-          <Button
-            style={{
-              color: "var(--primary-color)",
-              paddingLeft: "0.5rem",
-              paddingRight: "0.5rem",
-            }}
-            onClick={() => {
-              setShowLogin(!showLogin);
-              setShowSignUp(false);
-              setIsBackdropOpen(true);
-            }}
-          >
-            {" "}
-            Login
-          </Button>
-          <Button
-            style={{
-              color: "var(--primary-color)",
-              paddingLeft: "0.5rem",
-              paddingRight: "0.5rem",
-            }}
-            onClick={() => {
-              setShowSignUp(!showSignUp);
-              setShowLogin(false);
-              setIsBackdropOpen(true);
-            }}
-          >
-            Sign Up
-          </Button>
-        </div> */}
-
-        <div
+          {" "}
+          Login
+        </Button>
+        <Button
           style={{
-            marginTop: "2rem",
-            position: "absolute",
-            right: "0",
-            color: "#cc674b",
-            fontSize: "0.8rem",
-            fontFamily: `"Playfair Display", serif`,
-            padding: "0.5rem",
+            color: "var(--primary-color)",
+            paddingLeft: "0.5rem",
+            paddingRight: "0.5rem",
+          }}
+          onClick={() => {
+            handleButtonClick("signup");
+            // setShowSignUp(!showSignUp);
+            // setShowLogin(false);
           }}
         >
-          @2025 Bundle,{" "}
-          <span style={{ fontStyle: "italic" }}> Networking Application </span>. All
-          rights reserved.
-        </div>
+          Sign Up
+        </Button>
       </div>
-            {/* <Backdrop
-                sx={(theme) => ({ color: '#fff', zIndex: theme.zIndex.drawer + 1 })}
-                open={isBackdropOpen}
-            >
-                <CircularProgress color="inherit" />
-            </Backdrop> */}
-      {/* <ScrollButton /> You can keep or remove the scroll-to-top button */}
+
+      <div
+        style={{
+          position: "absolute",
+          bottom: "0",
+          right: "0",
+          color: "#cc674b",
+          fontSize: "0.8rem",
+          fontFamily: `"Playfair Display", serif`,
+          padding: "0.5rem",
+        }}
+      >
+        @2025 Bundle,{" "}
+        <span style={{ fontStyle: "italic" }}> Networking Application </span>. All
+        rights reserved.
+      </div>
     </div>
   );
 }

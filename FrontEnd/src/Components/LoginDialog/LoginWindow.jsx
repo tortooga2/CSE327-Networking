@@ -9,7 +9,7 @@ const LoginWindow = ({ setState }) => {
     const [password, setPassword] = useState("");
 
     const style = {
-        position: "absolute",
+        position: "fixed",
         top: "50%",
         left: "50%",
         transform: "translate(-50%, -50%)",
@@ -21,6 +21,7 @@ const LoginWindow = ({ setState }) => {
         gap: "2rem",
         alignItems: "left",
         justifyContent: "left",
+        zIndex: "1000",
     };
 
     const formStyle = {

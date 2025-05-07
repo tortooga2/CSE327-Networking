@@ -13,12 +13,15 @@
   padding: 30px 0;
   box-sizing: border-box; /* Ensure padding doesn't increase the width */
   position: relative;
-  z-index: 1;
+  z-index: 2;
+  opacity: 1;
+  visibility: visible;
 }
 
 :root {
   --text-color: #333;
   --primary-button-color: #333; /* Dark background for buttons */
+  --background-color: #efddd5; /* Light background for the page */
   --primary-button-text-color: #fff;
   --link-color: #333;
   --font-family: sans-serif; /* Default clean sans-serif */
@@ -39,18 +42,20 @@ body {
 
 .main-section-border {
   border: 2px solid #daa520;  /* 2px solid gold border */
-  border-radius: 12px;
+  border-radius: 20px;
   padding: 10px; /* Add padding between the border and the section content */
-  margin-bottom: 40px; /* Maintain spacing between sections */
+  margin-bottom: 40px;
+  position: relative; /* Maintain spacing between sections */
 }
 
 .landing-page-container {
   min-height: 100vh;
-  overflow: hidden;
+  overflow: visible;
   position: relative;
   display: flex; /* Add flex to the container */
   flex-direction: column; /* Stack header, main, footer vertically */
-  align-items: center; /* Center content horizontally within the viewport */
+  align-items: center;
+  justify-content: center; /* Center content horizontally within the viewport */
   /* background-size: 400% 400%;
   animation: subtleGradientShift 10s ease infinite; */
 }
@@ -130,21 +135,11 @@ body {
   max-width: 1200px; /* Optional: Limit the width of the split screen */
   min-height: calc(100vh - 60px); /* Adjust for header height */
   flex-direction: row;
+  margin: 0 auto;
+  padding-top: 40px;
+  padding-bottom: 40px;
 }
 
-.left-background {
-  flex-grow: 40; 
-  flex-shrink: 1;
-  flex-basis: 0;
-  background-color: #eddada; 
-  min-height: 65vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center; /* Center the sections horizontally within the right content */
-  padding: 40px; /* Add some padding around the content in the right side */
-  box-sizing: border-box; /* Ensure padding doesn't increase the width */
-  justify-content: center;
-}
 
 .right-background {
   flex: 0.4; /* Adjust the ratio as needed */
@@ -180,6 +175,7 @@ body {
   font-size: rem;
   align-items: center;
   gap: 20px;
+  z-index: 999;
 }
 
 .header-nav a,
@@ -193,6 +189,8 @@ body {
   font-size: 1.2rem;
   padding: 8px 0;
   transition: color 0.3s ease;
+  opacity: 1;
+  visibility: visible;
 }
 
 .header-nav a:hover {
@@ -217,11 +215,15 @@ body {
 .landing-main {
   display: flex;
   width: 100%;
-  max-width: 1200px;
+  max-width: 1000px;
   min-height: 80vh;
   margin-top: 2rem;
   position: relative;
   z-index: 1;
+  justify-content: center;
+  flex-direction: column;
+  padding-top: 40px;
+  padding-bottom: 40px;
 }
 
 
@@ -233,8 +235,9 @@ body {
   padding: 30px;
   margin-bottom: 30px; /* Add some spacing between the sections */
   width: 90%; /* Adjust the width of the white boxes as needed */
-  max-width: 800px; /* Optional: Set a maximum width for the white boxes */
-  box-sizing: border-box; /* Ensure padding doesn't increase the width */
+  max-width: 1000px; /* Optional: Set a maximum width for the white boxes */
+  box-sizing: border-box;
+  justify-content: center; /* Ensure padding doesn't increase the width */
 }
 
  
@@ -260,6 +263,8 @@ body {
   text-align: left;
   margin-bottom: 20px;
   font-size: 30px;
+  display: flex;
+  flex-direction: column;
 }
 
 .capture-info-section .hero-right {
@@ -285,7 +290,7 @@ body {
   margin-bottom: 30px;
   font-family: 'Playfair Display', serif;
   text-align: center;
-  max-width: 600px;
+  max-width: 700px;
 }
 
 .start-button {
@@ -315,7 +320,7 @@ body {
   line-height: 2.0;
 }
 
-.lottie-background {
+/* .lottie-background {
   position: absolute;
   top: 0;
   left: 0;
@@ -323,7 +328,7 @@ body {
   height: 100%;
   z-index: -2;
   pointer-events: none;
-}
+} */
 
 .lottie-wrapper {
   margin-bottom: 20px;

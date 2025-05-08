@@ -42,20 +42,39 @@
     margin-left: 1rem;
 } */
 
+.bundle {
+    color: var(--bundle-color-2);
+}
+
 .bundle > .marker {
     background-color: var(--bundle-color-2);
 }
 
+.doc {
+    color: var(--doc-color-2);
+}
 .doc > .marker {
     background-color: var(--doc-color-2);
+}
+
+.note {
+    color: var(--note-color-2);
 }
 
 .note > .marker {
     background-color: var(--note-color-2);
 }
 
+.img {
+    color: var(--img-color-2);
+}
+
 .img > .marker {
     background-color: var(--img-color-2);
+}
+
+.marker {
+    color: var(--rec-color-2);
 }
 
 .rec > .marker {

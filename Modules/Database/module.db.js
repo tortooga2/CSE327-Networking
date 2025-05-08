@@ -3,6 +3,8 @@ import chalk from "chalk";
 import { Sequelize } from "sequelize";
 import { createUsersTable } from "../../Models/model.users.js";
 import { createDataTable } from "../../Models/model.data.js";
+import { createUserSettings } from "../../Models/model.userSettings.js";
+import { initAssoc } from "./module.initAssoc.js";
 dotenv.config();
 
 const sequelize = new Sequelize(
@@ -27,6 +29,7 @@ const sequelize = new Sequelize(
 
 const Users = createUsersTable(sequelize);
 const Data = createDataTable(sequelize);
+const UserSettings = createUserSettings(sequelize);
 
 const SyncDB = async () => {
     //Test connection
@@ -56,13 +59,22 @@ const SyncDB = async () => {
     } catch (error) {
         console.error(chalk.bgRed("Error syncing database:", error));
     }
+
+    try {
+        await UserSettings.sync({ alter: true });
+        console.log(chalk.bgGreen("Database synchronized"));
+    } catch (error) {
+        console.error(chalk.bgRed("Error syncing database:", error));
+    }
 };
 
 const enablePG_TGRM = async () => {
     const transaction = await sequelize.transaction();
 
     try {
-        await sequelize.query('CREATE EXTENSION IF NOT EXISTS "pg_trgm"', {transaction: transaction});
+        await sequelize.query('CREATE EXTENSION IF NOT EXISTS "pg_trgm"', {
+            transaction: transaction,
+        });
 
         await transaction.commit();
         console.log(chalk.bgGreen("Postgres pg_tgrm enabled"));
@@ -87,4 +99,12 @@ const createIndexes = async () => {
     };
 };
 
-export { Users, Data, sequelize, SyncDB, enablePG_TGRM, createIndexes };
+export {
+    Users,
+    Data,
+    UserSettings,
+    sequelize,
+    SyncDB,
+    enablePG_TGRM,
+    createIndexes,
+};

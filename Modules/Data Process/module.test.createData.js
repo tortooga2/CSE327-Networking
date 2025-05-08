@@ -29,13 +29,13 @@ const GenerateData = () => {
 };
 
 export const testCreateUserData = async (req, res) => {
-    const { profile_id, username_base } = req.user;
+    const { profile_id, email } = req.user;
     try {
         const newData = await Data.create({
             ...GenerateData(),
             owner_id: profile_id,
             creator_id: profile_id,
-            creator_username: req.user.username_base,
+            creator_username: email,
         });
         debugMessage(newData);
         res.status(200).json({

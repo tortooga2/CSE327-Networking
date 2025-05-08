@@ -44,5 +44,7 @@ lerna-debug.log*
 *.sw?
 .DS_Store
 
+package-lock.json
+
 # Operating System Files
 Thumbs.db

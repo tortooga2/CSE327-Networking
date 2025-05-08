@@ -1,10 +1,10 @@
 :root {
     --bundle-color-1: #fcefef;
-    --bundle-color-2: #b4637a;
+    --bundle-color-2: #d7827e;
     --doc-color-1: #fcefef;
     --doc-color-2: #ea9d34;
     --note-color-1: #fcefef;
-    --note-color-2: #d7827e;
+    --note-color-2: #2a9d8f;
     --rec-color-1: #fcefef;
     --rec-color-2: #286983;
     --img-color-1: #fcefef;
@@ -22,17 +22,20 @@
 .tag {
     display: flex;
     width: 8rem;
+    min-width: 8rem;
     gap: 1rem;
+    align-items: center;
 }
 
 .tag.small {
     width: 2rem;
     gap: 0rem;
+    margin-left: 0.5rem;
 }
 
 .tag .marker {
-    width: 1.5rem;
-    height: 1.5rem;
+    width: 1rem;
+    height: 1rem;
     border-radius: 1rem;
 }
 /* .text {

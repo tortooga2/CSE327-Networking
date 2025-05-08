@@ -7,30 +7,29 @@ const Button = ({
     onClick = () => {
         console.log("Button clicked");
     },
-    style = {
-        // border: "1px solid var(--primary-color)",
-        backgroundColor: "transparent",
-        borderRadius: "0.5rem",
-        padding: "0.5rem",
-        position: "relative",
-        overflow: "hidden",
-        width: "80%",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        gap: "0.5rem",
-    },
+    style = {},
     hover = {
-        backgroundColor: "rgba(30, 30, 30, 0.1)",
+        backgroundColor: "rgba(0, 0, 0, 0.2)",
     },
     click = {},
     disabled = false,
 }) => {
     style = {
         ...style,
+        // border: "1px solid var(--primary-color)",
+        backgroundColor: "transparent",
+        borderRadius: "0.5rem",
+        padding: "0.5rem",
+        position: "relative",
+        overflow: "hidden",
+        width: "fit-content",
+        minWidth: "fit-content",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        gap: "0.5rem",
         userSelect: "none",
         cursor: "pointer",
-        width: "fit-content",
     };
 
     const [styleState, setStyleState] = useState(style);

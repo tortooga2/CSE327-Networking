@@ -11,13 +11,10 @@ import NewPage from "../../Components/UILayout/NewPage.jsx";
 import HorizontalDiv from "../../Components/UILayout/HorizontalDiv.jsx";
 import VerticalDiv from "../../Components/UILayout/VerticalDiv.jsx";
 import Header from "../../Components/header.jsx";
+// Add these imports if you use them in the JSX below
 import Menu from "../../Components/Menu.jsx";
 import SearchArea from "../../Components/SearchArea.jsx";
 import ErrorPopup from "../../Components/ErrorPopup.jsx";
-import MobileNavigation from "../../Components/Mobile/MobileNavigation.jsx";
-import MobileFileViewer from "../../Components/Mobile/MobileFileViewer.jsx";
-import MobileFilePreview from "../../Components/Mobile/MobileFilePreview.jsx";
-import MobileDockActions from "../../Components/DockActions/MobileDockActions.jsx";
 
 const MainApp = () => {
     const { user } = useUser();
@@ -30,67 +27,7 @@ const MainApp = () => {
 
     useEffect(() => {
         user.ValidateSession();
-    }, []);
-
-    const userSettings = useStore((state) => state.userSettings);
-
-    // useEffect(() => {
-    //     const root = document.getElementById("root");
-    //     for (let setting in userSettings) {
-    //         switch (setting) {
-    //             case "bundle_color":
-    //                 root.style.setProperty("--bundle-color-2", "#C8B0FF");
-    //                 break;
-
-    //             case "doc_color":
-    //                 root.style.setProperty("--document-color-2", "#2A9D8F");
-    //                 break;
-
-    //             case "note_color":
-    //                 root.style.setProperty("--note-color-2", "#E9C46A");
-    //                 break;
-
-    //             case "rec_color":
-    //                 root.style.setProperty("--video-color-2", "#F4A261");
-    //                 break;
-
-    //             case "img_color":
-    //                 root.style.setProperty("--img-color-2", "#E76F51");
-    //                 break;
-
-    //             case "font_size":
-    //                 root.style.setProperty(
-    //                     "--font-size",
-    //                     userSettings[setting]
-    //                 );
-    //                 break;
-
-    //             case "font_family":
-    //                 root.style.setProperty(
-    //                     "--font-family",
-    //                     userSettings[setting]
-    //                 );
-    //                 break;
-
-    //             default:
-    //                 console.warn(`Unknown setting “${setting}”`);
-    //         }
-    //     }
-    // }, [userSettings]);
-
-    const { isMobile } = useMobile();
-
-    if (isMobile) {
-        return (
-            <NewPage>
-                <MobileNavigation />
-                <MobileFileViewer />
-                <MobileFilePreview />
-                <MobileDockActions />
-                <ErrorPopup />
-            </NewPage>
-        );
-    }
+    }, [user]);
 
     return (
         <NewPage>
@@ -124,22 +61,18 @@ const MainApp = () => {
                         {
                             width: "100%",
                             left: "0",
-                            // transition:
-                            //     "all 0.3s cubic-bezier(.47,1.64,.41,.8)",
                         },
                         {
                             width: "60%",
                             left: "0",
-                            // transition:
-                            //     "all 0.3s cubic-bezier(.47,1.64,.41,.8)",
                         },
                         {
                             width: "60%",
                             left: "40%",
-                            // transition:
-                            //     "all 0.3s cubic-bezier(.47,1.64,.41,.8)",
                         },
                         {
+                            width: "80%",
+                            left: "20%",
                             width: "80%",
                             left: "20%",
                             // transition:

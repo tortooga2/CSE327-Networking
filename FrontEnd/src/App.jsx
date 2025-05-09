@@ -10,13 +10,11 @@ import { ReactLenis } from "lenis/react";
 const App = () => {
     return (
         <UserProvider>
-            <MobileProvider>
-                <Routes>
-                    <Route path="/" element={<LandingPage />} />
-                    <Route path="/app" element={<MainApp />} />
-                    <Route path="/file/:fileId" element={<FilePage />} />
-                </Routes>
-            </MobileProvider>
+            <Routes>
+                <Route path="/" element={<LandingPage />} />
+                <Route path="/app" element={<MainApp />} />
+                <Route path="/file/:ownerId/:fileId" element={<FilePage />} />
+            </Routes>
         </UserProvider>
     );
 };

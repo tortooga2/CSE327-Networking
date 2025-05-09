@@ -1,0 +1,32 @@
+.dock {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: var(--secondary-color);
+    border-top: 1px solid var(--border-color);
+    display: none; 
+    justify-content: space-around;
+    padding: 0.5rem;
+    z-index: 1000;
+}
+
+.dock-label {
+    font-size: 0.75rem;
+}
+
+@media (max-width: 768px) {
+    .dock {
+        display: flex;
+    }
+
+    .sidebar-wrapper {
+        display: none !important;
+    }
+    
+    .main-content {
+        margin-bottom: 4rem !important; 
+        width: 100% !important;
+        left: 0 !important;
+    }
+}

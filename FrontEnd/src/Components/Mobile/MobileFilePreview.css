@@ -1,0 +1,205 @@
+.mobile-preview-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: var(--primary-color);
+    z-index: 1500;
+    transform: translateX(100%);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    flex-direction: column;
+    will-change: transform;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+}
+
+.mobile-preview-overlay.visible {
+    transform: translateX(0);
+}
+
+.mobile-preview-header {
+    height: 60px;
+    padding: 0 1rem;
+    background-color: var(--primary-color);
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    transition: background-color 0.3s ease;
+}
+
+.mobile-preview-title {
+    opacity: 0;
+    transform: translateY(10px);
+    animation: slideUp 0.3s ease-out 0.15s forwards;
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.mobile-preview-title {
+    margin: 0;
+    font-size: 1.25rem;
+    color: var(--text-color);
+}
+
+.mobile-preview-close {
+    background: none;
+    border: none;
+    color: var(--text-color);
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    margin: -10px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: background-color 0.2s ease;
+    opacity: 0;
+    transform: scale(0.9);
+    animation: fadeInScale 0.3s ease-out 0.1s forwards;
+}
+
+.mobile-preview-close:active {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+@keyframes fadeInScale {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.mobile-preview-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 1rem;
+    overscroll-behavior-y: contain;
+    -webkit-overflow-scrolling: touch;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: slideUpContent 0.4s ease-out 0.2s forwards;
+}
+
+@keyframes slideUpContent {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Improve scrollbar appearance */
+.mobile-preview-content::-webkit-scrollbar {
+    width: 8px;
+}
+
+.mobile-preview-content::-webkit-scrollbar-track {
+    background: var(--primary-color);
+}
+
+.mobile-preview-content::-webkit-scrollbar-thumb {
+    background-color: var(--border-color);
+    border-radius: 4px;
+    border: 2px solid var(--primary-color);
+}
+
+/* Adjust FileContent component styles for mobile */
+.mobile-preview-content .content {
+    max-width: 100% !important;
+    margin: 0 !important;
+}
+
+.mobile-preview-content img,
+.mobile-preview-content video {
+    max-width: 100%;
+    height: auto;
+}
+
+.mobile-preview-loading,
+.mobile-preview-error {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 200px;
+    color: var(--text-color);
+    text-align: center;
+    padding: 2rem;
+}
+
+.mobile-preview-loading,
+.mobile-preview-error {
+    opacity: 0;
+    animation: fadeIn 0.3s ease-out forwards;
+}
+
+.loading-spinner {
+    width: 40px;
+    height: 40px;
+    border: 3px solid var(--border-color);
+    border-top-color: var(--bundle-color-2);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-bottom: 1rem;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.retry-button {
+    margin-top: 1rem;
+    padding: 0.75rem 2rem;
+    background-color: var(--bundle-color-2);
+    color: var(--primary-color);
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    font-weight: 500;
+    transition: opacity 0.2s;
+}
+
+.retry-button:hover {
+    opacity: 0.9;
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@media (min-width: 769px) {
+    .mobile-preview-overlay {
+        display: none;
+    }
+}

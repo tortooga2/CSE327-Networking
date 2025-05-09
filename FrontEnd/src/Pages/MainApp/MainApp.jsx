@@ -1,14 +1,11 @@
 import { useState, useRef, useEffect } from "react";
-
 import "./MainApp.css";
-
+import "./MainApp.mobile.css";
 import FileViewer from "../../Components/Fileviewer/Fileviewer.jsx";
-
 import { useUser } from "../../Components/Contexts/ctx.user.jsx";
 import { useStore } from "../../Components/Contexts/ctx.appManager.jsx";
-
+import { useMobile } from "../../Components/Contexts/ctx.mobile.jsx";
 import Sidebar from "../../Components/Sidebar.jsx";
-
 import FilePreview from "../../Components/FilePreview/FilePreview.jsx";
 import NewPage from "../../Components/UILayout/NewPage.jsx";
 import HorizontalDiv from "../../Components/UILayout/HorizontalDiv.jsx";
@@ -17,6 +14,10 @@ import Header from "../../Components/header.jsx";
 import Menu from "../../Components/Menu.jsx";
 import SearchArea from "../../Components/SearchArea.jsx";
 import ErrorPopup from "../../Components/ErrorPopup.jsx";
+import MobileNavigation from "../../Components/Mobile/MobileNavigation.jsx";
+import MobileFileViewer from "../../Components/Mobile/MobileFileViewer.jsx";
+import MobileFilePreview from "../../Components/Mobile/MobileFilePreview.jsx";
+import MobileDockActions from "../../Components/DockActions/MobileDockActions.jsx";
 
 const MainApp = () => {
     const { user } = useUser();
@@ -77,6 +78,20 @@ const MainApp = () => {
     //     }
     // }, [userSettings]);
 
+    const { isMobile } = useMobile();
+
+    if (isMobile) {
+        return (
+            <NewPage>
+                <MobileNavigation />
+                <MobileFileViewer />
+                <MobileFilePreview />
+                <MobileDockActions />
+                <ErrorPopup />
+            </NewPage>
+        );
+    }
+
     return (
         <NewPage>
             <VerticalDiv
@@ -99,7 +114,6 @@ const MainApp = () => {
                     style={{
                         position: "absolute",
                         borderRadius: "var(--border-radius)",
-
                         border: "1px solid var(--border-color)",
                         padding: "1rem",
                         background:

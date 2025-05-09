@@ -12,12 +12,14 @@ const SignupWindow = ({ setState }) => {
 
     const [style, setStyle] = useState({
         position: "absolute",
-        top: "50%",
+        top: "20%",
         left: "50%",
         transform: "translate(-50%, -50%)",
+        borderRadius: "0.5rem",
         padding: "5rem",
-        border: "1px solid var(--secondary-color)",
-        backdropFilter: "blur(20px)",
+        border: "1px solid var(--primary-color)",
+        backdropFilter: "blur(10px)",
+
         display: "flex",
         flexDirection: "column",
         gap: "2rem",
@@ -43,8 +45,6 @@ const SignupWindow = ({ setState }) => {
         top: "0",
         right: "0",
         cursor: "pointer",
-        margin: "0.5rem",
-        fontFamily: "monospace",
     });
 
     useEffect(() => {
@@ -54,20 +54,13 @@ const SignupWindow = ({ setState }) => {
 
         formRef.current.addEventListener("submit", async (e) => {
             e.preventDefault();
-            const username = e.target[0].value;
-            const email = e.target[1].value;
-            const password = e.target[2].value;
 
-            console.log(
-                "Signup with username:",
-                username,
-                "email:",
-                email,
-                "and password",
-                password
-            );
+            const email = e.target[0].value;
+            const password = e.target[1].value;
 
-            await user.SignUp(username, email, password);
+            console.log("email:", email, "and password", password);
+
+            await user.SignUp(email, password);
         });
     }, [navigate]);
 
@@ -75,7 +68,6 @@ const SignupWindow = ({ setState }) => {
         <div style={style}>
             <h1 style={{ width: "fit-content" }}>Sign up</h1>
             <form style={formStyle} ref={formRef}>
-                <input style={inputStyle} type="text" placeholder="Username" />
                 <input style={inputStyle} type="text" placeholder="Email" />
                 <input
                     style={inputStyle}
@@ -84,11 +76,6 @@ const SignupWindow = ({ setState }) => {
                 />
 
                 <Button
-                    style={{
-                        maxWidth: "100px",
-                        paddingLeft: "0.5rem",
-                        paddingRight: "0.5rem",
-                    }}
                     onClick={() => {
                         formRef.current.dispatchEvent(new Event("submit"));
                     }}
@@ -97,12 +84,18 @@ const SignupWindow = ({ setState }) => {
                 </Button>
             </form>
             <Button
-                style={closeStyle}
+                style={{
+                    position: "absolute",
+                    top: "2rem",
+                    right: "2rem",
+                    padding: "0.5rem",
+                    borderRadius: "0.5rem",
+                }}
                 onClick={() => {
                     setState(false);
                 }}
             >
-                [X]
+                Close
             </Button>
         </div>
     );

@@ -6,11 +6,11 @@ import { FaUserCircle } from "react-icons/fa";
 import { useUser } from "../Components/Contexts/ctx.user";
 import { useStore } from "./Contexts/ctx.appManager";
 
-const UserButton = ({ username, SignOut }) => {
+const UserButton = ({ username }) => {
     const [isHovered, setIsHovered] = useState(false);
     const [logoutHovered, setLogoutHovered] = useState(false);
 
-
+    const { user } = useUser();
 
     return (
         <div
@@ -67,7 +67,7 @@ const UserButton = ({ username, SignOut }) => {
                     setIsHovered(false);
                 }}
                 onClick={() => {
-                    SignOut();
+                    user.SignOut();
                 }}
             >
                 <IoLogOutOutline size={20} />

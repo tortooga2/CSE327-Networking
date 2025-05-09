@@ -4,16 +4,19 @@ import MainApp from "./Pages/MainApp/MainApp";
 import FilePage from "./Pages/FilePage/FilePage";
 
 import { UserProvider } from "./Components/Contexts/ctx.user.jsx";
+import { MobileProvider } from "./Components/Contexts/ctx.mobile.jsx";
 import { ReactLenis } from "lenis/react";
 
 const App = () => {
     return (
         <UserProvider>
-            <Routes>
-                <Route path="/" element={<LandingPage />} />
-                <Route path="/app" element={<MainApp />} />
-                <Route path="/file/:ownerId/:fileId" element={<FilePage />} />
-            </Routes>
+            <MobileProvider>
+                <Routes>
+                    <Route path="/" element={<LandingPage />} />
+                    <Route path="/app" element={<MainApp />} />
+                    <Route path="/file/:fileId" element={<FilePage />} />
+                </Routes>
+            </MobileProvider>
         </UserProvider>
     );
 };

@@ -14,7 +14,7 @@ import { s3Client, bucketName } from "../S3 Stuff/module.s3client.js";
 
 export const createUserData = async (req, res) => {
     console.log("Create user data");
-    const { profile_id, username_base } = req.user;
+    const { profile_id, email } = req.user;
     const { data } = req.body;
     const transaction = await sequelize.transaction(); //Start transaction with database
 
@@ -24,7 +24,7 @@ export const createUserData = async (req, res) => {
                 ...data,
                 owner_id: profile_id,
                 creator_id: profile_id,
-                creator_username: req.user.username_base,
+                creator_username: email,
             },
             { transaction: transaction }
         );

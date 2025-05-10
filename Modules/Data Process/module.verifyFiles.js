@@ -3,8 +3,8 @@ import { s3Client, bucketName } from "../S3 Stuff/module.s3client.js";
 import { HeadObjectCommand } from "@aws-sdk/client-s3";
 
 const checkObjExistence = async (profile_id, key) => {
-    if (typeof profile_id !== "string" || typeof key !== "string") {
-        throw new TypeError("profile_id and key must be strings!");
+    if (typeof key !== "string") {
+        throw new TypeError("All values within keys must be strings");
     }
 
     const command = new HeadObjectCommand({
@@ -16,37 +16,58 @@ const checkObjExistence = async (profile_id, key) => {
         await s3Client.send(command);
         return true; //No errors thrown, so the object exists
     } catch (err) {
-        if (err.$metadata.httpStatusCode === 404 || err.$metadata.httpStatusCode === 403) {
+        if (
+            err.$metadata.httpStatusCode === 404 ||
+            err.$metadata.httpStatusCode === 403
+        ) {
             return false; //File doesn't exist if Amazon throws this error
         }
 
         console.log("Couldn't check objects existence: ", err);
         throw new Error("Couldn't check objects existence");
-    };
+    }
 };
 
 const verifyFiles = async (req, res) => {
-    const { profile_id } = req.user;
-    const { data } = req.body;
+    const { profile_id, email } = req.user
+    const { keys, fileNames } = req.body;
+    const transaction = await sequelize.transaction(); //Start transaction with database
     const sentFiles = []; //All existing files will be copied to this array for bulk creation
 
-    //Validate inputs
-    if (!Array.isArray(data)) {
-        throw new TypeError("Expected data to be an array");
+    if (!Array.isArray(keys) || !Array.isArray(fileNames)) {
+        return res.status(400).json({
+            okay: false,
+            error: "Bad request",
+            message: "keys and fileNames must be arrays!",
+        });
     }
 
     try {
-        const keys = data.map((file) => file.metadata.key); //Extract keys from the data
-
         //Check if each file exists in bucket
-        for (let i = 0; i < data.length; i++) {
-            if (await checkObjExistence(profile_id, keys[i])) {
-                sentFiles.push(data[i]); //Push the existing files into another array
+        for (let index = 0; index < keys.length; index++) {
+            if (await checkObjExistence(profile_id, keys[index])) {
+                if (typeof (fileNames[index]) !== "string") {
+                    return res.status(400).json({
+                        okay: false,
+                        error: "Bad request",
+                        message: "All values within fileNames must be strings!",
+                    });
+                }
+
+                sentFiles.push({
+                    owner_id: profile_id,
+                    creator_id: profile_id,
+                    creator_username: email,
+                    name: fileNames[index],
+                    type: (fileNames[index]).split('.').pop(),
+                    metadata: {
+                        key: keys[index]
+                    }
+                });
             }
         }
 
-        
-        if (sentFiles.length === 0) { //This fucking line wasted so much of my life
+        if (sentFiles.length === 0) {
             return res.status(404).json({
                 okay: false,
                 error: "Files not found",
@@ -54,33 +75,45 @@ const verifyFiles = async (req, res) => {
             });
         }
 
-        const transaction = await sequelize.transaction(); //Start transaction with database
-        await Data.bulkCreate( //Bulk create validated files into our database
+        const freshlyMadeNewlyBakedFiles = await Data.bulkCreate(
+            //Bulk create validated files into our database
             sentFiles,
-            { transaction: transaction},
+            { transaction: transaction, returning: true }
         );
 
         await transaction.commit();
 
-        //Check to see if all files were validated
-        if (data.length === sentFiles.length) {
+        if (keys.length === sentFiles.length) {
             return res.status(201).json({
                 okay: true,
-                message: "All files were successfully uploaded!"
-            });
-        } else {
-            return res.status(201).json({
-                okay: true,
-                message: "Some files did not upload successfully",
+                message: "All files were successfully uploaded!",
+                data: freshlyMadeNewlyBakedFiles,
             });
         }
+
+        return res.status(201).json({
+            okay: true,
+            message: "Some files did not upload successfully",
+            data: freshlyMadeNewlyBakedFiles,
+        });
     } catch (err) {
+        await transaction.rollback();
+
+        if (err instanceof TypeError) {
+            return res.status(400).json({
+                okay: false,
+                error: "Bad request",
+                message: err.message,
+            });
+        }
+
+        console.log(err)
         return res.status(500).json({
             okay: false,
-            error: err,
+            error: "Internal server error",
             message: "The server encountered an unexpected condition",
         });
-    };
+    }
 };
 
 export { verifyFiles };

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { use, useEffect, useState } from "react";
 
 const HorizontalDiv = ({
     width = "100%",
@@ -8,9 +8,8 @@ const HorizontalDiv = ({
     gap = "1rem",
     style = {},
     children,
-    playAnimation = false,
-    before = {},
-    after = {},
+    playAnimation = 0,
+    state = [{}],
 }) => {
     const mainStyle = {
         flexShrink: width.includes("px") ? 0 : 1, // Don't shrink fixed-width divs
@@ -32,8 +31,9 @@ const HorizontalDiv = ({
     };
     const [styleState, setStyleState] = useState({
         ...mainStyle,
-        ...before,
+        ...state[playAnimation],
     });
+
     const [isTransitioning, setIsTransitioning] = useState(playAnimation);
 
     useEffect(() => {
@@ -41,17 +41,10 @@ const HorizontalDiv = ({
     }, [playAnimation]);
 
     useEffect(() => {
-        if (isTransitioning) {
-            setStyleState({
-                ...mainStyle,
-                ...after,
-            });
-        } else {
-            setStyleState({
-                ...mainStyle,
-                ...before,
-            });
-        }
+        setStyleState({
+            ...mainStyle,
+            ...state[isTransitioning],
+        });
     }, [isTransitioning]);
 
     return (

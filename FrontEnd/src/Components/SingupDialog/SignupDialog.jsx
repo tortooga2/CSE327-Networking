@@ -15,9 +15,11 @@ const SignupWindow = ({ setState }) => {
         top: "50%",
         left: "50%",
         transform: "translate(-50%, -50%)",
+        borderRadius: "0.5rem",
         padding: "5rem",
-        border: "1px solid var(--secondary-color)",
-        backdropFilter: "blur(20px)",
+        border: "1px solid var(--primary-color)",
+        backdropFilter: "blur(10px)",
+
         display: "flex",
         flexDirection: "column",
         gap: "2rem",
@@ -44,8 +46,6 @@ const SignupWindow = ({ setState }) => {
         top: "0",
         right: "0",
         cursor: "pointer",
-        margin: "0.5rem",
-        fontFamily: "monospace",
     });
 
     const handleSubmit = async (e) => {
@@ -83,7 +83,6 @@ const SignupWindow = ({ setState }) => {
         <div style={style}>
             <h1 style={{ width: "fit-content" }}>Sign up</h1>
             <form style={formStyle} ref={formRef}>
-                <input style={inputStyle} type="text" placeholder="Username" />
                 <input style={inputStyle} type="text" placeholder="Email" />
                 <input
                     style={inputStyle}
@@ -92,11 +91,6 @@ const SignupWindow = ({ setState }) => {
                 />
 
                 <Button
-                    style={{
-                        maxWidth: "100px",
-                        paddingLeft: "0.5rem",
-                        paddingRight: "0.5rem",
-                    }}
                     onClick={() => {
                         formRef.current.dispatchEvent(new Event("submit"));
                     }}
@@ -105,12 +99,18 @@ const SignupWindow = ({ setState }) => {
                 </Button>
             </form>
             <Button
-                style={closeStyle}
+                style={{
+                    position: "absolute",
+                    top: "2rem",
+                    right: "2rem",
+                    padding: "0.5rem",
+                    borderRadius: "0.5rem",
+                }}
                 onClick={() => {
                     setState(false);
                 }}
             >
-                [X]
+                Close
             </Button>
         </div>
     );

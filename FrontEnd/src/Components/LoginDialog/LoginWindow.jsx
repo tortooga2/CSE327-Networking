@@ -2,6 +2,8 @@ import { useState } from "react";
 import Button from "../Button/Button";
 import { useUser } from "../Contexts/ctx.user";
 
+import Button from "../Button/Button";
+
 const LoginWindow = ({ setState }) => {
     const { user } = useUser();
 
@@ -13,9 +15,11 @@ const LoginWindow = ({ setState }) => {
         top: "50%",
         left: "50%",
         transform: "translate(-50%, -50%)",
+        borderRadius: "0.5rem",
         padding: "5rem",
-        border: "1px solid var(--secondary-color)",
-        backdropFilter: "blur(20px)",
+        border: "1px solid var(--primary-color)",
+        backdropFilter: "blur(10px)",
+
         display: "flex",
         flexDirection: "column",
         gap: "2rem",
@@ -92,12 +96,18 @@ const LoginWindow = ({ setState }) => {
             </form>
 
             <Button
-                style={closeStyle}
+                style={{
+                    position: "absolute",
+                    top: "2rem",
+                    right: "2rem",
+                    padding: "0.5rem",
+                    borderRadius: "0.5rem",
+                }}
                 onClick={() => {
                     setState(false);
                 }}
             >
-                [X]
+                Close
             </Button>
         </div>
     );

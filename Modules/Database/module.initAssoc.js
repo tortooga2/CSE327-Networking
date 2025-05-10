@@ -11,6 +11,11 @@ export const initAssoc = (tables) => {
         sourceKey: "profile_id",
     });
 
+    tables.Users.hasMany(tables.UserSettings, {
+        foreignKey: "profile_id",
+        sourceKey: "profile_id",
+    });
+
     //Creates foreign key "owner_id" from User's "user_id"
     tables.Data.belongsTo(
         tables.Users,

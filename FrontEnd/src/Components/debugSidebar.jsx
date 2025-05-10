@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 
 import { FaUpload, FaLink, FaTimes, FaTrash } from "react-icons/fa";
-import { useStore } from "./Contexts/zus.fileManager";
+import { useStore } from "./Contexts/ctx.appManager";
 import NoteCreation from "./NoteCreation";
 
 // import NoteCreation from "./NoteCreation";
@@ -12,6 +12,7 @@ const DebugSidebar = () => {
     const UnSelectAll = useStore((state) => state.unSelectAll);
     const connectFiles = useStore((state) => state.connectFiles);
     const uploadFile = useStore((state) => state.uploadFiles);
+    const refreshFiles = useStore((state) => state.refreshFiles);
     const refreshFiles = useStore((state) => state.refreshFiles);
     const deleteFiles = useStore((state) => state.deleteFiles);
 
@@ -193,6 +194,7 @@ const DebugSidebar = () => {
             >
                 <FaTrash /> <p>Delete Files ({selectedFiles.size})</p>
             </div>
+            <NoteCreation />
             <NoteCreation />
         </VerticalDiv>
     );

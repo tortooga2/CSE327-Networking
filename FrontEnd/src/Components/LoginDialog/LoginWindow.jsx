@@ -2,7 +2,7 @@ import { useState } from "react";
 import Button from "../Button/Button";
 import { useUser } from "../Contexts/ctx.user";
 
-import Button from "../Button/Button";
+// import Button from "../Button/Button";
 
 const LoginWindow = ({ setState }) => {
     const { user } = useUser();

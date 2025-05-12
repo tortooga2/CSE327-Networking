@@ -18,18 +18,12 @@ import Button from "../../Components/Button/Button";
 import LoginWindow from "../../Components/LoginDialog/LoginWindow";
 import SignupWindow from "../../Components/SingupDialog/SignupDialog";
 // import SignupWindow from "./SignupWindow.jsx";
-import Particles from "react-tsparticles";
-import { loadFull } from "tsparticles";
-import { Canvas } from '@react-three/fiber';
-import { OrbitControls } from '@react-three/drei';
 // import CalendarApp from "./CalendarApp";
 // import 'react-calendar/dist/Calendar.css';
 // Import Material UI components for the backdrop
 // import * as React from 'react';  // Corrected import
 // import Backdrop from '@mui/material/Backdrop';
 // import CircularProgress from '@mui/material/CircularProgress';
-import FrontBackground from "../../Components/FrontBackground";
-import { AmbientLight, MeshStandardMaterial } from "three";
 //import Button from '@mui/material/Button'; //This import was already present.
 
 

@@ -187,7 +187,7 @@ const Sidebar = () => {
 
             <UploadArea />
             
-            <button onClick={getCoordinates}>Get my Coords</button>
+            {/*<button onClick={getCoordinates}>Get my Coords</button>*/}
 
             {/* <form
                 id="fileForm"

@@ -65,7 +65,7 @@ const SearchArea = () => {
                 </Button>
                 <input
                     type="search"
-                    placeholder="Search" /* by name */
+                    placeholder="Search by name"
                     style={{ width: "100%", outline: "none" }}
                     onChange={(e) => {
                         setSearchValue(e.target.value);
@@ -83,21 +83,12 @@ const SearchArea = () => {
                 <Button onClick={UnSelectAll} style={{}}>
                     <FaTimes /> Unselect All ({selectedFiles.size})
                 </Button>
-                {/*
                 <Button>
                     <FaSort /> Sort
                 </Button>
                 <Button>
                     <FaFilter /> Filter
                 </Button>
-                */}
-                <label for="searchby">Search by:</label>
-                <select id="searchby">
-                    <option>Name</option>
-                    <option>Date</option>
-                    <option>Location</option>
-                    <option>Owner</option>
-                </select>
             </div>
         </div>
     );

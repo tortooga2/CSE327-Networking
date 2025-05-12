@@ -17,13 +17,10 @@ const sequelize = new Sequelize(
         ...(process.env.DEBUG !== "true"
             ? {
                   dialectOptions: {
-                      /* ssl: false, */
-                      
                       ssl: {
                           require: true,
                           rejectUnauthorized: false, // You might want to set this to true in production with proper certs
                       },
-                       
                   },
               }
             : {}),

@@ -72,11 +72,6 @@ export const createDataTable = (sequelize) => {
                 allowNull: false,
                 defaultValue: { item_id: [] },
             },
-            location: {
-                type: DataTypes.STRING,
-                allowNull: true,
-                defaultValue: "Undetermined",
-            },
         },
         { tableName: "file_ledger" },
         {

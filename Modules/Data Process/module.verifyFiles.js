@@ -29,9 +29,8 @@ const checkObjExistence = async (profile_id, key) => {
 };
 
 const verifyFiles = async (req, res) => {
-    console.log('Received location:', req.body.location);
     const { profile_id, email } = req.user
-    const { keys, fileNames, location } = req.body;
+    const { keys, fileNames } = req.body;
     const transaction = await sequelize.transaction(); //Start transaction with database
     const sentFiles = []; //All existing files will be copied to this array for bulk creation
 
@@ -62,9 +61,8 @@ const verifyFiles = async (req, res) => {
                     name: fileNames[index],
                     type: (fileNames[index]).split('.').pop(),
                     metadata: {
-                        key: keys[index],
-                    },
-                    location: location
+                        key: keys[index]
+                    }
                 });
             }
         }

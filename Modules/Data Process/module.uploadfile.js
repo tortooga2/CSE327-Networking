@@ -3,7 +3,7 @@ import { Sequelize } from "sequelize";
 
 const createFileInDb = async (req, res) => {
     const { profile_id, email } = req.user;
-    const { fileName, fileType, key, loca } = req.body;
+    const { fileName, fileType, key } = req.body;
     const transaction = await sequelize.transaction(); //Start a transaction to our database
 
     if (!req.body) {
@@ -25,7 +25,6 @@ const createFileInDb = async (req, res) => {
                 metadata: {
                     key: key,
                 },
-                location: loca || "Undetermined",
             },
             { transaction: transaction }
         );

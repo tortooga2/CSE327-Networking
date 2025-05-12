@@ -46,7 +46,6 @@ export const ConnectFiles = async (req, res) => {
                 owner_id: profile_id,
                 creator_id: profile_id,
                 creator_username: email,
-                location: req.body.location || "undetermined"
             },
             { transaction: transaction }
         );

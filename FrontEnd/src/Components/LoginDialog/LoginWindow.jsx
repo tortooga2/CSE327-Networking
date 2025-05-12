@@ -56,17 +56,8 @@ const LoginWindow = ({ setState }) => {
         console.log("Login with email:", email, "and password", password);
 
         try {
-            const response = await user.SignIn(email, password);
-
-            if (response && response.data && response.data.accessToken) {
-                localStorage.setItem('authToken', response.data.accessToken);
-                console.log("Logged in!, token stored:", response.data.accessToken);
-                setState(false);
-            } else if (response && response.data && response.data.error) {
-                console.error("Try again with logging in:", response.data.error);
-            } else {
-                console.error("Failed login: Invalid response");
-            }
+            await user.SignIn(email, password);
+            setState(false);
         } catch (error) {
             console.error("Errors encounter with the login:", error);
         }
@@ -90,9 +81,9 @@ const LoginWindow = ({ setState }) => {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                 />
-                <Button type="submit" style={{ maxWidth: "100px" }}>
+                <button type="submit" style={{ maxWidth: "100px" }}>
                     Login
-                </Button>
+                </button>
             </form>
 
             <Button

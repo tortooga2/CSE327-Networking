@@ -54,35 +54,21 @@ const SignupWindow = ({ setState }) => {
         const email = e.target[1].value;
         const password = e.target[2].value;
 
-        console.log("Signup here:", username, "email:", email, "password:", password);
+        console.log(
+            "Signup here:",
+            username,
+            "email:",
+            email,
+            "password:",
+            password
+        );
         await user.SignUp(username, email, password);
     };
-
-    <form style = {formStyle} ref = {formRef} onSubmit = {handleSubmit}></form>
-   
-    //     formRef.current.addEventListener("submit", async (e) => {
-    //         e.preventDefault();
-    //         const username = e.target[0].value;
-    //         const email = e.target[1].value;
-    //         const password = e.target[2].value;
-
-    //         console.log(
-    //             "Signup with username:",
-    //             username,
-    //             "email:",
-    //             email,
-    //             "and password",
-    //             password
-    //         );
-
-    //         await user.SignUp(username, email, password);
-    //     });
-    // }, [navigate]);
 
     return (
         <div style={style}>
             <h1 style={{ width: "fit-content" }}>Sign up</h1>
-            <form style={formStyle} ref={formRef}>
+            <form style={formStyle} ref={formRef} onSubmit={handleSubmit}>
                 <input style={inputStyle} type="text" placeholder="Email" />
                 <input
                     style={inputStyle}
@@ -90,13 +76,7 @@ const SignupWindow = ({ setState }) => {
                     placeholder="Password"
                 />
 
-                <Button
-                    onClick={() => {
-                        formRef.current.dispatchEvent(new Event("submit"));
-                    }}
-                >
-                    Sign up
-                </Button>
+                <Button onClick={() => {}}>Sign up</Button>
             </form>
             <Button
                 style={{

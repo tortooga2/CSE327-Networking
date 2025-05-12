@@ -29,6 +29,167 @@ const useStore = create((set) => ({
 
     layoutState: 0,
     setLayoutState: (state) => set({ layoutState: state }),
+    
+    coordinates: null,
+
+    getCoordinates: () => {
+        return new Promise((resolve) => {
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    const coords = {
+                        latitude: position.coords.latitude,
+                        longitude: position.coords.longitude,
+                    };
+                    set({ coordinates: coords, geolocationFailed: false });
+                    resolve(coords);
+                },
+                (err) => {
+                    console.error("Geolocation error:", err);
+                    set({ coordinates: null, geolocationFailed: true });
+                    resolve(null); // Still resolve, just with null
+                }
+            );
+        });
+        
+        {/*
+        return new Promise((resolve, reject) => {
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    const coords = {
+                        latitude: position.coords.latitude,
+                        longitude: position.coords.longitude,
+                    };
+                    set({ coordinates: coords });
+                    resolve(coords);
+                },
+                (err) => {
+                    console.error("Geolocation error:", err);
+                    reject(err);
+                }
+            );
+        });
+        */}
+    
+        {/*
+        new Promise((resolve, reject) => {
+          navigator.geolocation.getCurrentPosition(
+            (position) => {
+              const coords = {
+                latitude: position.coords.latitude,
+                longitude: position.coords.longitude,
+              };
+              set({ coordinates: coords });
+              resolve(coords);
+            },
+            (err) => {
+              console.error("Geolocation error:", err);
+              reject(err);
+            }
+          );
+        }),
+        */}
+        
+        {/*
+        if ("geolocation" in navigator) {
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    const { latitude, longitude } = position.coords;
+                    console.log("User coordinates:", position.coords);
+                    useStore.getState().setCoordinates({ latitude, longitude });
+                },
+                (error) => {
+                    console.error("Error getting coordinates: ", error);
+                    useStore.getState().setCoordinates("Coordinates unavailable");
+                },
+                {
+                    enableHighAccuracy: true,
+                    timeout: Infinity,
+                    maximumAge: Infinity,
+                }
+            );
+        } else {
+            console.log("Geolocation is not supported by this browser.");
+        }
+        */}
+    },
+
+    /*
+    getIpCoordinates: async () => {
+        const apiKey = 'aec9182b8dbd8f';
+        try {
+            const response = await fetch(`https://ipinfo.io?token=${apiKey}`);
+            const data = await response.json();
+            console.log("IP-based coordinates:", data);
+
+            const [latitude, longitude] = data.loc.split(',');
+            useStore.getState().setCoordinates({ latitude, longitude });
+        } catch (error) {
+            console.error("Error getting IP-based coordinates:", error);
+        }
+    },
+    */
+
+    getPlaceFromCoordinates: async (latitude, longitude) => {
+        const apiKey = '32659073e1594643a51f7b9fe8676c0f';
+        
+        {/*
+        try {
+            const response = await fetch(`https://api.opencagedata.com/geocode/v1/json?q=${latitude}+${longitude}&key=${apiKey}`);
+            const data = await response.json();
+            console.log("Place details:", data);
+
+            if (data && data.results && data.results.length > 0) {
+                const components = data.results[0].components;
+
+                const placeName =
+                    components.university ||
+                    components.college ||
+                    components.school ||
+                    components.building ||
+                    components.city ||
+                    components.town ||
+                    components.village ||
+                    "undetermined";
+
+                console.log("Place name:", placeName);
+                return placeName;
+            }
+        } catch (error) {
+            console.error("Error fetching place from coordinates:", error);
+        }
+        */}
+        
+        return new Promise((resolve, reject) => {
+        fetch(`https://api.opencagedata.com/geocode/v1/json?q=${latitude}+${longitude}&key=${apiKey}`)
+            .then(response => response.json())
+            .then(data => {
+                console.log("Place details:", data);
+
+                if (data && data.results && data.results.length > 0) {
+                    const components = data.results[0].components;
+
+                    const placeName =
+                        components.university ||
+                        components.college ||
+                        components.school ||
+                        components.building ||
+                        components.city ||
+                        components.town ||
+                        components.village ||
+                        "undetermined";
+
+                    //console.log("Place name:", placeName);
+                    resolve(placeName); // Resolve the promise with the place name
+                } else {
+                    reject("No results found");
+                }
+            })
+            .catch(error => {
+                console.error("Error fetching place from coordinates:", error);
+                reject(error); // Reject the promise in case of an error
+            });
+    });
+    },
 
     files: new Map(),
     setFiles: (files) => set({ files }),
@@ -165,6 +326,61 @@ const useStore = create((set) => ({
             return;
         }
         try {
+            const selectedFileIDs = Array.from(useStore.getState().selectedFiles);
+            const selectedFileObjects = selectedFileIDs
+            .map((id) => useStore.getState().files.get(id))
+            .filter((file) => file && file.type !== "bundle");
+            
+            if (selectedFileObjects.length === 0) {
+                console.log("No files selected. Skipping connection.");
+                return;
+            }
+            
+            const filteredFileIDs = selectedFileObjects.map((file) => file.id);
+            
+            const waitForCoordinates = () => {
+                return new Promise((resolve, reject) => {
+                    const checkCoordinates = () => {
+                        const { coordinates, geolocationFailed } = useStore.getState();
+                        console.log(coordinates);
+                        
+                        if (geolocationFailed) return resolve(null); // stop loop on failure
+                        if (coordinates && coordinates.latitude && coordinates.longitude) return resolve(coordinates);
+
+                        setTimeout(checkCoordinates, 50);
+                        
+                        {/*
+                        if (coordinates && coordinates.latitude && coordinates.longitude) {
+                            resolve(coordinates);  // Resolve once coordinates are available
+                        }
+                        else {
+                            setTimeout(checkCoordinates, 50);  // Retry after 500ms if coordinates aren't available
+                        }
+                        */}
+                    };
+                    checkCoordinates();  // Start checking for coordinates
+                });
+            };
+                                                                
+            await useStore.getState().getCoordinates(); // ensure it kicks off
+            const coordinates = await waitForCoordinates();
+            {/*
+            console.log("Coords", coordinates);
+            console.log("lat: ", coordinates.latitude, "long: ", coordinates.longitude);
+                                    
+            const { getPlaceFromCoordinates } = useStore.getState();
+            const locationName = await getPlaceFromCoordinates(coordinates.latitude, coordinates.longitude);
+            console.log("Name of place: ", locationName);
+            */}
+            let locationName = "Undetermined";
+            if (coordinates && coordinates.latitude && coordinates.longitude) {
+                console.log("Coords", coordinates);
+                console.log("lat: ", coordinates.latitude, "long: ", coordinates.longitude);
+                const { getPlaceFromCoordinates } = useStore.getState();
+                locationName = await getPlaceFromCoordinates(coordinates.latitude, coordinates.longitude);
+                console.log("Name of place: ", locationName);
+            }
+                                    
             const response = await fetch("/api/file/connect", {
                 method: "POST",
                 headers: {
@@ -172,7 +388,8 @@ const useStore = create((set) => ({
                 },
                 credentials: "include",
                 body: JSON.stringify({
-                    file_ids: Array.from(useStore.getState().selectedFiles),
+                    file_ids: filteredFileIDs,
+                    location: locationName,
                 }),
             });
 
@@ -224,6 +441,53 @@ const useStore = create((set) => ({
                                     ? onProgress(files[index].name, 100)
                                     : null;
                                 await (async () => {
+                                    onProgress?.(files[index].name, 100);
+                                    
+                                    const waitForCoordinates = () => {
+                                        return new Promise((resolve, reject) => {
+                                            const checkCoordinates = () => {
+                                                const { coordinates, geolocationFailed } = useStore.getState();
+                                                console.log(coordinates);
+                                                
+                                                if (geolocationFailed) return resolve(null); // stop loop on failure
+                                                if (coordinates && coordinates.latitude && coordinates.longitude) return resolve(coordinates);
+
+                                                setTimeout(checkCoordinates, 100);
+                                                
+                                                {/*
+                                                if (coordinates && coordinates.latitude && coordinates.longitude) {
+                                                    resolve(coordinates);  // Resolve once coordinates are available
+                                                }
+                                                else {
+                                                    setTimeout(checkCoordinates, 50);  // Retry after 500ms if coordinates aren't available
+                                                }
+                                                */}
+                                            };
+                                            checkCoordinates();  // Start checking for coordinates
+                                        });
+                                    };
+                                                                
+                                    await useStore.getState().getCoordinates(); // ensure it kicks off
+                                    const coordinates = await waitForCoordinates();
+                                    {/*
+                                    console.log("Coords", coordinates);
+                                    console.log("lat: ", coordinates.latitude, "long: ", coordinates.longitude);
+                                    */}
+                                    let locationName = "Undetermined";
+                                    if (coordinates && coordinates.latitude && coordinates.longitude) {
+                                        console.log("Coords", coordinates);
+                                        console.log("lat: ", coordinates.latitude, "long: ", coordinates.longitude);
+                                        const { getPlaceFromCoordinates } = useStore.getState();
+                                        locationName = await getPlaceFromCoordinates(coordinates.latitude, coordinates.longitude);
+                                        console.log("Name of place: ", locationName);
+                                    }
+                                    
+                                    {/*
+                                    const { getPlaceFromCoordinates } = useStore.getState();
+                                    const locationName = await getPlaceFromCoordinates(coordinates.latitude, coordinates.longitude);
+                                    console.log("Name of place: ", locationName);
+                                    */}
+                                    
                                     const fileVerResponse = await fetch(
                                         "/api/file/verify",
                                         {
@@ -236,6 +500,7 @@ const useStore = create((set) => ({
                                             body: JSON.stringify({
                                                 keys: [keys[index]],
                                                 fileNames: [fileNames[index]],
+                                                location: locationName,
                                             }),
                                         }
                                     );

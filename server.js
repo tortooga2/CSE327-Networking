@@ -5,6 +5,8 @@ import cookieParser from "cookie-parser";
 import dotenv from "dotenv";
 import { createServer as createViteServer } from "vite";
 import http from "http";
+import https from "https";
+import fs from "fs";
 
 //Import the router from the module
 import {
@@ -119,17 +121,25 @@ async function startServer() {
             return res.sendFile(path.join(FRONTEND_DIST, "index.html"));
         });
     }
+    
+    // Read the SSL certificate files
+    const options = {
+            key: fs.readFileSync(path.join(__dirname, 'server.key')),
+            cert: fs.readFileSync(path.join(__dirname, 'server.crt')),
+        };
 
     // Create HTTP server
-    const server = http.createServer(app);
+    //const server = http.createServer(app);
+    
+    // Create HTTPS server
+    const server = https.createServer(options, app);
 
     // Start the server
     server.listen(PORT, () => {
-        console.log(
-            `Server is running on http://localhost:${PORT} (DEBUG: ${DEBUG})`
-        );
+        //console.log(`Server is running on http://localhost:${PORT} (DEBUG: ${DEBUG})`);
+        console.log(`Server is running on https://localhost:${PORT} (DEBUG: ${DEBUG})`);
     });
-
+    
     return { server, vite };
 }
 

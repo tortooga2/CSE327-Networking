@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import {
     FaUpload,
@@ -21,10 +21,96 @@ const Sidebar = () => {
     const UnSelectAll = useStore((state) => state.unSelectAll);
     const connectFiles = useStore((state) => state.connectFiles);
     const uploadFile = useStore((state) => state.uploadFiles);
-
     const deleteFiles = useStore((state) => state.deleteFiles);
 
     const formRef = useRef(null);
+    
+    const [coordinates, setCoordinates] = useState(null);
+    
+    const getCoordinates = () => {
+        if ("geolocation" in navigator) {
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    const { latitude, longitude } = position.coords;
+                    console.log("User coordinates:", position.coords);
+                    setCoordinates({ latitude, longitude });
+                },
+                (error) => {
+                    console.error("Error getting coordinates: ", error);
+                    setCoordinates("Coordinates unavailable");
+                },
+                {
+                    enableHighAccuracy: true,
+                    timeout: Infinity,
+                    maximumAge: Infinity,
+                }
+            );
+        } else {
+            console.log("Geolocation is not supported by this browser.");
+        }
+    };
+    
+    const getIpCoordinates = async () => {
+        const apiKey = 'aec9182b8dbd8f';
+        try {
+            const response = await fetch(`https://ipinfo.io?token=${apiKey}`);
+            const data = await response.json();
+            console.log("IP-based coordinates:", data);
+            console.log("Coordinates: ", data.loc.split(','));
+            
+            const [latitude, longitude] = data.loc.split(',');
+            setCoordinates({ latitude, longitude });
+        } catch (error) {
+            console.error("Error getting IP-based coordinates:", error);
+        }
+    }
+    
+    const getPlaceFromCoordinates = async (latitude, longitude) => {
+        const apiKey = '32659073e1594643a51f7b9fe8676c0f';
+        try {
+            const response = await fetch(`https://api.opencagedata.com/geocode/v1/json?q=${latitude}+${longitude}&key=${apiKey}`);
+            const data = await response.json();
+            console.log("Place details:", data);
+            
+            // Assuming the response contains 'results' with the place details
+            if (data && data.results && data.results.length > 0) {
+                const components = data.results[0].components
+                
+                const placeName =
+                    components.university ||
+                    components.college ||
+                    components.school ||
+                    components.building ||
+                    components.city ||
+                    components.town ||
+                    components.village ||
+                    "undetermined";
+                
+                console.log("Place name:", placeName);
+                
+                return placeName;
+                
+                //console.log(data.results[0].components);  // Update the place state with the first result
+            }
+        } catch (error) {
+            console.error("Error fetching place from coordinates:", error);
+        }
+    }
+    
+    /*
+    useEffect(() => {
+        if (coordinates) {
+            console.log("Updated coordinates:", coordinates);
+            //console.log(getPlaceFromCoordinates(coordinates.latitude, coordinates.longitude));
+            console.log(getPlaceFromCoordinates(37.36307795584273, -120.424845109885));
+        }
+    }, [coordinates]);
+    */
+    
+    useEffect(() => {
+        getCoordinates();
+        //getIpCoordinates();
+    }, []);
 
     useEffect(() => {
         if (!formRef.current) {
@@ -41,13 +127,14 @@ const Sidebar = () => {
             }
 
             try {
-                await uploadFile(files);
+                const p = "hello";
+                await uploadFile(files, "v", null);
                 //             let filesArray = [];
                 //             try {
                 //                 for (let i = 0; i < files.length; i++) {
                 //                     const file = files[i];
                 //                     console.log("Uploading file:", file.name);
-                //                     const fileResponse = await uploadFile(file);
+                //                     const fileResponse = await uploadFile(file, p);
                 //                     filesArray.push(fileResponse);
                 //                 }
 
@@ -99,6 +186,8 @@ const Sidebar = () => {
             </Button>
 
             <UploadArea />
+            
+            <button onClick={getCoordinates}>Get my Coords</button>
 
             {/* <form
                 id="fileForm"

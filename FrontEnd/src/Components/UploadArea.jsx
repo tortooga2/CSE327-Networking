@@ -11,7 +11,7 @@ const ListItem = ({ index, name, remove, percentage }) => {
     const setError = useStore((state) => state.setError);
 
     useEffect(() => {
-        console.log(percentage);
+        console.log("percentage: ", percentage);
     }, [percentage]);
 
     return (
@@ -220,7 +220,7 @@ const UploadArea = () => {
                                         newProgress[newList[i].name] = 0;
                                     }
 
-                                    console.log(newProgress);
+                                    console.log("newProgress: ", newProgress);
 
                                     setProgress(newProgress);
                                 }}

@@ -96,8 +96,35 @@ const FileContent = ({ file }) => {
                         }}
                     >
                         <p>Created At:</p>
-                        {file ? file.createdAt : ""}
+                        {file
+                                    ? (() => {
+                                          return new Date(
+                                              file.createdAt
+                                          ).toLocaleDateString("en-US", {
+                                              year: "numeric",
+                                              month: "short",
+                                              day: "numeric",
+                                              hour: "numeric",
+                                              minute: "numeric",
+                                              second: "numeric",
+                                              hour12: true,
+                                              timeZoneName: "short",
+                                          });
+                                      })()
+                                    : ""}
                     </div>
+                    
+                    <div
+                        style={{
+                            display: "flex",
+                            gap: "0.5rem",
+                            alignItems: "center",
+                            textOverflow: "ellipsis",
+                        }}
+                    >
+                        <p>Location:</p> {file?.location ? file.location : "none"}
+                    </div>
+                    
                     <p>Creator: {file ? file.creator_username : ""}</p>
                 </div>
 

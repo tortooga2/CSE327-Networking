@@ -26,6 +26,7 @@ export const getAllUserData = async (req, res) => {
                 "children",
                 "createdAt",
                 "updatedAt",
+                "location"
             ],
             where: {
                 owner_id: profile_id,

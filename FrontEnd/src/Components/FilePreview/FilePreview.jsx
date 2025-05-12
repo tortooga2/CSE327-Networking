@@ -69,6 +69,10 @@ const FilePreview = ({ width }) => {
             setIsBundle(getFileType(fileData.name) === "Bundle");
         }
     }, [fileData]);
+    
+    useEffect(() => {
+        console.log("fileData:", fileData);
+    }, [fileData]);
 
     return (
         <VerticalDiv width={width}>
@@ -132,7 +136,7 @@ const FilePreview = ({ width }) => {
                                     alignItems: "center",
                                 }}
                             >
-                                <p>Create At:</p>
+                                <p>Created At:</p>
                                 {fileData
                                     ? (() => {
                                           return new Date(
@@ -141,9 +145,23 @@ const FilePreview = ({ width }) => {
                                               year: "numeric",
                                               month: "short",
                                               day: "numeric",
+                                              hour: "numeric",
+                                              minute: "numeric",
+                                              second: "numeric",
+                                              hour12: true,
+                                              timeZoneName: "short",
                                           });
                                       })()
                                     : ""}
+                            </div>
+                            <div
+                                style={{
+                                    display: "flex",
+                                    gap: "0.5rem",
+                                    alignItems: "center",
+                                }}
+                            >
+                                <p>Location:</p> {fileData?.location ? fileData.location : "none"}
                             </div>
                             <p>
                                 Creator:{" "}

@@ -6,7 +6,7 @@
 :root {
     --colorMode: "dark";
     /* --text-color: rgb(87, 82, 121); */
-    --text-color: #dbdbdb;
+    --text-color: rgb(219, 219, 219);
     /* --secondary-color: #e87461; */
     --primary-color: #1f242f;
     --secondary-color: #2a2e3e;

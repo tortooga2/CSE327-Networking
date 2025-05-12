@@ -11,8 +11,8 @@ const SignupWindow = ({ setState }) => {
     const navigate = useNavigate();
 
     const [style, setStyle] = useState({
-        position: "absolute",
-        top: "20%",
+        position: "fixed",
+        top: "50%",
         left: "50%",
         transform: "translate(-50%, -50%)",
         borderRadius: "0.5rem",
@@ -25,6 +25,7 @@ const SignupWindow = ({ setState }) => {
         gap: "2rem",
         alignItems: "left",
         justifyContent: "left",
+        zIndex: "1000",
     });
 
     const [formStyle, setFormStyle] = useState({
@@ -47,27 +48,27 @@ const SignupWindow = ({ setState }) => {
         cursor: "pointer",
     });
 
-    useEffect(() => {
-        if (!formRef.current) {
-            return;
-        }
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        const username = e.target[0].value;
+        const email = e.target[1].value;
+        const password = e.target[2].value;
 
-        formRef.current.addEventListener("submit", async (e) => {
-            e.preventDefault();
-
-            const email = e.target[0].value;
-            const password = e.target[1].value;
-
-            console.log("email:", email, "and password", password);
-
-            await user.SignUp(email, password);
-        });
-    }, [navigate]);
+        console.log(
+            "Signup here:",
+            username,
+            "email:",
+            email,
+            "password:",
+            password
+        );
+        await user.SignUp(username, email, password);
+    };
 
     return (
         <div style={style}>
             <h1 style={{ width: "fit-content" }}>Sign up</h1>
-            <form style={formStyle} ref={formRef}>
+            <form style={formStyle} ref={formRef} onSubmit={handleSubmit}>
                 <input style={inputStyle} type="text" placeholder="Email" />
                 <input
                     style={inputStyle}
@@ -75,13 +76,7 @@ const SignupWindow = ({ setState }) => {
                     placeholder="Password"
                 />
 
-                <Button
-                    onClick={() => {
-                        formRef.current.dispatchEvent(new Event("submit"));
-                    }}
-                >
-                    Sign up
-                </Button>
+                <Button onClick={() => {}}>Sign up</Button>
             </form>
             <Button
                 style={{

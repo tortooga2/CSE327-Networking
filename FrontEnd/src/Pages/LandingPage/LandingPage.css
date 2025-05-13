@@ -11,14 +11,14 @@
 } */
 
 body {
-    font-family: var(--font-family);
-    margin: 0;
-    padding: 0;
     /* background-color: var(--background-color); */
     /* color: var(--text-color); */
 }
 
 .landing-page-container {
+    font-family: var(--font-family);
+    margin: 0;
+    padding: 0;
     display: flex;
     flex-direction: column;
     align-items: center;

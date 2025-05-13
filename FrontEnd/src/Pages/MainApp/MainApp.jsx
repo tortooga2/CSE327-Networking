@@ -175,8 +175,8 @@ const MainApp = () => {
                         <FileViewer width="100%" />
                     </HorizontalDiv>
                 </HorizontalDiv>
+                <ErrorPopup />
             </VerticalDiv>
-            <ErrorPopup />
         </NewPage>
     );
 };

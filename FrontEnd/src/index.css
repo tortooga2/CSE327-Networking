@@ -38,6 +38,14 @@
     all: revert;
 }
 
+.file-row:hover {
+    background-color: var(--primary-color);
+}
+
+.hover-thing:hover {
+    background-color: var(--secondary-color);
+}
+
 button {
     background-color: transparent;
     border: none;

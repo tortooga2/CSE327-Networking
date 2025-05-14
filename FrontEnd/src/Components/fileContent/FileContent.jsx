@@ -1,19 +1,35 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, use } from "react";
 import ImageView from "./imageView";
 import DocView from "./docView";
 import RecordingView from "./recordingView";
 import NotesView from "./NotesView";
 import Button from "../Button/Button";
 import getFileType from "../scripts/getFileType";
-import { FileType } from "../Tags";
+import { Bundle, FileType } from "../Tags";
 
 import { copyFileUrl, getFileUrl } from "../scripts/fileUrlFuncs";
+import BundleView from "./bundleView";
 
 const FileContent = ({ file }) => {
     const copyLink = (fileId) => (e) => {
         e.stopPropagation();
         navigator.clipboard.writeText(getFileUrl(fileId));
     };
+
+    const [fileData, setFileData] = useState(null);
+
+    useEffect(() => {
+        if (file) {
+            if (file.dataValues) {
+                console.log(
+                    "This file is a god damn bundle!",
+                    file.dataValues.id
+                );
+            } else {
+                console.log("This file is a normal file!", file.id);
+            }
+        }
+    }, [file]);
 
     return (
         <div
@@ -125,7 +141,7 @@ const FileContent = ({ file }) => {
                         case "Image":
                             return <ImageView src={file.metadata.url} />;
                         case "Bundle":
-                            return <h1>Bundle Here...</h1>;
+                            return <BundleView children={file.children} />;
                         case "Note":
                             return <NotesView src={file.metadata.url} />;
                     }

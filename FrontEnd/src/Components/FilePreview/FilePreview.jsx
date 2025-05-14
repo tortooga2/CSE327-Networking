@@ -45,6 +45,7 @@ const FilePreview = ({ width }) => {
                 });
                 if (response.ok) {
                     const data = await response.json();
+                    console.log("fileData", data);
                     setFileData(data.files.originalFile);
                     if (data.files.files) {
                         setFileContent(data.files.files);
@@ -58,7 +59,6 @@ const FilePreview = ({ width }) => {
                 user.ValidateSession();
             }
         };
-
         getFileData();
     }, [fileId]);
 
@@ -69,6 +69,8 @@ const FilePreview = ({ width }) => {
             setIsBundle(getFileType(fileData.name) === "Bundle");
         }
     }, [fileData]);
+
+    useEffect(() => {}, [fileContent]);
 
     return (
         <VerticalDiv width={width}>
@@ -197,8 +199,8 @@ const FilePreview = ({ width }) => {
 
             <VerticalDiv gap="1rem">
                 {fileContent && closedFile
-                    ? fileContent.map((file, index) => (
-                          <FileContent key={index} file={file} />
+                    ? Array.from(fileContent).map((file) => (
+                          <FileContent key={file.id} file={file} />
                       ))
                     : null}
             </VerticalDiv>

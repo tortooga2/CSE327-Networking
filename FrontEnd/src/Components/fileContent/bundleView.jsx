@@ -4,6 +4,8 @@ import { FileType } from "../Tags";
 import { getFileUrl } from "../scripts/fileUrlFuncs";
 import { useState } from "react";
 
+import { useStore } from "../Contexts/ctx.appManager.jsx";
+
 const BundleView = ({ children }) => {
     return (
         <VerticalDiv>
@@ -19,6 +21,11 @@ const BundleView = ({ children }) => {
                                   borderRadius: "0.5rem",
                               }}
                               className="hover-thing"
+                              onClick={() => {
+                                  useStore
+                                      .getState()
+                                      .setPreviewedFile(child.id);
+                              }}
                           >
                               <p>{child.id}</p>
                               {FileType(child.name, () => {})}

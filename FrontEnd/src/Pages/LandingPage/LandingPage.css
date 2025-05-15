@@ -24,8 +24,6 @@
     );
     font-family: var(--font-family);
     color: #333;
-
-    scrollbar-width: thin;
 }
 
 .welcome-section {

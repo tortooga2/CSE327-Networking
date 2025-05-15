@@ -48,14 +48,18 @@ function LandingPage() {
                             display: "flex",
                             justifyContent: "space-between",
                             alignItems: "center",
-                            margin: "0 auto",
                         }}
                     >
                         <div className="header-title">
                             <h1>ConnectWork</h1>
-                            <p></p>
                         </div>
-                        <div style={{ display: "flex", gap: "1rem" }}>
+                        <div
+                            style={{
+                                display: "flex",
+                                gap: "1rem",
+                                marginRight: "6rem",
+                            }}
+                        >
                             <Button
                                 style={{ height: "fit-content" }}
                                 onClick={() => handleButtonClick("login")}

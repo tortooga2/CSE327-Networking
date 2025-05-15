@@ -25,6 +25,10 @@ const File = ({ fileData }) => {
         return state.layoutState === 0;
     });
 
+    const isPreviewed = useStore((state) => {
+        return state.previewedFile === fileContent[0].id;
+    });
+
     const ViewFile = (fileId) => (e) => {
         // e.stopPropagation();
         useStore.getState().setPreviewedFile(fileId);
@@ -92,6 +96,17 @@ const File = ({ fileData }) => {
                         ...onEnter,
                         transition: "width 0.5s ease-in-out 0.2s",
                         zIndex: "1000",
+                    }}
+                ></div>
+                <div
+                    className={"underbar " + (isPreviewed ? "show" : "hide")}
+                    style={{
+                        height: "1px",
+                        backgroundColor: "var(--text-color)",
+                        position: "absolute",
+
+                        bottom: "0%",
+                        left: "2.5%",
                     }}
                 ></div>
                 <div

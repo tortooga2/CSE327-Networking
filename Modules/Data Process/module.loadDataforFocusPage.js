@@ -24,10 +24,17 @@ const unpackBundle = async (file) => {
                     id: childrenIdsLayer2,
                 },
             });
-            files.push({
-                ...child,
-                children: childrenLayer2,
+            const tempArray = childrenLayer2.map((child) => {
+                return {
+                    id: child.id,
+                    name: child.name,
+                    type: child.type,
+                    createdAt: child.createdAt,
+                    updatedAt: child.updatedAt,
+                };
             });
+            child.children = tempArray;
+            files.push(child);
         } else {
             const updatedFile = await rebuildFile(child);
             files.push(updatedFile);
@@ -49,6 +56,7 @@ export const loadDataForFocusPage = async (req, res) => {
     console.log("Loading data for focus page");
     try {
         const file = await Data.findByPk(fileId);
+        console.log("File: ", file);
         if (!file) {
             return res.status(404).json({
                 okay: false,
@@ -66,6 +74,7 @@ export const loadDataForFocusPage = async (req, res) => {
         }
 
         if (file.type === "bundle") {
+            console.log("is bundle");
             const unpackedFiles = await unpackBundle(file);
             return res.status(200).json(unpackedFiles);
         }

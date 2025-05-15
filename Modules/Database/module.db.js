@@ -1,6 +1,5 @@
 import dotenv from "dotenv";
 import chalk from "chalk";
-import { DEBUG } from "../module.debugHelpers.js";
 import { Sequelize } from "sequelize";
 import { createUsersTable } from "../../Models/model.users.js";
 import { createDataTable } from "../../Models/model.data.js";
@@ -81,33 +80,23 @@ const enablePG_TGRM = async () => {
         console.log(chalk.bgGreen("Postgres pg_tgrm enabled"));
     } catch (error) {
         await transaction.rollback();
-        console.log(
-            chalk.bgRed("enableExtensions encountered an error:", error)
-        );
-    }
+        console.log(chalk.bgRed("enableExtensions encountered an error:", error.message));
+    };
 };
 
 const createIndexes = async () => {
     const transaction = await sequelize.transaction();
 
     try {
-        await sequelize.query(
-            'CREATE INDEX IF NOT EXISTS trgm_file_ledger_gin ON "file_ledger" USING GIN ("name" gin_trgm_ops)',
-            { transaction: transaction }
-        );
-        await sequelize.query(
-            'CREATE INDEX IF NOT EXISTS file_ledger_index ON "file_ledger"("owner_id", "createdAt")',
-            { transaction: transaction }
-        );
+        await sequelize.query('CREATE INDEX IF NOT EXISTS trgm_file_ledger_gin ON "file_ledger" USING GIN ("name" gin_trgm_ops)', {transaction: transaction});
+        await sequelize.query('CREATE INDEX IF NOT EXISTS file_ledger_index ON "file_ledger"("owner_id", "createdAt", "type")',{transaction: transaction});
 
         await transaction.commit();
         console.log(chalk.bgGreen("Indexes created"));
     } catch (error) {
         await transaction.rollback();
-        console.log(
-            chalk.bgRed("enableExtensions encountered an error:", error)
-        );
-    }
+        console.log(chalk.bgRed("createIndexes encountered an error:", error.message));
+    };
 };
 
 export {

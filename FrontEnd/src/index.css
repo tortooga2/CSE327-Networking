@@ -31,10 +31,19 @@
 
     margin: 0;
     padding: 0;
+    overflow: hidden;
 }
 
 .markdown > * {
     all: revert;
+}
+
+.file-row:hover {
+    background-color: var(--primary-color);
+}
+
+.hover-thing:hover {
+    background-color: var(--secondary-color);
 }
 
 button {

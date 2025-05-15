@@ -135,7 +135,21 @@ const File = ({ fileData }) => {
                         width: "15rem",
                     }}
                 >
-                    {fileContent[0].createdAt}
+                    {(() => {
+                        const date = new Date(fileContent[0].createdAt);
+                        const datePart = date.toLocaleDateString("en-US", {
+                            year: "numeric",
+                            month: "short",
+                            day: "numeric",
+                        });
+                        const timePart = date.toLocaleTimeString("en-US", {
+                            hour: "numeric",
+                            minute: "numeric",
+                            hour12: true,
+                            timeZoneName: "short",
+                        });
+                        return `${datePart} ${timePart}`;
+                    })()}
                 </div>
                 <div
                     style={{

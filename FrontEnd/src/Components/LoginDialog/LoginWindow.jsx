@@ -48,6 +48,8 @@ const LoginWindow = ({ setState }) => {
         cursor: "pointer",
     });
 
+    const [error, setError] = useState(null);
+
     useEffect(() => {
         if (!formRef.current) {
             return;
@@ -60,13 +62,34 @@ const LoginWindow = ({ setState }) => {
 
             console.log("email:", email, "and password", password);
 
-            await user.SignIn(email, password);
+            const session = await user.SignIn(email, password);
+            if (session) {
+                console.log("Session", session);
+                navigate("/app");
+            } else {
+                console.log("Invalid email or password");
+                setError("Invalid email or password");
+            }
         });
     }, [navigate]);
 
     return (
         <div style={style}>
-            <h1 style={{ width: "fit-content" }}>Log in</h1>
+            <h2 style={{ width: "fit-content" }}>Log in</h2>
+            {error && (
+                <div
+                    style={{
+                        color: "red",
+                        fontSize: "1.2rem",
+                        marginBottom: "1rem",
+                        backgroundColor: "rgba(255, 200, 200, 0.6)",
+                        padding: "1rem",
+                        borderRadius: "0.5rem",
+                    }}
+                >
+                    {error}
+                </div>
+            )}
             <form style={formStyle} ref={formRef}>
                 <input style={inputStyle} type="text" placeholder="Email" />
                 <input

@@ -6,6 +6,14 @@ export const UserContext = createContext(null);
 
 import { useStore } from "./ctx.appManager";
 
+const validateEmail = (email) => {
+    return String(email)
+        .toLowerCase()
+        .match(
+            /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+        );
+};
+
 export const UserProvider = ({ children }) => {
     const [signedIn, setSignedIn] = useState(false);
     const navigate = useNavigate();
@@ -42,6 +50,10 @@ export const UserProvider = ({ children }) => {
                 }
             },
             SignIn: async (email, password) => {
+                if (!validateEmail(email)) {
+                    setSignedIn(false);
+                    return false;
+                }
                 try {
                     const response = await fetch(`/api/auth/login`, {
                         method: "POST",
@@ -53,10 +65,13 @@ export const UserProvider = ({ children }) => {
                     });
                     if (response.ok) {
                         setSignedIn(true);
+                        return true;
                     }
+                    return null;
                 } catch (error) {
                     setSignedIn(false);
                     console.error(error);
+                    return null;
                 }
             },
             SignOut: async () => {
@@ -74,9 +89,14 @@ export const UserProvider = ({ children }) => {
                 } catch (error) {
                     setSignedIn(false);
                     console.error(error);
+                    return null;
                 }
             },
             SignUp: async (email, password) => {
+                if (!validateEmail(email)) {
+                    setSignedIn(false);
+                    return false;
+                }
                 try {
                     const response = await fetch(`/api/auth/signup`, {
                         method: "POST",

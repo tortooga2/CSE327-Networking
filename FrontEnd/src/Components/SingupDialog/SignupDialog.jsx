@@ -48,6 +48,8 @@ const SignupWindow = ({ setState }) => {
         cursor: "pointer",
     });
 
+    const [error, setError] = useState(null);
+
     useEffect(() => {
         if (!formRef.current) {
             return;
@@ -61,13 +63,35 @@ const SignupWindow = ({ setState }) => {
 
             console.log("email:", email, "and password", password);
 
-            await user.SignUp(email, password);
+            const session = await user.SignUp(email, password);
+            if (session) {
+                console.log("Session", session);
+                navigate("/app");
+                return;
+            }
+
+            console.log("Error", "Failed to sign up");
+            setError("Failed to sign up for some reason");
         });
     }, [navigate]);
 
     return (
         <div style={style}>
-            <h1 style={{ width: "fit-content" }}>Sign up</h1>
+            <h2 style={{ width: "fit-content" }}>Sign up</h2>
+            {error && (
+                <div
+                    style={{
+                        color: "red",
+                        fontSize: "1.2rem",
+                        marginBottom: "1rem",
+                        backgroundColor: "rgba(255, 200, 200, 0.6)",
+                        padding: "1rem",
+                        borderRadius: "0.5rem",
+                    }}
+                >
+                    {error}
+                </div>
+            )}
             <form style={formStyle} ref={formRef}>
                 <input style={inputStyle} type="text" placeholder="Email" />
                 <input

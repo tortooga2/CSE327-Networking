@@ -81,10 +81,6 @@ h2 {
     font-weight: bold;
 }
 
-p {
-    font-size: 1.2rem;
-}
-
 .content-section {
     display: flex;
     gap: 2rem;

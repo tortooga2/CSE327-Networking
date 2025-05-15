@@ -10,20 +10,8 @@ const UtcClock = ({ style }) => {
 
         return () => clearInterval(interval); // clean up on unmount
     }, []);
-    
-    const formattedDate = utcDate.toLocaleString("en-US", {
-        timeZone: "UTC",
-        year: "numeric",
-        month: "long",
-        day: "numeric",
-        hour: "2-digit",
-        minute: "2-digit",
-        second: "2-digit",
-        hour12: true,
-    });
 
-    //return <div style={style}>{utcDate.toISOString()}</div>;
-    return <div style={style}>{formattedDate} UTC</div>;
+    return <div style={style}>{utcDate.toISOString()}</div>;
 };
 
 export default UtcClock;

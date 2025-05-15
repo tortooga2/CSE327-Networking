@@ -39,8 +39,10 @@ const RecordingView = ({ src }) => {
                 style={{
                     ...(loaded && closedFile ? afterLoad : beforeLoad),
                     margin: "0 auto",
-                    height: "100%",
-                    width: "100%",
+                    // maxWidth: "30vw",
+                    // width: "30vw",
+                    // minHeight: "40vh",
+                    // maxHeight: "100%",
                     opacity: "1",
                     borderRadius: "0.5rem",
                 }}

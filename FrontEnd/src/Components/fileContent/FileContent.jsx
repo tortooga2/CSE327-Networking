@@ -112,22 +112,7 @@ const FileContent = ({ file }) => {
                         }}
                     >
                         <p>Created At:</p>
-                        {file
-                            ? (() => {
-                                    return new Date(
-                                        file.createdAt
-                                    ).toLocaleDateString("en-US", {
-                                        year: "numeric",
-                                        month: "short",
-                                        day: "numeric",
-                                        hour: "numeric",
-                                        minute: "numeric",
-                                        second: "numeric",
-                                        hour12: true,
-                                        timeZoneName: "short",
-                                    });
-                                })()
-                        : ""}
+                        {file ? file.createdAt : ""}
                     </div>
                     <p>Creator: {file ? file.creator_username : ""}</p>
                 </div>
@@ -149,7 +134,7 @@ const FileContent = ({ file }) => {
             >
                 {(() => {
                     switch (getFileType(file.name)) {
-                        case "Recording":
+                        case "Video":
                             return <RecordingView src={file.metadata.url} />;
                         case "Document":
                             return <DocView src={file.metadata.url} />;

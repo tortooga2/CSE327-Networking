@@ -237,11 +237,15 @@ function LandingPage() {
                         color: "#cc674b",
                         fontSize: "0.8rem",
                         fontFamily: `"Playfair Display", serif`,
-                        padding: "9px",
-                        zIndex: "100"
+                        padding: "0.5rem",
                     }}
                 >
-                    © 2025 Bundle, <i>ConnectWork.</i> All rights reserved.
+                    @2025 Bundle,{" "}
+                    <span style={{ fontStyle: "italic" }}>
+                        {" "}
+                        Networking Application{" "}
+                    </span>
+                    . All rights reserved.
                 </div>
             </VerticalDiv>
         </NewPage>

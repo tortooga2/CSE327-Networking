@@ -134,7 +134,7 @@ const FilePreview = ({ width }) => {
                                     alignItems: "center",
                                 }}
                             >
-                                <p>Create At:</p>
+                                <p>Created At:</p>
                                 {fileData
                                     ? (() => {
                                           return new Date(
@@ -143,9 +143,15 @@ const FilePreview = ({ width }) => {
                                               year: "numeric",
                                               month: "short",
                                               day: "numeric",
+                                              hour: "numeric",
+                                              minute: "numeric",
+                                              second: "numeric",
+                                              hour12: true,
+                                              timeZoneName: "short",
                                           });
                                       })()
                                     : ""}
+
                             </div>
                             <p>
                                 Creator:{" "}

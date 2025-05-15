@@ -11,8 +11,8 @@ const SignupWindow = ({ setState }) => {
     const navigate = useNavigate();
 
     const [style, setStyle] = useState({
-        position: "absolute",
-        top: "20%",
+        position: "fixed",
+        top: "50%",
         left: "50%",
         transform: "translate(-50%, -50%)",
         borderRadius: "0.5rem",
@@ -25,6 +25,7 @@ const SignupWindow = ({ setState }) => {
         gap: "2rem",
         alignItems: "left",
         justifyContent: "left",
+        color: "#333",
     });
 
     const [formStyle, setFormStyle] = useState({

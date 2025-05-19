@@ -6,8 +6,6 @@ import {
     deleteFileById,
     getAllUserData,
     getFileById,
-    sendFileToUser,
-    updateFileLedger,
     testCreateUserData,
     loadDataForFocusPage,
     uploadHelper,
@@ -22,8 +20,6 @@ fileDataRouter.delete("/delete", deleteFileById);
 fileDataRouter.get("/user/:fileId", getFileById);
 fileDataRouter.get("/all", getAllUserData);
 fileDataRouter.post("/create", createUserData);
-fileDataRouter.post("/send/:other_id/:file_id", sendFileToUser);
-fileDataRouter.patch("/update/:id", updateFileLedger);
 fileDataRouter.post("/connect", ConnectFiles);
 fileDataRouter.get("/focus/:fileId", loadDataForFocusPage);
 

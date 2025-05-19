@@ -3,8 +3,6 @@ import { createUserData } from "./module.createUserData.js";
 import { deleteFileById } from "./module.deleteFileById.js";
 import { getAllUserData } from "./module.getAllUserData.js";
 import { getFileById } from "./module.getFileById.js";
-import { sendFileToUser } from "./module.sendFileToUser.js";
-import { updateFileLedger } from "./module.updateFileLedger.js";
 import { testCreateUserData } from "./module.test.createData.js";
 import { loadDataForFocusPage } from "./module.loadDataforFocusPage.js";
 import { uploadHelper } from "./module.uploadHelper.js";
@@ -17,8 +15,6 @@ export {
     deleteFileById,
     getAllUserData,
     getFileById,
-    sendFileToUser,
-    updateFileLedger,
     testCreateUserData,
     loadDataForFocusPage,
     uploadHelper,

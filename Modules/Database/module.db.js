@@ -88,6 +88,10 @@ const createIndexes = async () => {
     const transaction = await sequelize.transaction();
 
     try {
+        /**
+         * While fine for use during development, please avoid using this in production, and instead run the commands within the Postgres terminal.
+         * These only need to be ran once ever. -Chris
+        **/
         await sequelize.query('CREATE INDEX IF NOT EXISTS trgm_file_ledger_gin ON "file_ledger" USING GIN ("name" gin_trgm_ops)', {transaction: transaction});
         await sequelize.query('CREATE INDEX IF NOT EXISTS file_ledger_index ON "file_ledger"("owner_id", "createdAt", "type")',{transaction: transaction});
 

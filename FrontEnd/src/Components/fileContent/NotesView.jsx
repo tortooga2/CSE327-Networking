@@ -1,29 +1,11 @@
 import PropTypes from "prop-types";
-import { useState, useRef, useEffect } from "react";
-import { useStore } from "../Contexts/ctx.appManager";
-import MDEditor from "@uiw/react-md-editor";
+import { useState, useEffect } from "react";
 import VerticalDiv from "../UILayout/VerticalDiv";
 import MarkdownPreview from "react-markdown";
 import rehypeRaw from "rehype-raw";
 import FileContent from "./FileContent.jsx";
 
 const NotesView = ({ src, maxHeight = "60vh" }) => {
-    const [loaded, setLoaded] = useState(false);
-    const closedFile = useStore((state) => {
-        return state.previewedFile !== null;
-    });
-    const fileSrc = src;
-
-    const beforeLoad = {
-        opacity: 0,
-        transition: "opacity 0.5s ease-in-out 0.5s",
-    };
-
-    const afterLoad = {
-        opacity: 1,
-        transition: "opacity 0.5s ease-in-out 0.5s",
-    };
-
     const [text, setText] = useState("");
 
     useEffect(() => {
@@ -42,7 +24,7 @@ const NotesView = ({ src, maxHeight = "60vh" }) => {
         getText().then((newText) => setText(newText));
     }, [src]);
 
-    return (
+    return ( //Jesus christ
         <div
             style={{
                 height: "100%",
@@ -59,21 +41,10 @@ const NotesView = ({ src, maxHeight = "60vh" }) => {
                             file: ({ children }) => {
                                 const fileid = children;
                                 const [fileData, setFileData] = useState(null);
-                                const [fileContent, setFileContent] =
-                                    useState(null);
+                                const setFileContent = useState(null);
                                 const [loading, setLoading] = useState(true);
 
                                 useEffect(() => {
-                                    console.log(`File ID: ${children}`);
-                                    console.log(
-                                        "Fetching file data @",
-                                        `/api/file/user/${fileid}`
-                                    );
-                                    if (!fileid) {
-                                        setLoading(false);
-                                        return;
-                                    }
-
                                     const getFileData = async () => {
                                         try {
                                             const response = await fetch(

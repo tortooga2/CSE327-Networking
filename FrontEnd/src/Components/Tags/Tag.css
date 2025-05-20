@@ -80,3 +80,7 @@
 .rec > .marker {
     background-color: var(--rec-color-2);
 }
+
+.rec {
+    color: var(--rec-color-2);
+}

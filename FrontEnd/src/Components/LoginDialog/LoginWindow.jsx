@@ -19,13 +19,12 @@ const LoginWindow = ({ setState }) => {
         padding: "5rem",
         border: "1px solid var(--primary-color)",
         backdropFilter: "blur(10px)",
-
+        color: "var(--text-color)",
         display: "flex",
         flexDirection: "column",
         gap: "2rem",
         alignItems: "left",
         justifyContent: "left",
-        color: "#333",
     });
 
     const [formStyle, setFormStyle] = useState({

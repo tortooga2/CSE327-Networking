@@ -134,7 +134,7 @@ const FileContent = ({ file }) => {
             >
                 {(() => {
                     switch (getFileType(file.name)) {
-                        case "Video":
+                        case "Recording":
                             return <RecordingView src={file.metadata.url} />;
                         case "Document":
                             return <DocView src={file.metadata.url} />;

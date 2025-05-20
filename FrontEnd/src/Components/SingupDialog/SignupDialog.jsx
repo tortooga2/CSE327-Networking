@@ -19,13 +19,12 @@ const SignupWindow = ({ setState }) => {
         padding: "5rem",
         border: "1px solid var(--primary-color)",
         backdropFilter: "blur(10px)",
-
+        color: "var(--text-color)",
         display: "flex",
         flexDirection: "column",
         gap: "2rem",
         alignItems: "left",
         justifyContent: "left",
-        color: "#333",
     });
 
     const [formStyle, setFormStyle] = useState({
@@ -37,7 +36,7 @@ const SignupWindow = ({ setState }) => {
     const [inputStyle, setInputStyle] = useState({
         padding: "0.5rem",
         borderRadius: "5px",
-        border: "1px solid var(--secondary-color)",
+        border: "1px solid var(--text-color)",
         minWidth: "300px",
     });
 

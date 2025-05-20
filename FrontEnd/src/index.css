@@ -18,7 +18,6 @@
     font-family: monospace;
     line-height: 1.5;
     font-weight: 200;
-    font-size: medium;
 
     color-scheme: light dark;
     background-color: var(--secondary-color);
@@ -31,6 +30,51 @@
 
     margin: 0;
     padding: 0;
+    overflow: hidden;
+}
+
+.markdown > * {
+    all: revert;
+}
+
+.file-row:hover {
+    background-color: var(--primary-color);
+}
+
+.hover-thing:hover {
+    background-color: var(--secondary-color);
+}
+
+button {
+    background-color: transparent;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    color: var(--text-color);
+    transition: background-color 0.2s ease;
+}
+
+button:hover {
+    background-color: rgba(30, 30, 30, 0.1); /* Keep existing hover */
+}
+
+input[type="checkbox"] {
+    width: 1.2em;
+    height: 1.2em;
+    margin: 0;
+    padding: 0;
+    border-radius: 0.2em;
+    background-color: #f9f9f9;
+    border: 1px solid #eaeaea;
+}
+
+a {
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
 }
 
 /* button {

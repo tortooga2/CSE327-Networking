@@ -3,15 +3,15 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-const bucketName = process.env.AWS_BUCKET_NAME;
-const bucketRegion = process.env.AWS_REGION;
+const bucketName = process.env.S3_BUCKET_NAME;
+const bucketRegion = process.env.S3_REGION;
 
 const s3Client = (() => {
     try {
         return new S3Client({
             credentials: {
-                accessKeyId: process.env.AWS_ACCESS_KEY,
-                secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+                accessKeyId: process.env.S3_ACCESS_KEY,
+                secretAccessKey: process.env.S3_SECRET_ACCESS_KEY,
             },
             region: bucketRegion,
         });

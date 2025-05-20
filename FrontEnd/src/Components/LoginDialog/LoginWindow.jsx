@@ -1,20 +1,25 @@
 import { useState, useEffect, useRef } from "react";
-
-import Button from "../Button/Button";
+import { useNavigate } from "react-router-dom";
 import { useUser } from "../Contexts/ctx.user";
 
+import Button from "../Button/Button";
+
 const LoginWindow = ({ setState }) => {
-    const formRef = useRef(null);
     const { user } = useUser();
 
-    const [style] = useState({
-        position: "absolute",
+    const formRef = useRef(null);
+    const navigate = useNavigate();
+
+    const [style, setStyle] = useState({
+        position: "fixed",
         top: "50%",
         left: "50%",
         transform: "translate(-50%, -50%)",
+        borderRadius: "0.5rem",
         padding: "5rem",
-        border: "1px solid var(--secondary-color)",
-        backdropFilter: "blur(20px)",
+        border: "1px solid var(--primary-color)",
+        backdropFilter: "blur(10px)",
+        color: "var(--text-color)",
         display: "flex",
         flexDirection: "column",
         gap: "2rem",
@@ -22,26 +27,24 @@ const LoginWindow = ({ setState }) => {
         justifyContent: "left",
     });
 
-    const [formStyle] = useState({
+    const [formStyle, setFormStyle] = useState({
         display: "flex",
         flexDirection: "column",
         gap: "1rem",
     });
 
-    const [inputStyle] = useState({
+    const [inputStyle, setInputStyle] = useState({
         padding: "0.5rem",
         borderRadius: "5px",
         border: "1px solid var(--secondary-color)",
         minWidth: "300px",
     });
 
-    const [closeStyle] = useState({
+    const [closeStyle, setCloseStyle] = useState({
         position: "absolute",
         top: "0",
         right: "0",
         cursor: "pointer",
-        margin: "0.5rem",
-        fontFamily: "monospace",
     });
 
     useEffect(() => {
@@ -54,15 +57,15 @@ const LoginWindow = ({ setState }) => {
             const email = e.target[0].value;
             const password = e.target[1].value;
 
-            console.log("Login with email:", email, "and password", password);
+            console.log("email:", email, "and password", password);
 
             await user.SignIn(email, password);
         });
-    }, [user]);
+    }, [navigate]);
 
     return (
         <div style={style}>
-            <h1 style={{ width: "fit-content" }}>Login</h1>
+            <h1 style={{ width: "fit-content" }}>Log in</h1>
             <form style={formStyle} ref={formRef}>
                 <input style={inputStyle} type="text" placeholder="Email" />
                 <input
@@ -70,22 +73,28 @@ const LoginWindow = ({ setState }) => {
                     type="password"
                     placeholder="Password"
                 />
+
                 <Button
-                    style={{ maxWidth: "100px" }}
                     onClick={() => {
                         formRef.current.dispatchEvent(new Event("submit"));
                     }}
                 >
-                    Login
+                    Log in
                 </Button>
             </form>
             <Button
-                style={closeStyle}
+                style={{
+                    position: "absolute",
+                    top: "2rem",
+                    right: "2rem",
+                    padding: "0.5rem",
+                    borderRadius: "0.5rem",
+                }}
                 onClick={() => {
                     setState(false);
                 }}
             >
-                [X]
+                Close
             </Button>
         </div>
     );

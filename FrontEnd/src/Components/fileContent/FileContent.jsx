@@ -1,20 +1,35 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, use } from "react";
 import ImageView from "./imageView";
 import DocView from "./docView";
 import RecordingView from "./recordingView";
 import NotesView from "./NotesView";
 import Button from "../Button/Button";
 import getFileType from "../scripts/getFileType";
-import { FileType } from "../Tags";
+import { Bundle, FileType } from "../Tags";
+
+import { copyFileUrl, getFileUrl } from "../scripts/fileUrlFuncs";
+import BundleView from "./bundleView";
 
 const FileContent = ({ file }) => {
     const copyLink = (fileId) => (e) => {
         e.stopPropagation();
-        navigator.clipboard.writeText(
-            `${window.location.origin}/file/owner_id/${fileId}`
-        );
-        alert("Link copied to clipboard");
+        navigator.clipboard.writeText(getFileUrl(fileId));
     };
+
+    const [fileData, setFileData] = useState(null);
+
+    useEffect(() => {
+        if (file) {
+            if (file.dataValues) {
+                console.log(
+                    "This file is a god damn bundle!",
+                    file.dataValues.id
+                );
+            } else {
+                console.log("This file is a normal file!", file.id);
+            }
+        }
+    }, [file]);
 
     return (
         <div
@@ -28,7 +43,7 @@ const FileContent = ({ file }) => {
                 borderRadius: "var(--border-radius)",
                 display: "flex",
                 flexDirection: "column",
-                maxHeight: "100%",
+
                 padding: "1rem",
                 // gap: "1rem",
                 backgroundColor: "var(--primary-color)",
@@ -69,6 +84,7 @@ const FileContent = ({ file }) => {
                             display: "flex",
                             gap: "0.5rem",
                             alignItems: "center",
+                            textOverflow: "ellipsis",
                         }}
                     >
                         <p>Name:</p> {file ? file.name : ""}
@@ -79,29 +95,38 @@ const FileContent = ({ file }) => {
                             display: "flex",
                             gap: "0.5rem",
                             alignItems: "center",
+                            textOverflow: "ellipsis",
                         }}
                     >
-                        <p>Create At:</p>
-                        {file
-                            ? (() => {
-                                  return new Date(
-                                      file.createdAt
-                                  ).toLocaleDateString("en-US", {
-                                      year: "numeric",
-                                      month: "short",
-                                      day: "numeric",
-                                  });
-                              })()
-                            : ""}
+                        <p>URL:</p>{" "}
+                        <a href={getFileUrl(file.id)} target="_blank">
+                            {file ? getFileUrl(file.id) : ""}
+                        </a>
+                    </div>
+
+                    <div
+                        style={{
+                            display: "flex",
+                            gap: "0.5rem",
+                            alignItems: "center",
+                        }}
+                    >
+                        <p>Created At:</p>
+                        {file ? file.createdAt : ""}
                     </div>
                     <p>Creator: {file ? file.creator_username : ""}</p>
                 </div>
 
-                <Button onClick={copyLink(file.id)}>Copy Link</Button>
+                <Button
+                    onClick={(e) => {
+                        copyFileUrl(e, file.id);
+                    }}
+                >
+                    Copy Link
+                </Button>
             </div>
             <div
                 style={{
-                    maxHeight: "60vh",
                     overflow: "hidden",
                     border: "1px solid var(--border-color)",
                     borderRadius: "0.5rem",
@@ -109,14 +134,14 @@ const FileContent = ({ file }) => {
             >
                 {(() => {
                     switch (getFileType(file.name)) {
-                        case "Video":
+                        case "Recording":
                             return <RecordingView src={file.metadata.url} />;
                         case "Document":
                             return <DocView src={file.metadata.url} />;
                         case "Image":
                             return <ImageView src={file.metadata.url} />;
                         case "Bundle":
-                            return <h1>Bundle Here...</h1>;
+                            return <BundleView children={file.children} />;
                         case "Note":
                             return <NotesView src={file.metadata.url} />;
                     }

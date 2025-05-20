@@ -6,7 +6,7 @@ import dotenv from "dotenv";
 dotenv.config();
 
 import { Redis } from "ioredis";
-import { Users } from "./Database/module.db.js";
+import { Users, UserSettings } from "./Database/module.db.js";
 import { debugMessage, debugError, DEBUG } from "./module.debugHelpers.js";
 import { Sequelize } from "sequelize";
 import { generateUsername } from "./module.usernameGenerator.js";
@@ -18,7 +18,11 @@ import { generateUsername } from "./module.usernameGenerator.js";
 
 const connectToRedis = async () => {
     if (process.env.DEBUG === "true") {
-        var redis = new Redis(process.env.REDIS_URL);
+        console.log(process.env.REDIS_URL);
+        var redis = new Redis({
+            host: process.env.REDIS_HOST,
+            port: process.env.REDIS_PORT,
+        });
         redis.on("error", (error) => {
             //when error event is emitted, log the error
             debugError(error);
@@ -28,13 +32,26 @@ const connectToRedis = async () => {
             //When connected, log the connection
             debugMessage("Connected to Redis");
         });
+        (async () => {
+            try {
+                await redis.set("myKey", "Database Connected");
+                const result = await redis.get("myKey");
+                if (!result) {
+                    debugError("Redis connection failed");
+                    return;
+                }
+                debugMessage(result); // 'myValue'
+            } catch (err) {
+                console.error("Error with ioredis cluster:", err);
+            }
+        })();
         return redis;
     } else {
         const cluster = new Redis.Cluster(
             [
                 {
-                    host: "user-session-4uvyfj.serverless.usw1.cache.amazonaws.com",
-                    port: 6379,
+                    host: process.env.REDIS_HOST,
+                    port: process.env.REDIS_PORT,
                 },
                 // If you have multiple nodes, you can list them here
             ],
@@ -51,7 +68,7 @@ const connectToRedis = async () => {
             try {
                 await cluster.set("myKey", "myValue");
                 const result = await cluster.get("myKey");
-                console.log(result); // 'myValue'
+                debugMessage(result); // 'myValue'
             } catch (err) {
                 console.error("Error with ioredis cluster:", err);
             }
@@ -329,13 +346,50 @@ const auth = {
                 message: "Missing session token",
             });
         }
-        return auth.Verify(req, res, () => {
+
+        return auth.Verify(req, res, async () => {
             console.log("running from TestVerify", req.user);
             const user = req.user;
+            const { profile_id } = req.user;
+            const userSettings = await (async () => {
+                let userSettings;
+                userSettings = await UserSettings.findOne({
+                    where: { profile_id },
+                });
+
+                if (!userSettings) {
+                    userSettings = await UserSettings.create({
+                        profile_id,
+                    });
+                }
+
+                const {
+                    dark_mode,
+                    bundle_color,
+                    doc_color,
+                    note_color,
+                    rec_color,
+                    img_color,
+                    font_size,
+                    font_family,
+                } = userSettings;
+
+                return {
+                    dark_mode,
+                    bundle_color,
+                    doc_color,
+                    note_color,
+                    rec_color,
+                    img_color,
+                    font_size,
+                    font_family,
+                };
+            })();
+
             return res.status(200).json({
                 okay: true,
-                username_base: user.username_base,
-                username_suffix: user.username_suffix,
+                email: user.email,
+                settings: userSettings,
             });
         });
     },

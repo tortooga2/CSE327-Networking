@@ -18,10 +18,23 @@ export const deleteFileById = async (req, res) => {
 
     const transaction = await sequelize.transaction(); //Start transaction with database
     try {
+        const parsedIds = [];
+        for (let id = 0; id < file_ids.length; id++) {
+            const parsedId = parseInt(file_ids[id]);
+            if (isNaN(parsedId)) {
+                return res.status(400).json({
+                    okay: false,
+                    error: "Bad request",
+                    message: "All file ids must be integers"
+                });
+            }
+            parsedIds.push(parsedId);
+        }
+
         //Obtain all file keys
         const fileKeys = (await Data.findAll({
             where: {
-                id: file_ids,
+                id: parsedIds,
                 owner_id: profile_id,
             },
             attributes: ['metadata'],

@@ -10,6 +10,9 @@ import FileContent from "../fileContent/FileContent.jsx";
 
 import VerticalDiv from "../UILayout/VerticalDiv";
 
+import { getFileUrl } from "../scripts/fileUrlFuncs.js";
+import { useUser } from "../Contexts/ctx.user.jsx";
+
 const FilePreview = ({ width }) => {
     const fileId = useStore((state) => state.previewedFile);
     const closedFile = useStore((state) => {
@@ -19,23 +22,15 @@ const FilePreview = ({ width }) => {
     const [fileContent, setFileContent] = useState(null);
     const scrollableRef = useRef(null);
 
-    const copyLink = (e, fileId) => {
-        e.stopPropagation();
-        navigator.clipboard.writeText(
-            `${window.location.origin}/file/owner_id/${fileId}`
-        );
-        alert("Link copied to clipboard");
-    };
+    const { user } = useUser();
 
     const closePreview = () => {
         useStore.getState().setPreviewedFile(null);
-        console.log("Preview is", closedFile);
     };
 
-    useEffect(() => {
-        console.log(`File ID: ${fileId}`);
+    const fileIds = [];
 
-        console.log("Fetching file data @", `/api/file/user/${fileId}`);
+    useEffect(() => {
         if (!fileId) {
             return;
         }
@@ -50,7 +45,7 @@ const FilePreview = ({ width }) => {
                 });
                 if (response.ok) {
                     const data = await response.json();
-                    console.log(data);
+                    console.log("fileData", data);
                     setFileData(data.files.originalFile);
                     if (data.files.files) {
                         setFileContent(data.files.files);
@@ -58,18 +53,12 @@ const FilePreview = ({ width }) => {
                         setFileContent([data.files.originalFile]);
                     }
                 } else {
-                    setFileData({
-                        error: response.statusText,
-                    });
+                    user.ValidateSession();
                 }
             } catch (error) {
-                console.error(error);
-                setFileData({
-                    error: error,
-                });
+                user.ValidateSession();
             }
         };
-
         getFileData();
     }, [fileId]);
 
@@ -80,6 +69,8 @@ const FilePreview = ({ width }) => {
             setIsBundle(getFileType(fileData.name) === "Bundle");
         }
     }, [fileData]);
+
+    useEffect(() => {}, [fileContent]);
 
     return (
         <VerticalDiv width={width}>
@@ -160,6 +151,45 @@ const FilePreview = ({ width }) => {
                                 Creator:{" "}
                                 {fileData ? fileData.creator_username : ""}
                             </p>
+                            <div>
+                                Bundle Content Ids:{" "}
+                                {Array.from(fileContent).map((file) => {
+                                    fileIds.push(file.id);
+                                    return (
+                                        <a
+                                            href={getFileUrl(file.id)}
+                                            key={file.id}
+                                            target="_blank"
+                                        >
+                                            {getFileUrl(file.id)}{" "}
+                                        </a>
+                                    );
+                                })}
+                            </div>
+                            <Button
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    let clip = "";
+                                    for (let id in fileIds) {
+                                        clip += `<file>${fileIds[id]}</file>\n`;
+                                    }
+                                    navigator.clipboard.writeText(clip);
+                                }}
+                            >
+                                Copy Note Embedings
+                            </Button>
+                            <Button
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    let clip = "";
+                                    for (let id in fileIds) {
+                                        clip += `${getFileUrl(fileIds[id])}\n`;
+                                    }
+                                    navigator.clipboard.writeText(clip);
+                                }}
+                            >
+                                Copy Urls
+                            </Button>
                         </div>
                     )}
                 </div>
@@ -169,8 +199,8 @@ const FilePreview = ({ width }) => {
 
             <VerticalDiv gap="1rem">
                 {fileContent && closedFile
-                    ? fileContent.map((file, index) => (
-                          <FileContent key={index} file={file} />
+                    ? Array.from(fileContent).map((file) => (
+                          <FileContent key={file.id} file={file} />
                       ))
                     : null}
             </VerticalDiv>

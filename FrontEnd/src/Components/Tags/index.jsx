@@ -57,7 +57,7 @@ export const FileType = (filename, layout) => {
             return <Img layout={layout} />;
         case "Note":
             return <Note layout={layout} />;
-        case "Video":
+        case "Recording":
             return <Recording layout={layout} />;
         default:
             return <p>Type ?</p>;

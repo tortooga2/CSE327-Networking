@@ -18,7 +18,11 @@ import { generateUsername } from "./module.usernameGenerator.js";
 
 const connectToRedis = async () => {
     if (process.env.DEBUG === "true") {
-        var redis = new Redis(process.env.REDIS_URL);
+        console.log(process.env.REDIS_URL);
+        var redis = new Redis({
+            host: process.env.REDIS_HOST,
+            port: process.env.REDIS_PORT,
+        });
         redis.on("error", (error) => {
             //when error event is emitted, log the error
             debugError(error);
@@ -28,13 +32,26 @@ const connectToRedis = async () => {
             //When connected, log the connection
             debugMessage("Connected to Redis");
         });
+        (async () => {
+            try {
+                await redis.set("myKey", "Database Connected");
+                const result = await redis.get("myKey");
+                if (!result) {
+                    debugError("Redis connection failed");
+                    return;
+                }
+                debugMessage(result); // 'myValue'
+            } catch (err) {
+                console.error("Error with ioredis cluster:", err);
+            }
+        })();
         return redis;
     } else {
         const cluster = new Redis.Cluster(
             [
                 {
-                    host: "user-session-4uvyfj.serverless.usw1.cache.amazonaws.com",
-                    port: 6379,
+                    host: process.env.REDIS_HOST,
+                    port: process.env.REDIS_PORT,
                 },
                 // If you have multiple nodes, you can list them here
             ],
@@ -51,7 +68,7 @@ const connectToRedis = async () => {
             try {
                 await cluster.set("myKey", "myValue");
                 const result = await cluster.get("myKey");
-                console.log(result); // 'myValue'
+                debugMessage(result); // 'myValue'
             } catch (err) {
                 console.error("Error with ioredis cluster:", err);
             }

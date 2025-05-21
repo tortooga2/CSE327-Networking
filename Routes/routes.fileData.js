@@ -5,7 +5,6 @@ import {
     createUserData,
     deleteFileById,
     getAllUserData,
-    getFileById,
     testCreateUserData,
     loadDataForFocusPage,
     uploadHelper,
@@ -17,7 +16,6 @@ const fileDataRouter = Router();
 
 fileDataRouter.use(auth.Verify);
 fileDataRouter.delete("/delete", deleteFileById);
-fileDataRouter.get("/user/:fileId", getFileById);
 fileDataRouter.get("/all", getAllUserData);
 fileDataRouter.post("/create", createUserData);
 fileDataRouter.post("/connect", ConnectFiles);

@@ -51,7 +51,7 @@ Now inside the foler Backend/ add a new file called .env. Then copy and past thi
 DB_HOST = 0.0.0.0
 DB_PORT = 5432
 DB_NAME = connectwork
-DB_USR = postgres
+DB_USER = postgres
 DB_PASSWORD = 1234
 
 REDIS_URL = 0.0.0.0:6379

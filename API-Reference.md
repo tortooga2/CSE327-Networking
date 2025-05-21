@@ -1,5 +1,3 @@
-
-
 # Introduction
 Hello! Just in case this project gets continued by another team, I wanted to write a little API reference/guide/documentation or whatever. Hopefully, this should make your life a little easier when you try to understand our codebase.
 	-Chris
@@ -432,7 +430,7 @@ await fetch("/api/file/verify",
 ```
 
 ## Thoughts (Author: Chris)
-This is just a collection of random thoughts that I had that may or may not be useful.
+This is just a collection of random thoughts that I had that may or may not be useful. They include potential issues and maybe even some fixes.
 
  - [Strange Users Indexes](#Users-Indexes)
  - [Unnecessary Database Functions](#DB-Funcs)

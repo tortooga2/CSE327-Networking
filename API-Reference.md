@@ -430,3 +430,15 @@ await fetch("/api/file/verify",
 	}
 )
 ```
+
+## Thoughts (Author: Chris)
+This is just a collection of random thoughts that I had that may or may not be useful.
+
+ - [Strange Users Indexes](#Users-Indexes)
+ - [Unnecessary Database Functions](#DB-Funcs)
+
+#### Users-Indexes
+Something is seriously fucked with the `users` table within PostgreSQL. I noticed that whenever you start the application, A new `users_email_key` and `users_profile_id_key` index is made within the database for the table (even when they already exist. They do not overwrite the old ones, they just duplicate). As I understand indexes at 3:00 AM, every index adds overhead on deletion and creation of rows, and they take up more disk space. Having the table create clones of the index for no reason doesn't make sense and is bad. Strangely enough, the `file_ledger` table is unaffected, with no additional indexes made on startup. A potential reason that comes to mind is how we create foreign keys using Sequelize, with the code being found in `module.initAssoc.js`. It could also be related to our use of [model sync](https://sequelize.org/docs/v6/core-concepts/model-basics/#model-synchronization).
+
+#### DB-Funcs
+At the time of writing this, there exists two functions: `createIndexes` and `enablePG_TGRM` and they are almost completely worthless, and should be removed. For some context, in PostgreSQL, indexes can be used to speed up database queries. The thing is, the command for creating the indexes only needs to be ran once every (unless for whatever reason you decide to drop the file_ledger table). Both functions are used to create the indexes if they do not exist, and they are run every time the application starts up. There isn't really much of a reason to do this, and to be honest with you, I do not remember why I needed to write these functions since it's so easy to write the commands within the PSQL terminal. Do make sure to write down the commands somewhere if you do decide to delete them.

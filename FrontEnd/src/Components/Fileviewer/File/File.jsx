@@ -173,6 +173,7 @@ const File = ({ fileData }) => {
                     style={{
                         minWidth: "3rem",
                         width: "20rem",
+                        textWrap: "nowrap",
                         overflow: "hidden",
                         textOverflow: "ellipsis",
                     }}

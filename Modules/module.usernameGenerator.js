@@ -1,5 +1,3 @@
-import { Op } from "sequelize";
-
 //Generate a random username for a user
 const generateUsername = async (Users, desiredUsername) => {
     const cleanUsername = desiredUsername

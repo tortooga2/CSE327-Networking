@@ -1,4 +1,4 @@
-import { Users, UserSettings, sequelize } from "../Database/module.db.js";
+import { UserSettings } from "../Database/module.db.js";
 
 const UpdateUserSetting = async (req, res) => {
     const { profile_id } = req.user;

@@ -1,13 +1,7 @@
-import { Data, Users, sequelize } from "../Database/module.db.js";
+import { Data } from "../Database/module.db.js";
 import { debugMessage, debugError } from "../module.debugHelpers.js";
-import { Sequelize } from "sequelize";
-import crypto from "crypto";
 
-import {
-    GetObjectCommand,
-    PutObjectCommand,
-    DeleteObjectCommand,
-} from "@aws-sdk/client-s3";
+import { GetObjectCommand } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { s3Client, bucketName } from "../S3 Stuff/module.s3client.js";
 

@@ -4,7 +4,6 @@ import { Sequelize } from "sequelize";
 import { createUsersTable } from "../../Models/model.users.js";
 import { createDataTable } from "../../Models/model.data.js";
 import { createUserSettings } from "../../Models/model.userSettings.js";
-import { initAssoc } from "./module.initAssoc.js";
 dotenv.config();
 
 const sequelize = new Sequelize(

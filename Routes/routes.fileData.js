@@ -18,11 +18,11 @@ fileDataRouter.get("/all", getAllUserData);
 fileDataRouter.post("/connect", ConnectFiles);
 fileDataRouter.get("/focus/:fileId", loadDataForFocusPage);
 
-//New stuff
+//Use both of these in combination to upload files to our S3 bucket.
 fileDataRouter.get("/upload-helper", uploadHelper);
 fileDataRouter.post("/verify", verifyFiles);
 
-//Chunk thing
+//TODO: Implement pagination by using this over /all
 fileDataRouter.get("/load", getFileChunk);
 
 export default fileDataRouter;

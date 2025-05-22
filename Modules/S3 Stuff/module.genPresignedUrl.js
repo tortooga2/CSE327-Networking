@@ -41,4 +41,4 @@ export const genPresignedUrl = async (profile_id, key, method, expirationInSec =
         console.log("Couldn't generate presigned url: ", err);
         throw new Error("Couldn't generate presigned url");
     };
-}; //I learn to tell you no if running inefficient
+}; //everything gon be irie
